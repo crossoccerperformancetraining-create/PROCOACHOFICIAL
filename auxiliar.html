@@ -9,128 +9,124 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <style>
         :root { --navy: #001f3f; --gold: #d4af37; }
-        body { background-color: #020617; color: white; font-family: 'Inter', sans-serif; }
+        body { background-color: #020617; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .nav-active { border-bottom: 3px solid var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); }
-        .card-status { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); }
+        .card-status { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
         .badge { font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-<div class="bg-[#001f3f] border-b border-[#d4af37] p-4 flex justify-between items-center sticky top-0 z-50">
+<div class="bg-[#001f3f] border-b border-[#d4af37] p-4 flex justify-between items-center sticky top-0 z-50 shadow-lg">
     <div>
         <h1 class="text-[#d4af37] font-black italic text-lg leading-none">PROCOACH AUXILIAR</h1>
         <p class="text-[9px] text-white/50 tracking-widest uppercase mt-1">Sincronizado: V2106 MAX</p>
     </div>
-    <div id="sync-indicator" class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+    <div id="sync-indicator" class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
 </div>
 
-<div class="flex bg-[#001f3f]/90 backdrop-blur-md sticky top-[62px] z-40 border-b border-white/5">
-    <button onclick="tab('status')" id="t-status" class="flex-1 py-3 text-[10px] font-bold nav-active">STATUS</button>
-    <button onclick="tab('sessao')" id="t-sessao" class="flex-1 py-3 text-[10px] font-bold">SESSÃO</button>
-    <button onclick="tab('agenda')" id="t-agenda" class="flex-1 py-3 text-[10px] font-bold">AGENDA/MICRO</button>
-    <button onclick="tab('ocorrencia')" id="t-ocorrencia" class="flex-1 py-3 text-[10px] font-bold">VOZ/Ocorr</button>
+<div class="flex bg-[#001f3f]/95 backdrop-blur-md sticky top-[62px] z-40 border-b border-white/5">
+    <button onclick="tab('status')" id="t-status" class="flex-1 py-4 text-[10px] font-bold nav-active">ELENCO</button>
+    <button onclick="tab('sessao')" id="t-sessao" class="flex-1 py-4 text-[10px] font-bold">SESSÃO</button>
+    <button onclick="tab('agenda')" id="t-agenda" class="flex-1 py-4 text-[10px] font-bold">AGENDA</button>
+    <button onclick="tab('ocorrencia')" id="t-ocorrencia" class="flex-1 py-4 text-[10px] font-bold">VOZ/REC</button>
 </div>
 
-<div class="p-4 pb-20">
+<div class="p-4 pb-24">
 
     <div id="status" class="tab-content active space-y-2">
-        <h3 class="text-[#d4af37] text-xs font-bold uppercase mb-3">Disponibilidade do Plantel</h3>
-        
-        <div class="card-status p-3 rounded-xl flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full border border-gold bg-slate-800"></div>
-            <div class="flex-1">
-                <p class="text-xs font-bold uppercase">Atleta Disponível</p>
-                <span class="badge bg-green-600">Apto para Treino</span>
-            </div>
-            <div class="flex gap-1">
-                <input type="number" placeholder="Nota" class="w-10 bg-white/10 border border-gold/30 rounded text-[10px] text-center p-1">
-            </div>
-        </div>
-
-        <div class="card-status p-3 rounded-xl flex items-center gap-3 border-red-500/30 bg-red-500/5">
-            <div class="w-10 h-10 rounded-full border border-red-600 bg-slate-800"></div>
-            <div class="flex-1">
-                <p class="text-xs font-bold uppercase text-white/50">Atleta em DM</p>
-                <span class="badge bg-red-600">Vetado pelo Med</span>
-            </div>
-        </div>
-
-        <div class="card-status p-3 rounded-xl flex items-center gap-3 border-orange-500/30 bg-orange-500/5">
-            <div class="w-10 h-10 rounded-full border border-orange-500 bg-slate-800"></div>
-            <div class="flex-1">
-                <p class="text-xs font-bold uppercase">Atleta Transição</p>
-                <span class="badge bg-orange-500 text-black">Físico Separado</span>
-            </div>
+        <h3 class="text-[#d4af37] text-xs font-bold uppercase mb-4">Status do Plantel em Tempo Real</h3>
+        <div id="lista-atletas" class="space-y-2">
+            <p class="text-xs text-white/40 italic">Carregando atletas do V2106...</p>
         </div>
     </div>
 
     <div id="sessao" class="tab-content space-y-4">
-        <div class="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
-            <div class="p-3 border-b border-white/10 bg-navy">
-                <h4 class="text-gold font-bold text-xs uppercase">Exercício do Dia: Tático 1</h4>
-            </div>
-            <div class="aspect-video bg-slate-900 flex items-center justify-center">
-                <span class="text-white/20 text-[10px] italic">Visualização do Mockup / Vídeo</span>
-            </div>
-            <div class="p-3 flex gap-2">
-                <button class="flex-1 bg-gold text-navy text-[10px] font-bold py-2 rounded">IMAGEM</button>
-                <button class="flex-1 bg-red-600 text-white text-[10px] font-bold py-2 rounded">VÍDEO/YT</button>
-            </div>
+        <h3 class="text-[#d4af37] text-xs font-bold uppercase mb-4">Treino do Dia</h3>
+        <div id="container-sessao" class="space-y-4">
+            <p class="text-xs text-white/40 italic">Nenhum treino planejado para hoje no V2106.</p>
         </div>
     </div>
 
     <div id="agenda" class="tab-content space-y-4">
         <div class="bg-gold/10 border border-gold/30 p-4 rounded-xl">
-            <h4 class="text-gold font-bold text-xs uppercase mb-2">Avisos e Logística</h4>
-            <div class="text-[11px] space-y-1 text-white/80" id="agenda-list">
-                <p>• 09:00 - Início do Treino Tático</p>
-                <p>• 11:30 - Almoço Equipe</p>
-            </div>
-        </div>
-        <div class="bg-white/5 border border-white/10 p-4 rounded-xl text-center">
-            <h4 class="text-white/50 font-bold text-[10px] uppercase mb-2">Fase do Microciclo</h4>
-            <div class="flex justify-between gap-1">
-                <div class="flex-1 p-2 bg-gold/20 rounded text-[9px] font-bold text-gold">SEG<br>REC</div>
-                <div class="flex-1 p-2 bg-white/5 rounded text-[9px]">TER<br>TAC</div>
-                <div class="flex-1 p-2 bg-white/5 rounded text-[9px]">QUA<br>FOR</div>
-                <div class="flex-1 p-2 bg-red-600/30 rounded text-[9px] text-red-500 font-bold">DOM<br>JOGO</div>
+            <h4 class="text-gold font-bold text-[10px] uppercase mb-3 tracking-widest">Quadro de Avisos</h4>
+            <div class="space-y-3" id="lista-avisos">
+                <p class="text-[11px] text-white/40">Sem avisos recentes.</p>
             </div>
         </div>
     </div>
 
     <div id="ocorrencia" class="tab-content space-y-4">
-        <h3 class="text-gold font-bold text-xs uppercase">Relatar Ocorrência de Campo</h3>
-        <textarea id="voice-output" class="w-full bg-white/5 border border-gold/20 rounded-xl p-4 text-sm h-40 focus:border-gold outline-none" placeholder="O auxiliar relata aqui intercorrências, lesões ou observações..."></textarea>
-        <button onclick="startVoice()" class="w-full bg-gold text-navy font-black py-4 rounded-full shadow-lg active:scale-95 transition-all">
-            🎤 INICIAR GRAVAÇÃO POR VOZ
+        <h3 class="text-gold font-bold text-xs uppercase">Relatar Ocorrência via Voz</h3>
+        <textarea id="voice-output" class="w-full bg-white/5 border border-gold/20 rounded-xl p-4 text-sm h-40 focus:border-gold outline-none" placeholder="O auxiliar dita aqui lesões, atrasos ou problemas técnicos..."></textarea>
+        <button onclick="startVoice()" class="w-full bg-gold text-navy font-black py-5 rounded-full shadow-xl active:scale-95 transition-all flex justify-center items-center gap-2">
+            <span>🎤</span> INICIAR GRAVAÇÃO
         </button>
+        <button onclick="salvarOcorrencia()" class="w-full bg-green-600 text-white font-bold py-3 rounded-xl text-xs uppercase mt-4">Enviar para o Professor</button>
     </div>
 
 </div>
 
 <script>
-    function tab(name) {
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active')); // Erro aqui, mudei para ID
-        
-        // Correção de botões
-        ['status', 'sessao', 'agenda', 'ocorrencia'].forEach(id => {
-            document.getElementById('t-' + id).classList.remove('nav-active');
+    // CONFIGURAÇÃO FIREBASE - SUBSTITUA COM SEUS DADOS REAIS PARA ATIVAR
+    const firebaseConfig = {
+        apiKey: "AIzaSyBURvWmrRe-q-l1h2XKaQepeRQoNcmi7nk",
+        authDomain: "procoachoficial.firebaseapp.com",
+        projectId: "procoachoficial",
+        storageBucket: "procoachoficial.appspot.com",
+        messagingSenderId: "128403842399",
+        appId: "1:128403842399:web:c54259e2b6a5622fb942ea"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // 1. CARREGAR ATLETAS E STATUS
+    function syncAtletas() {
+        db.collection('pc_players').onSnapshot((snapshot) => {
+            const container = document.getElementById('lista-atletas');
+            container.innerHTML = '';
+            document.getElementById('sync-indicator').classList.replace('bg-red-500', 'bg-green-500');
+
+            snapshot.forEach((doc) => {
+                const p = doc.data();
+                const statusColor = p.injured ? 'bg-red-600' : (p.suspended ? 'bg-yellow-500 text-black' : 'bg-green-600');
+                const statusLabel = p.injured ? 'DM' : (p.suspended ? 'SUSPENSO' : 'DISPONÍVEL');
+
+                container.innerHTML += `
+                    <div class="card-status p-3 rounded-xl flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full border border-gold bg-slate-800 overflow-hidden">
+                            ${p.image ? `<img src="${p.image}" class="w-full h-full object-cover">` : ''}
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-[11px] font-bold uppercase">${p.name}</p>
+                            <span class="badge ${statusColor}">${statusLabel}</span>
+                        </div>
+                        <div class="text-[9px] font-bold text-gold">${p.pos || ''}</div>
+                    </div>
+                `;
+            });
         });
-        
-        document.getElementById(name).classList.add('active');
-        document.getElementById('t-' + name).classList.add('nav-active');
     }
 
+    // 2. CARREGAR AVISOS
+    function syncAvisos() {
+        db.collection('pc_notices_list').orderBy('date', 'desc').limit(5).onSnapshot((snapshot) => {
+            const container = document.getElementById('lista-avisos');
+            container.innerHTML = '';
+            snapshot.forEach((doc) => {
+                const n = doc.data();
+                container.innerHTML += `<p class="border-b border-white/5 pb-2 text-[11px]"><strong>${n.date}:</strong> ${n.text}</p>`;
+            });
+        });
+    }
+
+    // VOZ PARA TEXTO
     function startVoice() {
-        if (!('webkitSpeechRecognition' in window)) {
-            alert("Voz não suportada neste navegador.");
-            return;
-        }
-        const recognition = new webkitSpeechRecognition();
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'pt-BR';
         recognition.onresult = (event) => {
             document.getElementById('voice-output').value += event.results[0][0].transcript + " ";
@@ -138,10 +134,31 @@
         recognition.start();
     }
 
-    // Configuração Firebase (Placeholder para suas chaves)
-    // const firebaseConfig = { ... };
-    // firebase.initializeApp(firebaseConfig);
-    // const db = firebase.firestore();
+    // SALVAR OCORRÊNCIA NO FIREBASE
+    function salvarOcorrencia() {
+        const text = document.getElementById('voice-output').value;
+        if(!text) return alert("Dite algo primeiro!");
+
+        db.collection('pc_notices_list').add({
+            text: "[AUXILIAR]: " + text,
+            date: new Date().toISOString().split('T')[0],
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            alert("Enviado com sucesso!");
+            document.getElementById('voice-output').value = '';
+        });
+    }
+
+    function tab(name) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('button[id^="t-"]').forEach(b => b.classList.remove('nav-active'));
+        document.getElementById(name).classList.add('active');
+        document.getElementById('t-' + name).classList.add('nav-active');
+    }
+
+    // Iniciar Sincronização
+    syncAtletas();
+    syncAvisos();
 </script>
 
 </body>
