@@ -14,9 +14,10 @@
         :root { --navy: #020617; --gold: #d4af37; }
         body { background-color: var(--navy); color: #f8fafc; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         
-        .nav-container { @apply flex gap-3 p-3 bg-[#020617]/90 backdrop-blur-xl sticky top-[72px] z-40 border-b border-white/5 overflow-x-auto no-scrollbar; }
-        .nav-btn { @apply flex-none px-6 py-3 text-[10px] font-black text-center rounded-full uppercase tracking-widest transition-all bg-slate-800 text-slate-400 border border-transparent shadow-md; }
-        .nav-active { @apply border-gold text-gold bg-gold/10 shadow-[0_0_15px_rgba(212,175,55,0.3)] scale-105; }
+        /* MENU ESTILO BLOCOS SEPARADOS COM BORDAS */
+        .nav-container { @apply flex gap-3 p-4 bg-[#020617] sticky top-[72px] z-40 border-b border-white/10 overflow-x-auto no-scrollbar; }
+        .nav-btn { @apply flex-none px-6 py-3.5 text-[11px] font-black text-center rounded-xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border border-white/10 shadow-sm; }
+        .nav-active { @apply border-gold text-gold bg-gold/10 shadow-[0_0_15px_rgba(212,175,55,0.2)] scale-105; }
         
         .dash-card { @apply bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-3xl border border-white/10 shadow-2xl overflow-hidden; }
         .tag { @apply px-3 py-1.5 rounded-md text-[9px] font-black text-white uppercase shadow-md; }
@@ -26,9 +27,7 @@
 
         #loading { position: fixed; inset: 0; background: #020617; color: white; display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; gap: 15px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        
-        /* Modal Configuração */
-        .modal-overlay { background: rgba(2,6,23,0.9); backdrop-filter: blur(5px); }
+        .modal-overlay { background: rgba(2,6,23,0.95); backdrop-filter: blur(8px); }
     </style>
 </head>
 <body>
@@ -49,25 +48,19 @@
 </div>
 
 <div id="config-modal" class="fixed inset-0 z-[200] modal-overlay flex items-center justify-center p-4 hidden">
-    <div class="bg-[#1e293b] p-6 rounded-3xl shadow-2xl w-full max-w-xs border border-white/10">
-        <h2 class="text-gold font-black uppercase text-center mb-6 tracking-widest border-b border-white/10 pb-3">⚙️ Perfil da Comissão</h2>
-        <div class="space-y-4">
+    <div class="bg-[#1e293b] p-8 rounded-3xl shadow-2xl w-full max-w-sm border border-white/10">
+        <h2 class="text-gold font-black uppercase text-center mb-6 tracking-widest border-b border-white/10 pb-4 text-sm">⚙️ Perfil da Comissão</h2>
+        <div class="space-y-5">
             <div>
-                <label class="text-[9px] font-bold text-slate-400 uppercase">Seu Nome</label>
-                <input type="text" id="staff-name" placeholder="Ex: João" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm font-bold text-white outline-none mt-1">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Seu Nome</label>
+                <input type="text" id="staff-name" placeholder="Ex: Silva" class="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-sm font-bold text-white outline-none mt-2 focus:border-gold/50 transition-colors">
             </div>
             <div>
-                <label class="text-[9px] font-bold text-slate-400 uppercase">Sua Função</label>
-                <select id="staff-role" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-sm font-bold text-gold outline-none mt-1 uppercase">
-                    <option value="Auxiliar">Auxiliar Técnico</option>
-                    <option value="Prep. Físico">Prep. Físico</option>
-                    <option value="Prep. Goleiros">Prep. Goleiros</option>
-                    <option value="Analista">Analista</option>
-                    <option value="Fisioterapeuta">Fisioterapeuta</option>
-                </select>
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Sua Função</label>
+                <input type="text" id="staff-role" placeholder="Ex: Massagista" class="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-sm font-bold text-gold uppercase outline-none mt-2 focus:border-gold/50 transition-colors">
             </div>
-            <button onclick="salvarPerfil()" class="w-full bg-green-600 text-white font-black py-4 rounded-xl shadow-lg mt-4 uppercase tracking-widest text-xs active:scale-95 transition-all">Salvar Perfil</button>
-            <button onclick="fecharConfig()" class="w-full bg-transparent text-slate-400 font-bold py-2 rounded-xl text-xs uppercase">Cancelar</button>
+            <button onclick="salvarPerfil()" class="w-full bg-green-600 text-white font-black py-4 rounded-xl shadow-lg mt-6 uppercase tracking-widest text-xs active:scale-95 transition-all">Salvar Perfil</button>
+            <button onclick="fecharConfig()" class="w-full bg-transparent text-slate-400 font-bold py-3 rounded-xl text-xs uppercase">Cancelar</button>
         </div>
     </div>
 </div>
@@ -78,13 +71,13 @@
             <span class="text-[8px] opacity-30">LOGO</span>
         </div>
         <div>
-            <p id="greeting-msg" class="text-[10px] font-bold text-gold uppercase tracking-widest mb-0.5">Bom dia, Prof.</p>
+            <p id="greeting-msg" class="text-[9px] font-black text-gold uppercase tracking-widest mb-1">BOM DIA, COMISSÃO</p>
             <h2 id="team-name-display" class="text-white font-black italic text-xl leading-none uppercase tracking-tighter drop-shadow-md">EQUIPE</h2>
         </div>
     </div>
     <div class="flex flex-col items-end gap-2">
-        <button onclick="abrirConfig()" class="text-slate-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full border border-white/10">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <button onclick="abrirConfig()" class="text-slate-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full border border-white/10 active:scale-95">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
         <div class="flex items-center gap-1.5">
             <span class="text-[8px] font-black text-green-400 uppercase tracking-widest">ON</span>
@@ -96,64 +89,64 @@
 <div class="nav-container">
     <button onclick="showTab('dash')" id="btn-dash" class="nav-btn nav-active">Início</button>
     <button onclick="showTab('sessao')" id="btn-sessao" class="nav-btn">Sessão</button>
-    <button onclick="showTab('micro')" id="btn-micro" class="nav-btn">Micro</button>
-    <button onclick="showTab('voz')" id="btn-voz" class="nav-btn">Relato</button>
+    <button onclick="showTab('micro')" id="btn-micro" class="nav-btn">Microciclo</button>
+    <button onclick="showTab('voz')" id="btn-voz" class="nav-btn">Relato Voz</button>
 </div>
 
-<div id="content" class="p-4 pb-32 space-y-5">
+<div id="content" class="p-4 pb-32 space-y-6">
     
     <div id="tab-dash" class="tab-view space-y-5">
         
         <div class="dash-card p-6 border-b-4 border-gold/30">
             <h3 class="text-gold text-[10px] font-black uppercase mb-6 tracking-[0.2em] text-center">🏆 Próximo Adversário</h3>
             <div class="flex flex-col items-center justify-center">
-                <div id="adv-logo" class="w-20 h-20 bg-black/40 rounded-full border-2 border-white/10 flex items-center justify-center overflow-hidden shadow-2xl mb-4">
+                <div id="adv-logo" class="w-20 h-20 bg-black/40 rounded-2xl border border-white/10 flex items-center justify-center overflow-hidden shadow-2xl mb-4">
                     <span class="text-[10px] opacity-20 italic font-black">ADV</span>
                 </div>
-                <span id="adv-nome" class="text-2xl font-black italic text-white drop-shadow-lg mb-2 uppercase text-center">A DEFINIR</span>
+                <span id="adv-nome" class="text-2xl font-black italic text-white drop-shadow-lg mb-3 uppercase text-center">A DEFINIR</span>
                 <div class="flex gap-2">
-                    <span id="jogo-data" class="bg-black/50 px-3 py-1 rounded-full text-[10px] font-black text-gold uppercase tracking-widest border border-white/5">--/--</span>
-                    <span id="jogo-sistema" class="bg-black/50 px-3 py-1 rounded-full text-[10px] font-black text-white/50 uppercase tracking-widest border border-white/5">SIS: -</span>
+                    <span id="jogo-data" class="bg-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black text-gold uppercase tracking-widest border border-white/5 shadow-inner">--/--</span>
+                    <span id="jogo-sistema" class="bg-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black text-white/50 uppercase tracking-widest border border-white/5 shadow-inner">SIS: -</span>
                 </div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="dash-card p-5">
-                <h3 class="text-slate-400 text-[10px] font-black uppercase mb-4 tracking-widest flex items-center gap-2">📅 Agenda Hoje</h3>
+            <div class="dash-card p-6">
+                <h3 class="text-slate-400 text-[10px] font-black uppercase mb-5 tracking-widest flex items-center gap-2">📅 Agenda Hoje</h3>
                 <div id="agenda-hoje" class="space-y-3"></div>
             </div>
-            <div class="dash-card p-5 border-l-4 border-yellow-500 bg-yellow-500/5">
-                <h3 class="text-yellow-500 text-[10px] font-black uppercase mb-4 tracking-widest flex items-center gap-2">📋 Avisos Oficiais</h3>
-                <div id="avisos-lista" class="space-y-3 text-xs text-white/80 font-medium"></div>
+            <div class="dash-card p-6 border-l-4 border-yellow-500 bg-yellow-500/5">
+                <h3 class="text-yellow-500 text-[10px] font-black uppercase mb-5 tracking-widest flex items-center gap-2">📋 Avisos Oficiais</h3>
+                <div id="avisos-lista" class="space-y-3 text-[11px] text-white/80 font-bold leading-relaxed"></div>
             </div>
         </div>
 
         <div class="grid grid-cols-3 gap-3">
-            <div class="dash-card p-4 border-b-2 border-gold flex flex-col items-center">
+            <div class="dash-card p-5 border-b-2 border-gold flex flex-col items-center">
                 <h4 class="text-[9px] font-black text-slate-400 uppercase mb-3">⚽ Gols</h4>
-                <div id="gols-lista" class="text-[10px] font-black text-gold space-y-1 text-center w-full truncate"></div>
+                <div id="gols-lista" class="text-[10px] font-black text-gold space-y-1.5 text-center w-full truncate"></div>
             </div>
-            <div class="dash-card p-4 border-b-2 border-red-500 flex flex-col items-center">
+            <div class="dash-card p-5 border-b-2 border-red-500 flex flex-col items-center">
                 <h4 class="text-[9px] font-black text-red-500 uppercase mb-3">🏥 DM</h4>
-                <div id="dm-lista" class="text-[10px] font-bold text-red-400 space-y-1 text-center w-full truncate"></div>
+                <div id="dm-lista" class="text-[10px] font-bold text-red-400 space-y-1.5 text-center w-full truncate"></div>
             </div>
-            <div class="dash-card p-4 border-b-2 border-yellow-500 flex flex-col items-center">
+            <div class="dash-card p-5 border-b-2 border-yellow-500 flex flex-col items-center">
                 <h4 class="text-[9px] font-black text-yellow-500 uppercase mb-3">⚠️ Susp</h4>
-                <div id="susp-lista" class="text-[10px] font-bold text-yellow-400 space-y-1 text-center w-full truncate"></div>
+                <div id="susp-lista" class="text-[10px] font-bold text-yellow-400 space-y-1.5 text-center w-full truncate"></div>
             </div>
         </div>
     </div>
 
     <div id="tab-sessao" class="tab-view hidden space-y-6">
-        <div id="drills-lista" class="space-y-5"></div>
+        <div id="drills-lista" class="space-y-6"></div>
         
-        <div class="dash-card p-6">
-            <h3 class="text-gold text-[11px] font-black uppercase mb-6 text-center tracking-[0.3em] border-b border-white/10 pb-4">⭐ Performance do Plantel</h3>
+        <div class="dash-card p-6 bg-gradient-to-t from-[#0f172a] to-[#1e293b]">
+            <h3 class="text-gold text-[12px] font-black uppercase mb-6 text-center tracking-[0.3em] border-b border-white/10 pb-4">⭐ Performance do Plantel</h3>
             <div id="players-performance" class="space-y-3"></div>
             
-            <button onclick="finalizarTreino()" class="w-full py-6 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-xl active:scale-95 transition-all uppercase tracking-widest text-[10px] mt-8">
-                🛑 Encerrar e Sincronizar Sessão
+            <button onclick="finalizarTreino()" class="w-full py-6 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-[0_10px_20px_rgba(220,38,38,0.3)] active:scale-95 transition-all uppercase tracking-[0.2em] text-xs mt-8">
+                🛑 Encerrar Sessão
             </button>
         </div>
     </div>
@@ -163,14 +156,14 @@
     </div>
 
     <div id="tab-voz" class="tab-view hidden space-y-5">
-        <div class="dash-card p-6 border border-gold/20">
+        <div class="dash-card p-6 border-gold/20 border">
             <h3 class="text-gold text-[11px] font-black uppercase mb-6 tracking-widest text-center">🎙️ Gravar Ocorrência</h3>
-            <textarea id="voice-txt" class="w-full bg-black/40 text-sm h-56 outline-none border border-white/10 rounded-2xl p-5 text-white/90 placeholder-white/30 focus:border-gold/50 shadow-inner resize-none" placeholder="Dite os acontecimentos do treino..."></textarea>
+            <textarea id="voice-txt" class="w-full bg-black/40 text-base h-56 outline-none border border-white/10 rounded-2xl p-5 text-white/90 placeholder-white/30 focus:border-gold/50 transition-colors shadow-inner resize-none" placeholder="Dite problemas ou observações do treino..."></textarea>
         </div>
-        <button onclick="iniciarVoz()" class="w-full bg-gradient-to-r from-gold to-yellow-600 text-navy font-black py-6 rounded-2xl shadow-2xl active:scale-95 transition-all text-sm uppercase tracking-widest flex justify-center items-center gap-2">
-            <span class="text-xl">🎤</span> Iniciar Ditado
+        <button onclick="iniciarVoz()" class="w-full bg-gradient-to-r from-gold to-yellow-600 text-navy font-black py-6 rounded-2xl shadow-2xl active:scale-95 transition-all text-sm uppercase tracking-widest">
+            🎤 Iniciar Gravação
         </button>
-        <button onclick="enviarVoz()" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl text-[10px] uppercase mt-2 tracking-widest shadow-lg">Salvar Aviso na Nuvem</button>
+        <button onclick="enviarVoz()" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl text-[11px] uppercase mt-2 tracking-widest shadow-lg active:scale-95 transition-transform">Salvar na Nuvem</button>
     </div>
 </div>
 
@@ -180,19 +173,20 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // LÓGICA DA SAUDAÇÃO E PERFIL
+    // Funções de Perfil e Saudação
     function atualizarSaudacao() {
         const hora = new Date().getHours();
-        let saudacao = "Bom dia";
-        if (hora >= 12 && hora < 18) saudacao = "Boa tarde";
-        else if (hora >= 18) saudacao = "Boa noite";
+        let saudacao = "BOM DIA";
+        if (hora >= 12 && hora < 18) saudacao = "BOA TARDE";
+        else if (hora >= 18) saudacao = "BOA NOITE";
         
         const role = localStorage.getItem('pc_staff_role') || "Comissão";
         const name = localStorage.getItem('pc_staff_name') || "";
-        document.getElementById('greeting-msg').innerText = `${saudacao}, ${role} ${name}`;
+        const textoFull = name ? `${saudacao}, ${role} ${name}` : `${saudacao}, ${role}`;
         
+        document.getElementById('greeting-msg').innerText = textoFull;
         document.getElementById('staff-name').value = name;
-        document.getElementById('staff-role').value = localStorage.getItem('pc_staff_role') || "Auxiliar";
+        document.getElementById('staff-role').value = role;
     }
     
     function abrirConfig() { document.getElementById('config-modal').classList.remove('hidden'); }
@@ -200,7 +194,8 @@
     
     function salvarPerfil() {
         localStorage.setItem('pc_staff_name', document.getElementById('staff-name').value);
-        localStorage.setItem('pc_staff_role', document.getElementById('staff-role').value);
+        const roleInput = document.getElementById('staff-role').value;
+        localStorage.setItem('pc_staff_role', roleInput ? roleInput : "Comissão");
         atualizarSaudacao();
         fecharConfig();
     }
@@ -245,7 +240,7 @@
             // Agenda e Avisos
             const micro = JSON.parse(d.pc_micro_v7 || "{}");
             const agendaHoje = micro[todayName]?.blocks || [];
-            document.getElementById('agenda-hoje').innerHTML = agendaHoje.map(b => `<div class="flex items-center gap-3"><span class="text-[9px] font-black opacity-30 w-8">${b.period}</span><span class="tag ${b.color}">${b.label}</span></div>`).join('') || '<p class="opacity-20 text-[10px] italic">Sem treinos.</p>';
+            document.getElementById('agenda-hoje').innerHTML = agendaHoje.map(b => `<div class="flex items-center gap-3"><span class="text-[9px] font-black opacity-40 w-10">${b.period}</span><span class="tag ${b.color}">${b.label}</span></div>`).join('') || '<p class="opacity-20 text-[10px] italic">Sem treinos.</p>';
             
             const avisos = JSON.parse(d.pc_notices_list || "[]");
             document.getElementById('avisos-lista').innerHTML = avisos.slice(0,3).map(n => `<p class="border-b border-white/5 pb-2 last:border-0 truncate">➤ ${n.text}</p>`).join('');
@@ -256,7 +251,7 @@
                 <div class="flex items-center justify-between p-3 bg-black/30 rounded-2xl border border-white/5">
                     <div class="flex items-center gap-3">
                         <img src="${p.image || ''}" class="w-10 h-10 rounded-full border border-white/10 shadow-lg object-cover">
-                        <span class="player-name truncate w-20">${p.name}</span>
+                        <span class="text-[11px] font-black uppercase tracking-wide text-white truncate w-24">${p.name}</span>
                     </div>
                     <div class="flex gap-0.5 star-rating">
                         ${[1,2,3,4,5].map(n => `<button onclick="votar(${i}, ${n})" class="${(p.rating||0) >= n ? 'active' : ''}">★</button>`).join('')}
@@ -264,16 +259,16 @@
                 </div>
             `).join('');
 
-            // Gols/DM/Susp (Listas limpas)
+            // Gols/DM/Susp
             document.getElementById('gols-lista').innerHTML = players.sort((a,b)=> (b.stats?.g||0)-(a.stats?.g||0)).slice(0,3).map(p=>`<div class="truncate">${p.name}: ${p.stats?.g||0}</div>`).join('');
             document.getElementById('dm-lista').innerHTML = players.filter(p=>p.injured).map(p=>`<div class="truncate">${p.name}</div>`).join('') || '<span class="opacity-20">Livre</span>';
             document.getElementById('susp-lista').innerHTML = players.filter(p=>p.suspended).map(p=>`<div class="truncate">${p.name}</div>`).join('') || '<span class="opacity-20">Livre</span>';
 
-            // Microciclo Vertical (Sem Desenho do Campo)
+            // Microciclo Vertical Simplificado
             const dias = ["SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO", "DOMINGO"];
             document.getElementById('micro-flex').innerHTML = dias.map(dia => `
-                <div class="min-w-[160px] bg-[#1e293b] rounded-3xl border border-white/10 flex flex-col shadow-xl">
-                    <div class="bg-blue-900/60 text-white font-black text-[10px] p-4 text-center border-b border-gold/20 uppercase tracking-[0.2em] rounded-t-3xl">${dia}</div>
+                <div class="min-w-[160px] bg-[#1e293b] rounded-3xl border border-white/10 flex flex-col shadow-xl overflow-hidden h-[400px]">
+                    <div class="bg-blue-900/60 text-white font-black text-[11px] p-4 text-center border-b border-gold/20 uppercase tracking-[0.2em]">${dia}</div>
                     <div class="px-4 py-4 space-y-4 flex-1">
                         <div><p class="text-[8px] font-black text-slate-500 uppercase mb-2">Manhã</p>${(micro[dia]?.blocks || []).filter(x=>x.period==='M').map(x=>`<div class="tag ${x.color} w-full block text-center py-2 mb-1 shadow-md">${x.label}</div>`).join('') || '<span class="text-[10px] opacity-20">-</span>'}</div>
                         <div><p class="text-[8px] font-black text-slate-500 uppercase mb-2">Tarde</p>${(micro[dia]?.blocks || []).filter(x=>x.period==='T').map(x=>`<div class="tag ${x.color} w-full block text-center py-2 mb-1 shadow-md">${x.label}</div>`).join('') || '<span class="text-[10px] opacity-20">-</span>'}</div>
@@ -288,25 +283,25 @@
             
             let htmlSessao = `
                 <div class="bg-gradient-to-tr from-blue-900 to-navy p-6 rounded-3xl shadow-2xl border-b-4 border-gold/40">
-                    <h1 class="text-2xl font-black uppercase mb-4 italic tracking-tighter text-white drop-shadow-md">${d.pc_team_name || 'EQUIPE'}</h1>
+                    <h1 class="text-2xl font-black uppercase mb-5 italic tracking-tighter text-white drop-shadow-md">${d.pc_team_name || 'EQUIPE'}</h1>
                     <div class="grid grid-cols-3 gap-3">
-                        <div class="bg-black/30 p-3 rounded-xl border border-white/5 text-center"><span class="text-[8px] block opacity-40 font-bold uppercase mb-1">DATA</span><b class="text-[10px] uppercase text-white">${todayISO.split('-').reverse().slice(0,2).join('/')}</b></div>
-                        <div class="bg-black/30 p-3 rounded-xl border border-white/5 text-center"><span class="text-[8px] block opacity-40 font-bold uppercase mb-1">LOCAL</span><b class="text-[10px] uppercase text-white">${header.local || "CT"}</b></div>
-                        <div class="bg-black/30 p-3 rounded-xl border border-white/5 text-center"><span class="text-[8px] block opacity-40 font-bold uppercase mb-1">DURAÇÃO</span><b class="text-[10px] uppercase text-gold">${header.dur || "90 min"}</b></div>
+                        <div class="bg-black/30 p-3 rounded-2xl border border-white/5 text-center"><span class="text-[8px] block opacity-40 font-bold uppercase mb-1">DATA</span><b class="text-[10px] uppercase text-white">${todayISO.split('-').reverse().slice(0,2).join('/')}</b></div>
+                        <div class="bg-black/30 p-3 rounded-2xl border border-white/5 text-center"><span class="text-[8px] block opacity-40 font-bold uppercase mb-1">LOCAL</span><b class="text-[10px] uppercase text-white">${header.local || "CT"}</b></div>
+                        <div class="bg-black/30 p-3 rounded-2xl border border-white/5 text-center"><span class="text-[8px] block opacity-40 font-bold uppercase mb-1">DURAÇÃO</span><b class="text-[10px] uppercase text-gold">${header.dur || "90 min"}</b></div>
                     </div>
                 </div>
             `;
 
             htmlSessao += sessao.map((ex,i) => `
-                <div class="dash-card overflow-hidden mt-4">
+                <div class="dash-card overflow-hidden mt-5">
                     <div class="bg-black/40 p-4 flex justify-between items-center border-b border-white/5">
                         <span class="text-xs font-black text-gold uppercase tracking-widest">${i+1}. ${ex.name}</span>
-                        <span class="text-[9px] font-black bg-white/10 px-3 py-1 rounded-md uppercase">${ex.time} min</span>
+                        <span class="text-[10px] font-black bg-white/10 px-3 py-1.5 rounded-lg uppercase shadow-inner">${ex.time} min</span>
                     </div>
                     <img src="${ex.image || ''}" class="w-full h-56 object-contain bg-black/60 p-2">
-                    ${ex.desc ? `<div class="p-4 text-[10px] text-white/60 italic border-t border-white/5 bg-[#1e293b] leading-relaxed">${ex.desc}</div>` : ''}
+                    ${ex.desc ? `<div class="p-5 text-[11px] text-white/60 italic border-t border-white/5 bg-[#1e293b] leading-relaxed">${ex.desc}</div>` : ''}
                 </div>
-            `).join('') || '<div class="dash-card p-10 text-center mt-4"><p class="opacity-40 text-xs font-black uppercase tracking-widest">Sem Exercícios</p></div>';
+            `).join('') || '<div class="dash-card p-10 text-center mt-5"><p class="opacity-40 text-xs font-black uppercase tracking-widest">Sem Exercícios</p></div>';
             
             document.getElementById('drills-lista').innerHTML = htmlSessao;
         });
@@ -322,12 +317,13 @@
     }
 
     function finalizarTreino() {
-        if(!confirm("Atenção: Deseja encerrar as avaliações?")) return;
+        if(!confirm("Atenção: Deseja encerrar as avaliações e sincronizar com o Professor?")) return;
         const uid = auth.currentUser.uid;
-        const nome = localStorage.getItem('pc_staff_name') || "Comissão";
+        const staffNome = document.getElementById('staff-name').value || "Membro";
+        const staffRole = document.getElementById('staff-role').value || "Comissão";
         db.collection('coachData').doc(uid).get().then(doc => {
             let list = JSON.parse(doc.data().pc_notices_list || "[]");
-            list.unshift({ id: Date.now(), date: new Date().toISOString().split('T')[0], text: `🏁 [INFO]: Sessão finalizada por ${nome}.` });
+            list.unshift({ id: Date.now(), date: new Date().toISOString().split('T')[0], text: `🏁 [INFO]: Sessão finalizada por ${staffRole} ${staffNome}.` });
             db.collection('coachData').doc(uid).update({ pc_notices_list: JSON.stringify(list) });
             alert("Sistema Principal Atualizado!");
         });
@@ -351,12 +347,12 @@
         const txt = document.getElementById('voice-txt').value;
         if(!txt) return alert("Grave algo primeiro.");
         const uid = auth.currentUser.uid;
-        const role = localStorage.getItem('pc_staff_role') || "Comissão";
+        const staffRole = document.getElementById('staff-role').value || "Comissão";
         db.collection('coachData').doc(uid).get().then(doc => {
             let list = JSON.parse(doc.data().pc_notices_list || "[]");
-            list.unshift({ id: Date.now(), date: new Date().toISOString().split('T')[0], text: `[${role}]: ${txt}` });
+            list.unshift({ id: Date.now(), date: new Date().toISOString().split('T')[0], text: `[${staffRole.toUpperCase()}]: ${txt}` });
             db.collection('coachData').doc(uid).update({ pc_notices_list: JSON.stringify(list) });
-            alert("Enviado para o Professor!"); 
+            alert("Enviado para o Dashboard Principal!"); 
             document.getElementById('voice-txt').value = '';
         });
     }
