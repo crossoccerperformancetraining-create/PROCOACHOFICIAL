@@ -14,9 +14,8 @@
         :root { --navy: #020617; --gold: #d4af37; }
         body { background-color: var(--navy); color: #f8fafc; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         
-        /* MENU SUPERIOR RESTAURADO (PÍLULAS GIGANTES) */
         .nav-container { @apply flex gap-3 p-4 bg-[#020617] sticky top-[85px] z-40 border-b-2 border-white/10 overflow-x-auto no-scrollbar; }
-        .nav-btn { @apply flex-none px-5 py-4 text-xs font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-2 min-w-[100px]; }
+        .nav-btn { @apply flex-none px-5 py-4 text-xs font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-1 min-w-[100px]; }
         .nav-active { @apply border-gold text-navy bg-gradient-to-br from-gold to-yellow-500 shadow-[0_10px_25px_rgba(212,175,55,0.4)] scale-105; }
         .nav-icon { @apply text-2xl block drop-shadow-md; } 
         
@@ -86,6 +85,10 @@
         <button onclick="abrirConfig()" class="bg-black/30 p-3 rounded-full border border-white/20 shadow-lg active:scale-95">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
+        <div class="flex items-center gap-1.5">
+            <span id="status-text" class="text-[8px] font-black text-green-400 uppercase tracking-widest">ON</span>
+            <div id="status-dot" class="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e] animate-pulse"></div>
+        </div>
     </div>
 </div>
 
@@ -100,7 +103,6 @@
 <div id="content" class="p-5 pb-32 space-y-6">
     
     <div id="tab-dash" class="tab-view space-y-6">
-        
         <div class="dash-card p-8 border-b-8 border-gold/40">
             <h3 class="text-gold text-sm font-black uppercase mb-6 tracking-[0.3em] text-center drop-shadow-md">🏆 Próximo Confronto</h3>
             <div class="flex flex-col items-center justify-center">
@@ -205,8 +207,32 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
+    // ATIVANDO MODO OFFLINE NATIVO DO FIREBASE
+    db.enablePersistence({synchronizeTabs:true}).catch(function(err) {
+        console.log("Offline Mode Error:", err.code);
+    });
+
     let allPlayers = []; 
     let currentFilter = 'Todos';
+
+    // GERENCIAMENTO DE CONEXÃO UI
+    const statusDot = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+
+    function updateOnlineStatus() {
+        if (navigator.onLine) {
+            statusDot.className = "w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e] animate-pulse";
+            statusText.innerText = "ON";
+            statusText.className = "text-[8px] font-black text-green-400 uppercase tracking-widest";
+        } else {
+            statusDot.className = "w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444]";
+            statusText.innerText = "OFF (LOCAL)";
+            statusText.className = "text-[8px] font-black text-red-400 uppercase tracking-widest";
+        }
+    }
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
 
     function openFullScreen(imgSrc) {
         if(!imgSrc) return;
@@ -215,7 +241,6 @@
         fs.classList.remove('hidden');
         fs.classList.add('flex');
     }
-    
     function closeFullScreen() {
         const fs = document.getElementById('fullscreen-view');
         fs.classList.add('hidden');
@@ -283,7 +308,7 @@
             }
 
             const micro = JSON.parse(d.pc_micro_v7 || "{}");
-            document.getElementById('agenda-hoje').innerHTML = (micro[todayName]?.blocks || []).map(b => `<div class="flex items-center gap-4"><span class="text-sm font-black opacity-40 w-12">${b.period}</span><span class="tag ${b.color} text-sm py-2">${b.label}</span></div>`).join('') || '<p class="opacity-30 text-sm italic font-bold">Livre.</p>';
+            document.getElementById('agenda-hoje').innerHTML = (micro[todayName]?.blocks || []).map(b => `<div class="flex items-center gap-4"><span class="text-xs font-black opacity-40 w-12">${b.period}</span><span class="tag ${b.color} text-sm py-2">${b.label}</span></div>`).join('') || '<p class="opacity-30 text-sm italic font-bold">Livre.</p>';
             
             const avisos = JSON.parse(d.pc_notices_list || "[]");
             document.getElementById('avisos-lista').innerHTML = avisos.slice(0,3).map(n => `<p class="border-b border-white/5 pb-3 last:border-0 truncate text-lg">➤ ${n.text}</p>`).join('');
@@ -402,6 +427,7 @@
     }
 
     function iniciarVoz() {
+        if (!navigator.onLine) return alert("A gravação de voz precisa de internet para funcionar.");
         const r = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         r.lang = 'pt-BR';
         r.onresult = e => document.getElementById('voice-txt').value += e.results[0][0].transcript + " ";
