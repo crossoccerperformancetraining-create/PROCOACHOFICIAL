@@ -3,142 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ProCoach Auxiliar - Comando de Campo</title>
+    <title>ProCoach Auxiliar - V2106</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <style>
         :root { --navy: #001f3f; --gold: #d4af37; }
-        body { background-color: #020617; color: white; font-family: sans-serif; }
+        body { background-color: #020617; color: white; font-family: 'Inter', sans-serif; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .nav-active { border-bottom: 3px solid var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); }
-        .card-atleta { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); }
-        .badge { font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
-        .micro-block { @apply p-2 rounded text-[9px] font-bold text-white mb-1 text-center; }
+        .card-atleta { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; }
+        .star-rating { color: #d4af37; font-size: 14px; }
     </style>
 </head>
 <body>
 
 <div id="auth-screen" class="fixed inset-0 z-[100] bg-[#001f3f] flex items-center justify-center p-4">
     <div class="bg-white p-8 rounded-2xl w-full max-w-sm text-slate-800 shadow-2xl">
-        <h1 class="text-2xl font-black italic text-center mb-6">PROCOACH <span class="text-blue-600 text-sm">AUXILIAR</span></h1>
+        <h1 class="text-2xl font-black italic text-center mb-6 text-[#001f3f]">PROCOACH <span class="text-blue-600 text-sm">AUXILIAR</span></h1>
         <input type="email" id="email" placeholder="E-mail" class="w-full border-b-2 p-2 mb-4 outline-none focus:border-gold">
         <input type="password" id="pass" placeholder="Senha" class="w-full border-b-2 p-2 mb-6 outline-none focus:border-gold">
-        <button onclick="login()" class="w-full bg-blue-600 text-white font-black py-3 rounded-lg">ENTRAR E SINCRONIZAR</button>
+        <button onclick="login()" class="w-full bg-[#001f3f] text-white font-black py-3 rounded-lg uppercase">Sincronizar Campo</button>
     </div>
 </div>
 
 <div id="main-app" class="hidden">
-    <div class="bg-[#001f3f] border-b border-[#d4af37] p-4 flex justify-between items-center sticky top-0 z-50 shadow-lg">
-        <h1 class="text-[#d4af37] font-black italic text-lg">PROCOACH AUXILIAR</h1>
-        <div id="sync-indicator" class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></div>
+    <div class="bg-[#001f3f] border-b border-[#d4af37] p-4 sticky top-0 z-50 flex justify-between items-center">
+        <span class="text-[#d4af37] font-black italic">PROCOACH V2106</span>
+        <div class="flex items-center gap-2">
+            <span class="text-[9px] uppercase font-bold opacity-60">Sincronizado</span>
+            <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e]"></div>
+        </div>
     </div>
 
-    <div class="flex bg-[#001f3f]/95 backdrop-blur-md sticky top-[62px] z-40 border-b border-white/5">
-        <button onclick="tab('status')" id="t-status" class="flex-1 py-4 text-[10px] font-bold nav-active uppercase">Elenco</button>
-        <button onclick="tab('sessao')" id="t-sessao" class="flex-1 py-4 text-[10px] font-bold uppercase">Sessão</button>
-        <button onclick="tab('micro')" id="t-micro" class="flex-1 py-4 text-[10px] font-bold uppercase">Micro</button>
-        <button onclick="tab('ocorrencia')" id="t-ocorrencia" class="flex-1 py-4 text-[10px] font-bold uppercase">Voz/Rec</button>
+    <div class="flex bg-[#001f3f]/95 backdrop-blur-md sticky top-[57px] z-40 border-b border-white/5 overflow-x-auto">
+        <button onclick="tab('elenco')" id="t-elenco" class="flex-none px-6 py-4 text-[10px] font-bold nav-active uppercase">Elenco</button>
+        <button onclick="tab('jogo')" id="t-jogo" class="flex-none px-6 py-4 text-[10px] font-bold uppercase">Próximo Jogo</button>
+        <button onclick="tab('micro')" id="t-micro" class="flex-none px-6 py-4 text-[10px] font-bold uppercase">Microciclo</button>
+        <button onclick="tab('voz')" id="t-voz" class="flex-none px-6 py-4 text-[10px] font-bold uppercase">Voz</button>
     </div>
 
     <div class="p-4 pb-24">
-        <div id="status" class="tab-content active space-y-2">
-            <h3 class="text-gold text-xs font-bold uppercase mb-4">Disponibilidade e Notas</h3>
-            <div id="lista-atletas" class="space-y-2"></div>
+        <div id="elenco" class="tab-content active space-y-3">
+            <div id="lista-atletas" class="grid grid-cols-1 gap-2"></div>
         </div>
 
-        <div id="sessao" class="tab-content space-y-4">
-            <h3 class="text-gold text-xs font-bold uppercase mb-4">Treino Planejado</h3>
-            <div id="container-sessao"></div>
-        </div>
-
-        <div id="micro" class="tab-content space-y-4">
-            <div class="bg-gold/10 border border-gold/30 p-4 rounded-xl mb-4">
-                <h4 class="text-gold font-bold text-[10px] uppercase mb-3">Quadro de Avisos</h4>
-                <div id="lista-avisos" class="text-[11px] space-y-2"></div>
+        <div id="jogo" class="tab-content">
+            <div class="bg-white/5 rounded-2xl border border-white/10 p-5 text-center">
+                <p class="text-gold font-black text-xs uppercase mb-4">Confronto Agendado</p>
+                <div class="flex justify-around items-center mb-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-white/10 rounded-full mx-auto mb-2 flex items-center justify-center font-bold">ESC</div>
+                        <p class="text-[10px] font-bold uppercase">Meu Time</p>
+                    </div>
+                    <span class="text-2xl font-black italic">VS</span>
+                    <div class="text-center">
+                        <div id="adv-logo" class="w-16 h-16 bg-white/10 rounded-full mx-auto mb-2 flex items-center justify-center text-xs italic">?</div>
+                        <p id="adv-name" class="text-[10px] font-bold uppercase">Definindo...</p>
+                    </div>
+                </div>
+                <div id="jogo-detalhes" class="text-[11px] space-y-1 opacity-70"></div>
             </div>
-            <h3 class="text-gold text-xs font-bold uppercase">Microciclo da Semana</h3>
-            <div id="grade-micro" class="grid grid-cols-1 gap-2"></div>
         </div>
 
-        <div id="ocorrencia" class="tab-content space-y-4">
-            <h3 class="text-gold text-xs font-bold uppercase">Relatório de Voz</h3>
-            <textarea id="voice-output" class="w-full bg-white/5 border border-gold/20 rounded-xl p-4 text-sm h-40 outline-none" placeholder="Dite ocorrências..."></textarea>
-            <button onclick="startVoice()" class="w-full bg-gold text-navy font-black py-5 rounded-full flex justify-center items-center gap-2">🎤 GRAVAR</button>
-            <button onclick="salvarOcorrencia()" class="w-full bg-green-600 text-white font-bold py-3 rounded-xl text-xs uppercase">ENVIAR RELATÓRIO</button>
+        <div id="micro" class="tab-content">
+            <h3 class="text-gold text-[10px] font-black uppercase mb-4 tracking-widest text-center">Planejamento Semanal</h3>
+            <div id="grade-micro" class="space-y-2"></div>
+        </div>
+
+        <div id="voz" class="tab-content space-y-4">
+            <div class="bg-gold/10 p-4 rounded-xl border border-gold/20">
+                <p class="text-[10px] font-bold uppercase text-gold mb-2">Relatório de Campo</p>
+                <textarea id="voice-output" class="w-full bg-transparent text-sm h-32 outline-none resize-none" placeholder="O auxiliar dita e você recebe no PC..."></textarea>
+            </div>
+            <button onclick="startVoice()" class="w-full bg-gold text-navy font-black py-4 rounded-xl flex justify-center items-center gap-2">🎤 INICIAR GRAVAÇÃO</button>
         </div>
     </div>
 </div>
 
 <script>
-    const firebaseConfig = { apiKey: "AIzaSyBURvWmrRe-q-l1h2XKaQepeRQoNcmi7nk", authDomain: "procoachoficial.firebaseapp.com", projectId: "procoachoficial", storageBucket: "procoachoficial.firebasestorage.app", messagingSenderId: "128403842399", appId: "1:128403842399:web:c54259e2b6a5622fb942ea" };
+    const firebaseConfig = { 
+        apiKey: "AIzaSyBURvWmrRe-q-l1h2XKaQepeRQoNcmi7nk", 
+        authDomain: "procoachoficial.firebaseapp.com", 
+        projectId: "procoachoficial", 
+        storageBucket: "procoachoficial.firebasestorage.app", 
+        messagingSenderId: "128403842399", 
+        appId: "1:128403842399:web:c54259e2b6a5622fb942ea" 
+    };
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
     const db = firebase.firestore();
 
     function login() {
-        auth.signInWithEmailAndPassword(document.getElementById('email').value, document.getElementById('pass').value);
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('pass').value;
+        firebase.auth().signInWithEmailAndPassword(email, pass);
     }
 
-    auth.onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged(user => {
         if (user) {
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
-            syncAll(user.uid);
+            startSync(user.uid);
         }
     });
 
-    function syncAll(uid) {
+    function startSync(uid) {
         db.collection('coachData').doc(uid).onSnapshot(doc => {
-            if (!doc.exists) return;
-            const data = doc.data();
-            const today = new Date().toISOString().split('T')[0];
-
-            // SINC ATLETAS (Status DM/Transição)
+            const data = doc.data() || {};
+            
+            // ELENCO COM ESTRELAS (Sincronizado)
             if (data.pc_players) {
-                const players = JSON.parse(data.pc_players);
-                document.getElementById('lista-atletas').innerHTML = players.map((p, i) => `
-                    <div class="card-atleta p-3 rounded-xl flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full border border-gold overflow-hidden bg-slate-800">
-                            <img src="${p.image || ''}" class="w-full h-full object-cover">
+                const p = JSON.parse(data.pc_players);
+                document.getElementById('lista-atletas').innerHTML = p.map(atleta => `
+                    <div class="card-atleta p-4 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-slate-800 border border-gold/30 overflow-hidden">
+                                <img src="${atleta.image || ''}" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-bold uppercase">${atleta.name}</p>
+                                <div class="star-rating">★★★★★</div>
+                            </div>
                         </div>
-                        <div class="flex-1">
-                            <p class="text-[11px] font-bold uppercase">${p.name}</p>
-                            <span class="badge ${p.injured ? 'bg-red-600' : 'bg-green-600'}">${p.injured ? 'DM' : 'DISPONÍVEL'}</span>
+                        <div class="px-3 py-1 rounded font-black text-[9px] ${atleta.injured ? 'bg-red-600' : 'bg-green-600'}">
+                            ${atleta.injured ? 'DM' : 'OK'}
                         </div>
-                        <button onclick="setNota(${i})" class="text-[9px] font-bold border border-gold/30 px-2 py-1 rounded">⭐ NOTA</button>
                     </div>
                 `).join('');
             }
 
-            // SINC MICRO
-            if (data.pc_micro_v7) {
-                const micro = JSON.parse(data.pc_micro_v7);
-                document.getElementById('grade-micro').innerHTML = Object.entries(micro).map(([day, val]) => `
-                    <div class="bg-white/5 p-2 rounded border border-white/10 flex justify-between items-center">
-                        <span class="text-[10px] font-bold text-gold">${day}</span>
-                        <div class="flex gap-1">${(val.blocks || []).map(b => `<span class="badge ${b.color}">${b.label}</span>`).join('')}</div>
+            // MICROCICLO (SEGUNDA A DOMINGO)
+            const dias = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+            const micro = JSON.parse(data.pc_micro_v7 || "{}");
+            document.getElementById('grade-micro').innerHTML = dias.map(dia => `
+                <div class="bg-white/5 border-l-2 border-gold p-3 flex justify-between items-center">
+                    <span class="text-[10px] font-bold uppercase">${dia}</span>
+                    <div class="flex gap-1">
+                        ${(micro[dia]?.blocks || []).map(b => `<span class="px-2 py-1 rounded text-[8px] font-bold ${b.color || 'bg-slate-700'}">${b.label}</span>`).join('')}
                     </div>
-                `).join('');
-            }
-
-            // SINC SESSÃO
-            const history = JSON.parse(data.pc_history_v2 || "{}");
-            const sessao = history[today] || { drills: [] };
-            document.getElementById('container-sessao').innerHTML = sessao.drills.map(d => `
-                <div class="bg-white/5 border border-white/10 rounded-xl overflow-hidden p-3">
-                    <p class="text-gold font-bold text-xs uppercase mb-2">${d.name}</p>
-                    ${d.image ? `<img src="${d.image}" class="w-full rounded mb-2">` : '<div class="h-20 bg-slate-800 flex items-center justify-center rounded text-[10px] text-white/20 italic">Sem Mockup</div>'}
-                    <p class="text-[10px] text-white/60">${d.desc}</p>
                 </div>
-            `).join('') || '<p class="text-xs italic opacity-30">Sem treino para hoje.</p>';
+            `).join('');
 
-            // SINC AVISOS
-            if (data.pc_notices_list) {
-                const notices = JSON.parse(data.pc_notices_list);
-                document.getElementById('lista-avisos').innerHTML = notices.slice(0,3).map(n => `<p>• ${n.text}</p>`).join('');
+            // PRÓXIMO JOGO
+            if (data.pc_next_match) {
+                const m = JSON.parse(data.pc_next_match);
+                document.getElementById('adv-name').innerText = m.opponent || "Nenhum adversário";
+                document.getElementById('jogo-detalhes').innerHTML = `<p>${m.date || ''} - ${m.time || ''}</p><p>${m.stadium || ''}</p>`;
             }
         });
     }
@@ -151,10 +163,12 @@
     }
 
     function startVoice() {
-        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        rec.lang = 'pt-BR';
-        rec.onresult = e => { document.getElementById('voice-output').value += e.results[0][0].transcript + " "; };
-        rec.start();
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'pt-BR';
+        recognition.onresult = (event) => {
+            document.getElementById('voice-output').value += event.results[0][0].transcript + " ";
+        };
+        recognition.start();
     }
 </script>
 </body>
