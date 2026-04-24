@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ProCoach Auxiliar - V2106 Cloud Sync</title>
+    <title>ProCoach Auxiliar - Comando de Campo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
@@ -14,135 +14,140 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .nav-active { border-bottom: 3px solid var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); }
-        .status-badge { font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
-        #auth-screen { background-color: #001f3f; }
+        .card-atleta { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); }
+        .badge { font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
+        .micro-block { @apply p-2 rounded text-[9px] font-bold text-white mb-1 text-center; }
     </style>
 </head>
 <body>
 
-<div id="auth-screen" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-sm text-slate-800">
-        <div class="text-center mb-8">
-            <h1 class="text-2xl font-black italic">PROCOACH</h1>
-            <span class="text-[10px] font-bold bg-blue-600 text-white px-2 py-0.5 rounded">AUXILIAR SYNC</span>
-        </div>
-        <div class="space-y-4">
-            <div><label class="text-[10px] font-bold text-slate-500 uppercase">E-mail do Treinador</label>
-            <input type="email" id="login-email" class="w-full border-b-2 border-slate-200 py-2 outline-none focus:border-blue-500 text-sm"></div>
-            <div><label class="text-[10px] font-bold text-slate-500 uppercase">Senha</label>
-            <input type="password" id="login-pass" class="w-full border-b-2 border-slate-200 py-2 outline-none focus:border-blue-500 text-sm"></div>
-            <button onclick="login()" class="w-full bg-blue-600 text-white font-black py-3 rounded-lg shadow-lg hover:bg-blue-700 mt-4">SINCRONIZAR NUVEM</button>
-            <p id="auth-error" class="text-red-500 text-[10px] font-bold mt-2 text-center"></p>
-        </div>
+<div id="auth-screen" class="fixed inset-0 z-[100] bg-[#001f3f] flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-2xl w-full max-w-sm text-slate-800 shadow-2xl">
+        <h1 class="text-2xl font-black italic text-center mb-6">PROCOACH <span class="text-blue-600 text-sm">AUXILIAR</span></h1>
+        <input type="email" id="email" placeholder="E-mail" class="w-full border-b-2 p-2 mb-4 outline-none focus:border-gold">
+        <input type="password" id="pass" placeholder="Senha" class="w-full border-b-2 p-2 mb-6 outline-none focus:border-gold">
+        <button onclick="login()" class="w-full bg-blue-600 text-white font-black py-3 rounded-lg">ENTRAR E SINCRONIZAR</button>
     </div>
 </div>
 
 <div id="main-app" class="hidden">
-    <div class="bg-[#001f3f] border-b border-[#d4af37] p-4 flex justify-between items-center sticky top-0 z-50">
-        <div>
-            <h1 class="text-[#d4af37] font-black italic text-lg leading-none">PROCOACH AUXILIAR</h1>
-            <p id="user-info" class="text-[8px] text-white/50 tracking-widest uppercase mt-1">Conectando...</p>
-        </div>
-        <div id="sync-indicator" class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></div>
+    <div class="bg-[#001f3f] border-b border-[#d4af37] p-4 flex justify-between items-center sticky top-0 z-50 shadow-lg">
+        <h1 class="text-[#d4af37] font-black italic text-lg">PROCOACH AUXILIAR</h1>
+        <div id="sync-indicator" class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></div>
     </div>
 
-    <div class="flex bg-[#001f3f]/90 backdrop-blur-md sticky top-[62px] z-40 border-b border-white/5">
-        <button onclick="tab('status')" id="t-status" class="flex-1 py-4 text-[10px] font-bold nav-active">ELENCO</button>
-        <button onclick="tab('agenda')" id="t-agenda" class="flex-1 py-4 text-[10px] font-bold">AGENDA</button>
-        <button onclick="tab('ocorrencia')" id="t-ocorrencia" class="flex-1 py-4 text-[10px] font-bold">GRAVAR VOZ</button>
+    <div class="flex bg-[#001f3f]/95 backdrop-blur-md sticky top-[62px] z-40 border-b border-white/5">
+        <button onclick="tab('status')" id="t-status" class="flex-1 py-4 text-[10px] font-bold nav-active uppercase">Elenco</button>
+        <button onclick="tab('sessao')" id="t-sessao" class="flex-1 py-4 text-[10px] font-bold uppercase">Sessão</button>
+        <button onclick="tab('micro')" id="t-micro" class="flex-1 py-4 text-[10px] font-bold uppercase">Micro</button>
+        <button onclick="tab('ocorrencia')" id="t-ocorrencia" class="flex-1 py-4 text-[10px] font-bold uppercase">Voz/Rec</button>
     </div>
 
     <div class="p-4 pb-24">
         <div id="status" class="tab-content active space-y-2">
-            <h3 class="text-[#d4af37] text-xs font-bold uppercase mb-4">Status do Plantel</h3>
-            <div id="lista-atletas" class="space-y-2">
-                <p class="text-xs text-white/30 italic">Puxando atletas da sua nuvem...</p>
-            </div>
+            <h3 class="text-gold text-xs font-bold uppercase mb-4">Disponibilidade e Notas</h3>
+            <div id="lista-atletas" class="space-y-2"></div>
         </div>
 
-        <div id="agenda" class="tab-content space-y-4">
-            <div class="bg-white/5 border border-white/10 p-4 rounded-xl">
+        <div id="sessao" class="tab-content space-y-4">
+            <h3 class="text-gold text-xs font-bold uppercase mb-4">Treino Planejado</h3>
+            <div id="container-sessao"></div>
+        </div>
+
+        <div id="micro" class="tab-content space-y-4">
+            <div class="bg-gold/10 border border-gold/30 p-4 rounded-xl mb-4">
                 <h4 class="text-gold font-bold text-[10px] uppercase mb-3">Quadro de Avisos</h4>
                 <div id="lista-avisos" class="text-[11px] space-y-2"></div>
             </div>
+            <h3 class="text-gold text-xs font-bold uppercase">Microciclo da Semana</h3>
+            <div id="grade-micro" class="grid grid-cols-1 gap-2"></div>
         </div>
 
         <div id="ocorrencia" class="tab-content space-y-4">
-            <h3 class="text-gold font-bold text-xs uppercase">Relato de Campo</h3>
-            <textarea id="voice-output" class="w-full bg-white/5 border border-gold/20 rounded-xl p-4 text-sm h-40 outline-none" placeholder="Fale as ocorrências..."></textarea>
-            <button onclick="startVoice()" class="w-full bg-gold text-navy font-black py-5 rounded-full flex justify-center items-center gap-2">
-                🎤 INICIAR GRAVAÇÃO
-            </button>
-            <button onclick="salvarOcorrencia()" class="w-full bg-green-600 text-white font-bold py-3 rounded-xl text-xs uppercase mt-4">ENVIAR PARA O PROFESSOR</button>
+            <h3 class="text-gold text-xs font-bold uppercase">Relatório de Voz</h3>
+            <textarea id="voice-output" class="w-full bg-white/5 border border-gold/20 rounded-xl p-4 text-sm h-40 outline-none" placeholder="Dite ocorrências..."></textarea>
+            <button onclick="startVoice()" class="w-full bg-gold text-navy font-black py-5 rounded-full flex justify-center items-center gap-2">🎤 GRAVAR</button>
+            <button onclick="salvarOcorrencia()" class="w-full bg-green-600 text-white font-bold py-3 rounded-xl text-xs uppercase">ENVIAR RELATÓRIO</button>
         </div>
     </div>
 </div>
 
 <script>
-    // MESMAS CONFIGURAÇÕES DO SEU V2106
     const firebaseConfig = { apiKey: "AIzaSyBURvWmrRe-q-l1h2XKaQepeRQoNcmi7nk", authDomain: "procoachoficial.firebaseapp.com", projectId: "procoachoficial", storageBucket: "procoachoficial.firebasestorage.app", messagingSenderId: "128403842399", appId: "1:128403842399:web:c54259e2b6a5622fb942ea" };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
     function login() {
-        const email = document.getElementById('login-email').value;
-        const pass = document.getElementById('login-pass').value;
-        auth.signInWithEmailAndPassword(email, pass).catch(e => {
-            document.getElementById('auth-error').innerText = "Erro: " + e.message;
-        });
+        auth.signInWithEmailAndPassword(document.getElementById('email').value, document.getElementById('pass').value);
     }
 
     auth.onAuthStateChanged(user => {
         if (user) {
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
-            document.getElementById('user-info').innerText = "Professor: " + user.email;
-            document.getElementById('sync-indicator').classList.replace('bg-red-500', 'bg-green-500');
-            syncData(user.uid);
+            syncAll(user.uid);
         }
     });
 
-    function syncData(uid) {
+    function syncAll(uid) {
         db.collection('coachData').doc(uid).onSnapshot(doc => {
-            if (doc.exists) {
-                const data = doc.data();
-                
-                // Sincronizar Atletas
-                if (data.pc_players) {
-                    const players = JSON.parse(data.pc_players);
-                    const container = document.getElementById('lista-atletas');
-                    container.innerHTML = '';
-                    players.forEach(p => {
-                        const sColor = p.injured ? 'bg-red-600' : 'bg-green-600';
-                        container.innerHTML += `
-                            <div class="bg-white/5 border border-white/10 p-3 rounded-xl flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full border border-gold bg-slate-800 overflow-hidden">
-                                    ${p.image ? `<img src="${p.image}" class="w-full h-full object-cover">` : ''}
-                                </div>
-                                <div class="flex-1">
-                                    <p class="text-[11px] font-bold uppercase">${p.name}</p>
-                                    <span class="status-badge ${sColor}">${p.injured ? 'DM' : 'DISPONÍVEL'}</span>
-                                </div>
-                            </div>`;
-                    });
-                }
+            if (!doc.exists) return;
+            const data = doc.data();
+            const today = new Date().toISOString().split('T')[0];
 
-                // Sincronizar Avisos
-                if (data.pc_notices_list) {
-                    const notices = JSON.parse(data.pc_notices_list);
-                    const container = document.getElementById('lista-avisos');
-                    container.innerHTML = notices.map(n => `<p class="border-b border-white/5 pb-2">${n.text}</p>`).join('');
-                }
+            // SINC ATLETAS (Status DM/Transição)
+            if (data.pc_players) {
+                const players = JSON.parse(data.pc_players);
+                document.getElementById('lista-atletas').innerHTML = players.map((p, i) => `
+                    <div class="card-atleta p-3 rounded-xl flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full border border-gold overflow-hidden bg-slate-800">
+                            <img src="${p.image || ''}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-[11px] font-bold uppercase">${p.name}</p>
+                            <span class="badge ${p.injured ? 'bg-red-600' : 'bg-green-600'}">${p.injured ? 'DM' : 'DISPONÍVEL'}</span>
+                        </div>
+                        <button onclick="setNota(${i})" class="text-[9px] font-bold border border-gold/30 px-2 py-1 rounded">⭐ NOTA</button>
+                    </div>
+                `).join('');
+            }
+
+            // SINC MICRO
+            if (data.pc_micro_v7) {
+                const micro = JSON.parse(data.pc_micro_v7);
+                document.getElementById('grade-micro').innerHTML = Object.entries(micro).map(([day, val]) => `
+                    <div class="bg-white/5 p-2 rounded border border-white/10 flex justify-between items-center">
+                        <span class="text-[10px] font-bold text-gold">${day}</span>
+                        <div class="flex gap-1">${(val.blocks || []).map(b => `<span class="badge ${b.color}">${b.label}</span>`).join('')}</div>
+                    </div>
+                `).join('');
+            }
+
+            // SINC SESSÃO
+            const history = JSON.parse(data.pc_history_v2 || "{}");
+            const sessao = history[today] || { drills: [] };
+            document.getElementById('container-sessao').innerHTML = sessao.drills.map(d => `
+                <div class="bg-white/5 border border-white/10 rounded-xl overflow-hidden p-3">
+                    <p class="text-gold font-bold text-xs uppercase mb-2">${d.name}</p>
+                    ${d.image ? `<img src="${d.image}" class="w-full rounded mb-2">` : '<div class="h-20 bg-slate-800 flex items-center justify-center rounded text-[10px] text-white/20 italic">Sem Mockup</div>'}
+                    <p class="text-[10px] text-white/60">${d.desc}</p>
+                </div>
+            `).join('') || '<p class="text-xs italic opacity-30">Sem treino para hoje.</p>';
+
+            // SINC AVISOS
+            if (data.pc_notices_list) {
+                const notices = JSON.parse(data.pc_notices_list);
+                document.getElementById('lista-avisos').innerHTML = notices.slice(0,3).map(n => `<p>• ${n.text}</p>`).join('');
             }
         });
     }
 
-    function tab(name) {
+    function tab(n) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('button[id^="t-"]').forEach(b => b.classList.remove('nav-active'));
-        document.getElementById(name).classList.add('active');
-        document.getElementById('t-' + name).classList.add('nav-active');
+        document.getElementById(n).classList.add('active');
+        document.getElementById('t-' + n).classList.add('nav-active');
     }
 
     function startVoice() {
@@ -150,19 +155,6 @@
         rec.lang = 'pt-BR';
         rec.onresult = e => { document.getElementById('voice-output').value += e.results[0][0].transcript + " "; };
         rec.start();
-    }
-
-    function salvarOcorrencia() {
-        const text = document.getElementById('voice-output').value;
-        const uid = auth.currentUser.uid;
-        // Pega lista atual, adiciona nova nota e salva de volta no coachData
-        db.collection('coachData').doc(uid).get().then(doc => {
-            let list = JSON.parse(doc.data().pc_notices_list || "[]");
-            list.unshift({ id: Date.now(), date: new Date().toISOString().split('T')[0], text: "[AUXILIAR]: " + text });
-            db.collection('coachData').doc(uid).set({ pc_notices_list: JSON.stringify(list) }, { merge: true });
-            alert("Sincronizado!");
-            document.getElementById('voice-output').value = '';
-        });
     }
 </script>
 </body>
