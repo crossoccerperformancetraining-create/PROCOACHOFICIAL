@@ -1,180 +1,206 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ProCoach Auxiliar - V2106 Premium Sync</title>
+    <title>ProCoach Auxiliar - V2106 Cloud Sync</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+
     <style>
-        :root { --navy-bg: #0f172a; --navy-card: #1e293b; --gold: #d4af37; --blue-v2: #1e3a8a; }
-        body { background-color: var(--navy-bg); color: #f8fafc; font-family: 'Inter', sans-serif; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .nav-active { border-bottom: 3px solid var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); }
-        .star-btn { font-size: 18px; color: #334155; transition: 0.2s; }
-        .star-btn.active { color: #facc15; }
-        .micro-col { min-width: 180px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; }
-        .pitch-mini { background: #15803d; border: 1px solid #ffffff33; position: relative; overflow: hidden; }
+        :root { --navy: #0f172a; --gold: #d4af37; }
+        body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; overscroll-behavior-y: contain; }
+        .nav-btn { @apply flex-1 py-4 text-[10px] font-black text-center border-b-2 border-transparent uppercase tracking-wider transition-all; }
+        .nav-active { @apply border-gold text-gold bg-white/5; }
+        .grass-pattern { background-color: #15803d; background-image: repeating-linear-gradient(0deg, transparent, transparent 10%, rgba(255,255,255,0.1) 10%, rgba(255,255,255,0.1) 11%); }
+        .star-rating button { @apply text-slate-600 transition-colors; font-size: 18px; }
+        .star-rating button.active { @apply text-yellow-400 drop-shadow-sm; }
+        .card-sessao { @apply bg-[#1e293b] rounded-xl border border-white/10 overflow-hidden mb-4 shadow-xl; }
+        .player-row { @apply flex flex-col p-2 border-b border-white/5 last:border-0; }
+        #loading { position: fixed; inset: 0; background: #0f172a; color: white; display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; gap: 10px; }
     </style>
 </head>
 <body>
 
-<div id="auth-screen" class="fixed inset-0 z-[100] bg-[#0f172a] flex items-center justify-center p-4">
-    <div class="bg-white p-8 rounded-2xl w-full max-w-sm text-slate-800 shadow-2xl text-center">
-        <h1 class="text-2xl font-black italic mb-6">PROCOACH <span class="text-blue-600">V2106</span></h1>
-        <input type="email" id="email" placeholder="E-mail" class="w-full border-b-2 p-2 mb-4 outline-none">
-        <input type="password" id="pass" placeholder="Senha" class="w-full border-b-2 p-2 mb-6 outline-none">
-        <button onclick="login()" class="w-full bg-[#0f172a] text-white font-black py-3 rounded-lg uppercase">Sincronizar Cloud</button>
+<div id="loading">
+    <div class="text-3xl font-black italic text-gold">PROCOACH AUXILIAR</div>
+    <div class="text-sm opacity-70">Sincronizando Nuvem...</div>
+</div>
+
+<div id="auth-screen" class="fixed inset-0 z-[100] bg-slate-900 flex items-center justify-center p-4 hidden">
+    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-sm text-slate-800">
+        <div class="text-center mb-8"><h1 class="text-2xl font-black italic">PROCOACH</h1><span class="text-xs font-bold text-white bg-blue-600 px-2 py-0.5 rounded uppercase">Módulo Campo</span></div>
+        <div class="space-y-4">
+            <input type="email" id="email" placeholder="E-mail" class="w-full border-b-2 py-2 outline-none focus:border-gold">
+            <input type="password" id="pass" placeholder="Senha" class="w-full border-b-2 py-2 outline-none focus:border-gold">
+            <button onclick="login()" class="w-full bg-slate-900 text-white font-black py-3 rounded-lg mt-4">SINCRONIZAR</button>
+        </div>
     </div>
 </div>
 
-<div id="main-app" class="hidden">
-    <div class="bg-[#1e293b] border-b border-white/10 p-4 sticky top-0 z-50">
-        <div class="flex justify-between items-center">
-            <div>
-                <h2 id="team-display" class="text-white font-black italic text-lg uppercase leading-none">MINHA EQUIPE</h2>
-                <span class="text-[9px] text-gold font-bold tracking-widest uppercase">Módulo Auxiliar de Campo</span>
+<div class="bg-[#0f172a] border-b border-white/10 p-4 flex justify-between items-center sticky top-0 z-50">
+    <div>
+        <h2 id="team-name-header" class="text-gold font-black italic text-xl leading-none uppercase">MINHA EQUIPE</h2>
+        <p class="text-[9px] text-white/40 tracking-widest mt-1">MODO COMISSÃO TÉCNICA</p>
+    </div>
+    <div id="sync-indicator" class="flex items-center gap-2">
+        <span class="text-[9px] font-black text-green-500 uppercase">Online</span>
+        <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e]"></div>
+    </div>
+</div>
+
+<div class="flex bg-[#0f172a]/95 backdrop-blur-md sticky top-[65px] z-40 border-b border-white/5 overflow-x-auto no-scrollbar">
+    <button onclick="showTab('dash')" id="btn-dash" class="nav-btn nav-active">Início</button>
+    <button onclick="showTab('sessao')" id="btn-sessao" class="nav-btn">Sessão</button>
+    <button onclick="tab('micro')" id="btn-micro" class="nav-btn">Micro</button>
+    <button onclick="showTab('ocorrencia')" id="btn-ocorrencia" class="nav-btn">Ocorrência</button>
+</div>
+
+<div id="content" class="p-3 pb-24">
+    <div id="tab-dash" class="tab-view space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white/5 border border-white/10 p-4 rounded-xl">
+                <h3 class="text-slate-400 text-[10px] font-bold uppercase mb-3 flex items-center gap-2">📅 Agenda do Dia</h3>
+                <div id="agenda-hoje" class="space-y-2 text-xs font-bold"></div>
             </div>
-            <div class="flex items-center gap-2">
-                <div id="sync-dot" class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            <div class="bg-white/5 border border-white/10 p-4 rounded-xl">
+                <h3 class="text-slate-400 text-[10px] font-bold uppercase mb-3">📋 Quadro de Avisos</h3>
+                <div id="avisos-lista" class="space-y-2 text-xs text-white/80"></div>
             </div>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-2">
+            <div class="bg-white/5 p-3 rounded-xl border border-white/10"><h4 class="text-[9px] font-bold text-slate-500 uppercase mb-2">Gols</h4><div id="gols-lista" class="text-[10px] font-black"></div></div>
+            <div class="bg-red-500/10 p-3 rounded-xl border border-red-500/20"><h4 class="text-[9px] font-bold text-red-500 uppercase mb-2">DM</h4><div id="dm-lista" class="text-[10px] font-bold text-red-400"></div></div>
+            <div class="bg-yellow-500/10 p-3 rounded-xl border border-yellow-500/20"><h4 class="text-[9px] font-bold text-yellow-500 uppercase mb-2">Susp</h4><div id="susp-lista" class="text-[10px] font-bold text-yellow-400"></div></div>
         </div>
     </div>
 
-    <div class="flex bg-[#1e293b] sticky top-[62px] z-40 border-b border-white/10 overflow-x-auto no-scrollbar">
-        <button onclick="tab('sessao')" id="t-sessao" class="flex-none px-6 py-4 text-[10px] font-bold nav-active uppercase">Sessão / Notas</button>
-        <button onclick="tab('perf')" id="t-perf" class="flex-none px-6 py-4 text-[10px] font-bold uppercase">Rank Performance</button>
-        <button onclick="tab('micro')" id="t-micro" class="flex-none px-6 py-4 text-[10px] font-bold uppercase">Microciclo</button>
-        <button onclick="tab('rec')" id="t-rec" class="flex-none px-6 py-4 text-[10px] font-bold uppercase">Voz / Rec</button>
+    <div id="tab-sessao" class="tab-view hidden flex flex-col md:flex-row gap-4">
+        <div id="drills-container" class="flex-1 space-y-4"></div>
+        
+        <div class="w-full md:w-80 bg-[#1e293b] rounded-xl border border-white/10 p-4 h-fit sticky top-20">
+            <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-2">
+                <h3 class="text-gold text-[10px] font-black uppercase">Notas dos Atletas</h3>
+                <span class="text-[9px] font-bold opacity-40 uppercase">Disponíveis</span>
+            </div>
+            <div id="players-rating-list" class="max-h-[60vh] overflow-y-auto no-scrollbar"></div>
+        </div>
     </div>
 
-    <div class="p-3 pb-24">
-        <div id="sessao" class="tab-content active flex flex-col md:flex-row gap-4">
-            <div class="flex-1 space-y-4" id="sessao-lista"></div>
-            <div class="w-full md:w-64 bg-slate-800/50 rounded-xl p-3 border border-white/5 h-fit">
-                <div class="flex justify-between text-[10px] font-bold text-slate-400 uppercase mb-3 px-1">
-                    <span>Atletas em Campo</span>
-                    <span>Disponíveis</span>
-                </div>
-                <div id="lista-notas" class="space-y-2"></div>
-            </div>
-        </div>
+    <div id="tab-micro" class="tab-view hidden overflow-x-auto pb-6">
+        <div id="micro-grid" class="flex gap-4 min-w-max"></div>
+    </div>
 
-        <div id="perf" class="tab-content space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-green-500/10 border border-green-500/20 p-4 rounded-xl">
-                    <h3 class="text-green-500 font-black text-xs uppercase mb-3 flex items-center gap-2">🔥 TOP 5 PERFORMANCE</h3>
-                    <div id="top-5" class="space-y-2"></div>
-                </div>
-                <div class="bg-red-500/10 border border-red-500/20 p-4 rounded-xl">
-                    <h3 class="text-red-500 font-black text-xs uppercase mb-3 flex items-center gap-2">⚠️ BOTTOM 5 PERFORMANCE</h3>
-                    <div id="bottom-5" class="space-y-2"></div>
-                </div>
-            </div>
+    <div id="tab-ocorrencia" class="tab-view hidden space-y-4">
+        <div class="bg-white/5 p-4 rounded-xl border border-white/10">
+            <h3 class="text-gold text-[10px] font-black uppercase mb-4">Relato de Voz</h3>
+            <textarea id="voice-txt" class="w-full bg-transparent text-sm h-48 outline-none border-0" placeholder="Fale as ocorrências do treino..."></textarea>
         </div>
-
-        <div id="micro" class="tab-content overflow-x-auto pb-6">
-            <div id="micro-grade" class="flex gap-4 min-w-max"></div>
-        </div>
-
-        <div id="rec" class="tab-content space-y-4">
-            <textarea id="voice-txt" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-sm h-48 outline-none" placeholder="Relate as ocorrências aqui..."></textarea>
-            <button onclick="startVoice()" class="w-full bg-gold text-navy-bg font-black py-5 rounded-xl text-sm">🎤 GRAVAR OCORRÊNCIA</button>
-            <button onclick="salvarVoz()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg text-xs uppercase">Sincronizar no Dashboard</button>
-        </div>
+        <button onclick="startVoice()" class="w-full bg-gold text-navy font-black py-5 rounded-full shadow-lg">🎤 GRAVAR ÁUDIO</button>
+        <button onclick="salvarVoz()" class="w-full bg-green-600 text-white font-bold py-3 rounded-xl text-xs uppercase">Sincronizar Cloud</button>
     </div>
 </div>
 
 <script>
     const firebaseConfig = { apiKey: "AIzaSyBURvWmrRe-q-l1h2XKaQepeRQoNcmi7nk", authDomain: "procoachoficial.firebaseapp.com", projectId: "procoachoficial", storageBucket: "procoachoficial.firebasestorage.app", messagingSenderId: "128403842399", appId: "1:128403842399:web:c54259e2b6a5622fb942ea" };
     firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
     const db = firebase.firestore();
 
     function login() {
-        firebase.auth().signInWithEmailAndPassword(document.getElementById('email').value, document.getElementById('pass').value);
+        auth.signInWithEmailAndPassword(document.getElementById('email').value, document.getElementById('pass').value);
     }
 
-    firebase.auth().onAuthStateChanged(user => {
+    auth.onAuthStateChanged(user => {
+        const l = document.getElementById('loading');
+        const a = document.getElementById('auth-screen');
         if (user) {
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-            syncV2106(user.uid);
+            l.style.display = 'none';
+            a.style.display = 'none';
+            sync(user.uid);
+        } else {
+            l.style.display = 'none';
+            a.style.display = 'flex';
         }
     });
 
-    function syncV2106(uid) {
+    function sync(uid) {
         db.collection('coachData').doc(uid).onSnapshot(doc => {
-            const d = doc.data() || {};
-            const today = new Date().toISOString().split('T')[0];
-            const players = JSON.parse(d.pc_players || "[]");
+            if (!doc.exists) return;
+            const data = doc.data();
+            const todayISO = new Date().toISOString().split('T')[0];
+            const todayName = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'][new Date().getDay()];
 
-            if(d.pc_team_name) document.getElementById('team-display').innerText = d.pc_team_name;
+            if(data.pc_team_name) document.getElementById('team-name-header').innerText = data.pc_team_name;
 
-            // SESSÃO E NOTAS (ESTRELAS IGUAL IMAGEM)
-            const history = JSON.parse(d.pc_history_v2 || "{}");
-            const sessao = history[today]?.drills || [];
-            document.getElementById('sessao-lista').innerHTML = sessao.map((ex,i) => `
-                <div class="bg-white/5 border border-white/10 rounded-xl overflow-hidden shadow-xl">
-                    <div class="bg-blue-900/50 p-2 border-b border-white/10 flex justify-between">
-                        <span class="text-xs font-black text-gold">${i+1}. ${ex.name}</span>
-                        <span class="text-[9px] opacity-50 uppercase font-bold">${ex.method} | ${ex.time} min</span>
+            // --- DASHBOARD: AGENDA ---
+            const micro = JSON.parse(data.pc_micro_v7 || "{}");
+            const blocosHoje = micro[todayName]?.blocks || [];
+            document.getElementById('agenda-hoje').innerHTML = blocosHoje.map(b => `
+                <div class="flex items-center gap-2"><span class="text-[8px] opacity-40 w-8">${b.period}</span><span class="px-2 py-0.5 rounded text-white ${b.color}">${b.label}</span></div>
+            `).join('') || '<p class="opacity-20 italic">Folga.</p>';
+
+            // --- DASHBOARD: GOLS/DM/SUSP ---
+            const players = JSON.parse(data.pc_players || "[]");
+            document.getElementById('gols-lista').innerHTML = players.sort((a,b)=> (b.stats?.g||0)-(a.stats?.g||0)).slice(0,3).map(p=>`<div>${p.name}: ${p.stats?.g||0}</div>`).join('');
+            document.getElementById('dm-lista').innerHTML = players.filter(p=>p.injured).map(p=>`<div>• ${p.name}</div>`).join('') || 'Vazio';
+            document.getElementById('susp-lista').innerHTML = players.filter(p=>p.suspended).map(p=>`<div>• ${p.name}</div>`).join('') || 'Vazio';
+
+            // --- SESSÃO: EXERCÍCIOS ---
+            const history = JSON.parse(data.pc_history_v2 || "{}");
+            const sessao = history[todayISO]?.drills || [];
+            document.getElementById('drills-container').innerHTML = sessao.map((d,i) => `
+                <div class="card-sessao">
+                    <div class="bg-[#2a374a] p-3 flex justify-between border-b border-white/5">
+                        <span class="text-xs font-black text-gold">${i+1}. ${d.name}</span>
+                        <span class="text-[10px] font-bold opacity-50 uppercase">${d.method} | ${d.time} min</span>
                     </div>
-                    <img src="${ex.image || ''}" class="w-full h-48 object-contain bg-black/20">
-                    <div class="p-3 text-[10px] text-white/70 bg-black/10 italic">${ex.desc || 'Sem observações.'}</div>
+                    <img src="${d.image || ''}" class="w-full h-48 object-contain bg-black/20">
+                    <div class="p-3 text-[10px] text-white/60 italic">${d.desc || ''}</div>
                 </div>
-            `).join('');
+            `).join('') || '<div class="text-center py-10 opacity-20">Sem treino hoje</div>';
 
-            document.getElementById('lista-notas').innerHTML = players.filter(p => !p.injured).map((p, i) => `
-                <div class="bg-black/20 p-2 rounded-lg border border-white/5">
+            // --- SESSÃO: NOTAS (LATERAL) ---
+            document.getElementById('players-rating-list').innerHTML = players.filter(p=>!p.injured).map((p,i) => `
+                <div class="player-row">
                     <div class="flex items-center gap-2 mb-1">
                         <img src="${p.image || ''}" class="w-5 h-5 rounded-full border border-gold/30">
-                        <span class="text-[10px] font-bold uppercase truncate">${p.name}</span>
-                        <input type="checkbox" checked class="ml-auto w-3 h-3 accent-green-500">
+                        <span class="text-[10px] font-bold truncate uppercase">${p.name}</span>
+                        <input type="checkbox" checked class="ml-auto accent-green-500">
                     </div>
-                    <div class="flex justify-center gap-1">
-                        ${[1,2,3,4,5].map(n => `<button onclick="votar(${i}, ${n})" class="star-btn ${p.rating >= n ? 'active' : ''}">★</button>`).join('')}
+                    <div class="flex gap-1 star-rating">
+                        ${[1,2,3,4,5].map(n => `<button onclick="votar(${i}, ${n})" class="${(p.rating||0) >= n ? 'active' : ''}">★</button>`).join('')}
                     </div>
                 </div>
             `).join('');
 
-            // RANKING TOP/BOTTOM 5
-            const ranked = players.map(p => ({...p, avg: parseFloat(p.avg || 0)})).sort((a,b) => b.avg - a.avg);
-            document.getElementById('top-5').innerHTML = ranked.slice(0,5).map(p => `<div class="flex justify-between text-xs p-1 border-b border-white/5"><span>${p.name}</span><b class="text-green-500">${p.avg}</b></div>`).join('');
-            document.getElementById('bottom-5').innerHTML = ranked.reverse().slice(0,5).map(p => `<div class="flex justify-between text-xs p-1 border-b border-white/5"><span>${p.name}</span><b class="text-red-500">${p.avg}</b></div>`).join('');
-
-            // MICROCICLO COM PITCH (IDÊNTICO À IMAGEM ANTERIOR)
-            const micro = JSON.parse(d.pc_micro_v7 || "{}");
+            // --- MICROCICLO: IDENTICO AO APP ---
             const dias = ["SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO", "DOMINGO"];
-            document.getElementById('micro-grade').innerHTML = dias.map(dia => {
-                const b = micro[dia]?.blocks || [];
-                const pitchSize = micro[dia]?.f || 'Pequeno';
-                return `
-                    <div class="micro-col flex flex-col h-full overflow-hidden shadow-2xl">
-                        <div class="bg-blue-900 text-white font-black text-[10px] p-3 text-center uppercase tracking-widest border-b border-gold/30">${dia}</div>
-                        <div class="p-2 space-y-1 flex-1">
-                            <p class="text-[8px] font-bold text-slate-500 uppercase text-center mb-1">Agenda</p>
-                            ${b.map(x => `<div class="px-2 py-1.5 rounded text-[9px] font-black text-center border border-white/10 ${x.color}">${x.label}</div>`).join('')}
-                        </div>
-                        <div class="p-2 bg-black/20 border-t border-white/5">
-                            <div class="pitch-mini h-24 rounded flex items-center justify-center opacity-80">
-                                <svg class="w-full h-full p-2" viewBox="0 0 100 140" fill="none" stroke="white" stroke-width="1.5"><rect x="5" y="5" width="90" height="130"/><line x1="5" y1="70" x2="95" y2="70"/><circle cx="50" cy="70" r="10"/></svg>
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <div class="bg-yellow-400/30 border border-yellow-300 animate-pulse rounded" style="width:${pitchSize==='Pequeno'?'40%':pitchSize==='Médio'?'70%':'90%'}; height:30%"></div>
-                                </div>
-                            </div>
-                            <p class="text-[8px] font-black text-gold text-center mt-2">${pitchSize.toUpperCase()}</p>
-                        </div>
+            document.getElementById('micro-grid').innerHTML = dias.map(dia => `
+                <div class="min-w-[180px] bg-[#1e293b] rounded-xl border border-white/10 flex flex-col h-[400px]">
+                    <div class="bg-blue-900 text-white font-black text-[10px] p-3 text-center border-b border-gold/30 uppercase">${dia}</div>
+                    <div class="p-2 space-y-1 flex-1">
+                        ${(micro[dia]?.blocks || []).map(b => `<div class="px-2 py-1.5 rounded text-[9px] font-black text-center border border-white/10 ${b.color}">${b.label}</span></div>`).join('')}
                     </div>
-                `;
-            }).join('');
+                    <div class="p-2 bg-black/20 grass-pattern h-24 rounded-b flex items-center justify-center opacity-60">
+                        <svg class="w-full h-full p-2" viewBox="0 0 100 140" fill="none" stroke="white" stroke-width="1.5"><rect x="5" y="5" width="90" height="130"/><line x1="5" y1="70" x2="95" y2="70"/><circle cx="50" cy="70" r="10"/></svg>
+                        <div class="absolute bg-yellow-400/30 border border-yellow-300" style="width:${micro[dia]?.f === 'Grande' ? '80%' : micro[dia]?.f === 'Médio' ? '50%' : '30%'}; height:20%"></div>
+                    </div>
+                </div>
+            `).join('');
+
+            // --- AVISOS ---
+            const avisos = JSON.parse(data.pc_notices_list || "[]");
+            document.getElementById('avisos-lista').innerHTML = avisos.slice(0,5).map(n=>`<div>• ${n.text}</div>`).join('');
         });
     }
 
     function votar(idx, nota) {
-        const uid = firebase.auth().currentUser.uid;
+        const uid = auth.currentUser.uid;
         db.collection('coachData').doc(uid).get().then(doc => {
             const p = JSON.parse(doc.data().pc_players);
             p[idx].rating = nota;
@@ -182,18 +208,29 @@
         });
     }
 
-    function tab(n) {
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('button[id^="t-"]').forEach(b => b.classList.remove('nav-active'));
-        document.getElementById(n).classList.add('active');
-        document.getElementById('t-' + n).classList.add('nav-active');
+    function showTab(t) {
+        document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
+        document.getElementById('tab-' + t).classList.remove('hidden');
+        document.getElementById('btn-' + t).classList.add('nav-active');
     }
 
     function startVoice() {
-        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        rec.lang = 'pt-BR';
-        rec.onresult = e => document.getElementById('voice-txt').value += e.results[0][0].transcript + " ";
-        rec.start();
+        const r = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        r.lang = 'pt-BR';
+        r.onresult = e => document.getElementById('voice-txt').value += e.results[0][0].transcript + " ";
+        r.start();
+    }
+
+    function salvarVoz() {
+        const txt = document.getElementById('voice-txt').value;
+        const uid = auth.currentUser.uid;
+        db.collection('coachData').doc(uid).get().then(doc => {
+            let list = JSON.parse(doc.data().pc_notices_list || "[]");
+            list.unshift({ id: Date.now(), date: new Date().toISOString().split('T')[0], text: "[AUXILIAR]: " + txt });
+            db.collection('coachData').doc(uid).update({ pc_notices_list: JSON.stringify(list) });
+            alert("Sincronizado!"); document.getElementById('voice-txt').value = '';
+        });
     }
 </script>
 </body>
