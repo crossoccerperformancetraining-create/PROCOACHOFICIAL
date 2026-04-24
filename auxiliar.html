@@ -3,81 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ProCoach Auxiliar - V2106</title>
+    <title>ProCoach Auxiliar - Dashboard Sync</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <style>
-        :root { --navy: #001f3f; --gold: #d4af37; }
-        body { background-color: #020617; color: white; font-family: 'Inter', sans-serif; }
+        :root { --navy-dark: #0f172a; --navy-card: #1e293b; --gold: #d4af37; }
+        body { background-color: var(--navy-dark); color: #f8fafc; font-family: 'Inter', sans-serif; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .nav-active { border-bottom: 3px solid var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); }
-        .card-atleta { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; }
-        .star-rating button { color: #444; font-size: 20px; transition: color 0.2s; }
-        .star-rating button.active { color: #d4af37; }
-        .micro-row { border-left: 4px solid var(--gold); background: rgba(255,255,255,0.02); }
+        .dashboard-card { background: var(--navy-card); border: 1px solid #334155; border-radius: 8px; }
+        .star-rating button { color: #334155; font-size: 18px; transition: 0.2s; }
+        .star-rating button.active { color: #facc15; }
+        .tag { @apply px-2 py-0.5 rounded text-[10px] font-bold text-white uppercase; }
+        .micro-col { min-width: 160px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; }
     </style>
 </head>
 <body>
 
-<div id="auth-screen" class="fixed inset-0 z-[100] bg-[#001f3f] flex items-center justify-center p-4">
+<div id="auth-screen" class="fixed inset-0 z-[100] bg-[#0f172a] flex items-center justify-center p-4">
     <div class="bg-white p-8 rounded-2xl w-full max-w-sm text-slate-800 shadow-2xl text-center">
-        <h1 class="text-2xl font-black italic mb-6">PROCOACH <span class="text-blue-600 text-sm">AUXILIAR</span></h1>
-        <input type="email" id="email" placeholder="E-mail" class="w-full border-b-2 p-2 mb-4 outline-none">
+        <h1 class="text-2xl font-black italic mb-6 uppercase">PROCOACH <span class="text-blue-600">AUXILIAR</span></h1>
+        <input type="email" id="email" placeholder="E-mail do Treinador" class="w-full border-b-2 p-2 mb-4 outline-none">
         <input type="password" id="pass" placeholder="Senha" class="w-full border-b-2 p-2 mb-6 outline-none">
-        <button onclick="login()" class="w-full bg-[#001f3f] text-white font-black py-3 rounded-lg">SINCRONIZAR</button>
+        <button onclick="login()" class="w-full bg-[#0f172a] text-white font-black py-3 rounded-lg">SINCRONIZAR</button>
     </div>
 </div>
 
 <div id="main-app" class="hidden">
-    <div class="bg-[#001f3f] border-b border-[#d4af37] p-4 sticky top-0 z-50">
-        <div class="flex justify-between items-center mb-4">
-            <span class="text-[#d4af37] font-black italic">DASHBOARD CAMPO</span>
-            <div id="sync-dot" class="w-2 h-2 rounded-full bg-green-500"></div>
-        </div>
-        
-        <div class="grid grid-cols-2 gap-2 text-[10px] font-bold">
-            <div class="bg-white/5 p-2 rounded">
-                <p class="text-gold uppercase mb-1 border-b border-gold/20">Manhã</p>
-                <div id="agenda-manha" class="flex flex-wrap gap-1"></div>
-            </div>
-            <div class="bg-white/5 p-2 rounded">
-                <p class="text-gold uppercase mb-1 border-b border-gold/20">Tarde</p>
-                <div id="agenda-tarde" class="flex flex-wrap gap-1"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="flex bg-[#001f3f]/95 sticky top-[105px] z-40 border-b border-white/5 overflow-x-auto no-scrollbar">
-        <button onclick="tab('elenco')" id="t-elenco" class="flex-none px-6 py-4 text-[10px] font-bold nav-active uppercase">Performance</button>
+    <div class="flex bg-[#1e293b] sticky top-0 z-40 border-b border-white/10 overflow-x-auto">
+        <button onclick="tab('dash')" id="t-dash" class="flex-none px-6 py-4 text-[10px] font-bold nav-active uppercase">Início</button>
         <button onclick="tab('sessao')" id="t-sessao" class="flex-none px-6 py-4 text-[10px] font-bold uppercase">Sessão</button>
         <button onclick="tab('micro')" id="t-micro" class="flex-none px-6 py-4 text-[10px] font-bold uppercase">Microciclo</button>
-        <button onclick="tab('voz')" id="t-voz" class="flex-none px-6 py-4 text-[10px] font-bold uppercase">Ocorrência</button>
+        <button onclick="tab('ocorrencia')" id="t-ocorrencia" class="flex-none px-6 py-4 text-[10px] font-bold uppercase">Voz</button>
     </div>
 
-    <div class="p-4 pb-24">
-        <div id="elenco" class="tab-content active space-y-3">
-            <h3 class="text-gold text-[10px] font-black uppercase mb-2">Avaliação Pós-Treino</h3>
-            <div id="lista-atletas" class="space-y-2"></div>
+    <div class="p-3 space-y-4 pb-24">
+        
+        <div id="dash" class="tab-content active space-y-3">
+            <div class="dashboard-card p-4 flex items-center gap-4">
+                <div id="equipe-logo" class="w-12 h-12 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center overflow-hidden italic text-[10px]">Logo</div>
+                <div>
+                    <h2 id="equipe-nome" class="font-black text-lg uppercase tracking-tighter">MINHA EQUIPE</h2>
+                    <p class="text-xs text-slate-400">Bem-vindo, Professor.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="dashboard-card p-3">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-4 flex items-center gap-2">🏆 Próximo Jogo</p>
+                    <div id="next-match" class="text-center py-4 text-xs opacity-50">Nenhum adversário.</div>
+                </div>
+
+                <div class="dashboard-card p-3">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">📅 Agenda (<span id="data-atual"></span>)</p>
+                    <div id="agenda-lista" class="space-y-2"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+                <div class="dashboard-card p-2">
+                    <p class="text-[9px] font-bold text-slate-400 uppercase border-b border-white/5 mb-2 pb-1">⚽ Gols</p>
+                    <div id="dash-gols" class="space-y-1"></div>
+                </div>
+                <div class="dashboard-card p-2 border-l-2 border-red-500">
+                    <p class="text-[9px] font-bold text-red-400 uppercase border-b border-white/5 mb-2 pb-1">🏥 DM</p>
+                    <div id="dash-dm" class="space-y-1"></div>
+                </div>
+                <div class="dashboard-card p-2 border-l-2 border-yellow-500">
+                    <p class="text-[9px] font-bold text-yellow-400 uppercase border-b border-white/5 mb-2 pb-1">⚠️ Susp.</p>
+                    <div id="dash-susp" class="space-y-1"></div>
+                </div>
+            </div>
+
+            <div class="dashboard-card p-3">
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">📋 Quadro de Avisos</p>
+                <div id="dash-avisos" class="bg-yellow-500/5 p-3 rounded border border-yellow-500/20 text-xs space-y-2"></div>
+            </div>
+
+            <div class="dashboard-card p-3">
+                <p class="text-[10px] font-bold text-gold uppercase mb-3 tracking-widest">Avaliação de Performance</p>
+                <div id="performance-lista" class="space-y-2"></div>
+            </div>
         </div>
 
         <div id="sessao" class="tab-content space-y-4">
-            <div id="detalhe-sessao" class="space-y-4"></div>
+            <div id="sessao-detalhe" class="space-y-4"></div>
         </div>
 
-        <div id="micro" class="tab-content space-y-2">
-            <div id="grade-micro" class="space-y-2"></div>
+        <div id="micro" class="tab-content overflow-x-auto pb-4">
+            <div id="micro-grade" class="flex gap-3"></div>
         </div>
 
-        <div id="voz" class="tab-content space-y-4">
-            <div class="bg-white/5 p-4 rounded-xl border border-white/10">
-                <p class="text-gold text-[10px] font-bold uppercase mb-3">Relato de Campo (Voz)</p>
-                <textarea id="voice-output" class="w-full bg-transparent text-sm h-32 outline-none" placeholder="Fale as ocorrências..."></textarea>
-            </div>
-            <button onclick="startVoice()" class="w-full bg-gold text-navy font-black py-4 rounded-xl">🎤 GRAVAR RELATÓRIO</button>
-            <button onclick="enviarOcorrencia()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl text-xs uppercase">Sincronizar com PC</button>
+        <div id="ocorrencia" class="tab-content space-y-4">
+            <h3 class="text-gold font-bold text-xs uppercase">Relatar Ocorrência</h3>
+            <textarea id="voice-output" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-sm h-40 outline-none focus:border-gold" placeholder="Dite problemas, lesões ou atrasos..."></textarea>
+            <button onclick="startVoice()" class="w-full bg-gold text-navy-dark font-black py-4 rounded-xl flex justify-center items-center gap-2">🎤 GRAVAR VOZ</button>
+            <button onclick="salvarNotaVoz()" class="w-full bg-green-600 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-widest">Enviar ao Professor</button>
         </div>
     </div>
 </div>
@@ -95,73 +119,108 @@
         if (user) {
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
-            syncApp(user.uid);
+            sync(user.uid);
         }
     });
 
-    function syncApp(uid) {
+    function sync(uid) {
         db.collection('coachData').doc(uid).onSnapshot(doc => {
             const data = doc.data() || {};
-            const today = new Date().toLocaleDateString('pt-BR', {weekday:'long'}).split('-')[0].charAt(0).toUpperCase() + new Date().toLocaleDateString('pt-BR', {weekday:'long'}).split('-')[0].slice(1);
+            const hojeData = new Date().toISOString().split('T')[0];
+            const hojeSemana = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'][new Date().getDay()];
+            document.getElementById('data-atual').innerText = hojeData.split('-').reverse().slice(0,2).join('/');
 
-            // 1. AGENDA DO DIA
+            // Header e Logo
+            if(data.pc_team_name) document.getElementById('equipe-nome').innerText = data.pc_team_name;
+            if(data.pc_team_logo_url) document.getElementById('equipe-logo').innerHTML = `<img src="${data.pc_team_logo_url}" class="w-full h-full object-contain">`;
+
+            // Agenda do Dia (do Microciclo)
             const micro = JSON.parse(data.pc_micro_v7 || "{}");
-            const blocosHoje = micro[today]?.blocks || [];
-            document.getElementById('agenda-manha').innerHTML = blocosHoje.filter((_,i) => i < 2).map(b => `<span class="px-2 py-0.5 rounded ${b.color}">${b.label}</span>`).join('');
-            document.getElementById('agenda-tarde').innerHTML = blocosHoje.filter((_,i) => i >= 2).map(b => `<span class="px-2 py-0.5 rounded ${b.color}">${b.label}</span>`).join('');
-
-            // 2. ATLETAS E ESTRELAS
-            if (data.pc_players) {
-                const players = JSON.parse(data.pc_players);
-                document.getElementById('lista-atletas').innerHTML = players.map((p, i) => `
-                    <div class="card-atleta p-3 flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-slate-800 border border-gold/20 overflow-hidden">
-                                <img src="${p.image || ''}" class="w-full h-full object-cover">
-                            </div>
-                            <div>
-                                <p class="text-[11px] font-bold uppercase">${p.name}</p>
-                                <div class="star-rating" id="stars-${i}">
-                                    ${[1,2,3,4,5].map(num => `<button onclick="votar(${i}, ${num})" class="${p.rating >= num ? 'active' : ''}">★</button>`).join('')}
-                                </div>
-                            </div>
-                        </div>
-                        <span class="text-[9px] font-bold ${p.injured ? 'text-red-500' : 'text-green-500'}">${p.injured ? 'DM' : 'OK'}</span>
-                    </div>
-                `).join('');
-            }
-
-            // 3. SESSÃO DE TREINO
-            const history = JSON.parse(data.pc_history_v2 || "{}");
-            const dateKey = new Date().toISOString().split('T')[0];
-            const sessao = history[dateKey]?.drills || [];
-            document.getElementById('detalhe-sessao').innerHTML = sessao.map(d => `
-                <div class="bg-white/5 rounded-xl p-3 border border-white/5">
-                    <p class="text-gold font-bold text-xs uppercase mb-2">${d.name}</p>
-                    <img src="${d.image || ''}" class="w-full rounded-lg mb-2">
-                    <p class="text-[10px] opacity-60">${d.desc}</p>
+            const agendaHoje = micro[hojeSemana]?.blocks || [];
+            document.getElementById('agenda-lista').innerHTML = agendaHoje.map(b => `
+                <div class="flex items-center gap-2 border-b border-white/5 pb-1">
+                    <span class="text-[8px] font-bold opacity-30 w-10">${b.period === 'M' ? 'MANHÃ' : 'TARDE'}</span>
+                    <span class="tag ${b.color}">${b.label}</span>
                 </div>
-            `).join('') || '<p class="text-center opacity-30 text-xs">Sem treino para hoje</p>';
+            `).join('') || '<p class="text-[10px] opacity-20 italic">Folga.</p>';
 
-            // 4. MICROCICLO (SEG A DOM)
-            const diasSemana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
-            document.getElementById('grade-micro').innerHTML = diasSemana.map(d => `
-                <div class="micro-row p-3 flex justify-between items-center rounded-r">
-                    <span class="text-[10px] font-black uppercase">${d}</span>
-                    <div class="flex gap-1">
-                        ${(micro[d]?.blocks || []).map(b => `<span class="px-2 py-1 rounded text-[8px] font-bold ${b.color}">${b.label}</span>`).join('')}
+            // Atletas (Gols, DM, Suspensos e Estrelas)
+            const players = JSON.parse(data.pc_players || "[]");
+            document.getElementById('dash-gols').innerHTML = players.sort((a,b)=>(b.stats?.g||0)-(a.stats?.g||0)).slice(0,3).map(p=>`<div class="flex justify-between text-[9px]"><span>${p.name}</span><b class="text-gold">${p.stats?.g||0}</b></div>`).join('');
+            document.getElementById('dash-dm').innerHTML = players.filter(p=>p.injured).map(p=>`<div class="text-[9px] text-white/60">• ${p.name}</div>`).join('') || '<span class="text-[9px] opacity-20">Vazio</span>';
+            document.getElementById('dash-susp').innerHTML = players.filter(p=>p.suspended).map(p=>`<div class="text-[9px] text-white/60">• ${p.name}</div>`).join('') || '<span class="text-[9px] opacity-20">Vazio</span>';
+            
+            document.getElementById('performance-lista').innerHTML = players.map((p, i) => `
+                <div class="bg-black/20 p-3 rounded flex justify-between items-center border border-white/5">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full border border-white/10 overflow-hidden bg-slate-800">
+                            ${p.image ? `<img src="${p.image}" class="w-full h-full object-cover">` : ''}
+                        </div>
+                        <span class="text-xs font-bold uppercase">${p.name}</span>
+                    </div>
+                    <div class="star-rating flex gap-0.5">
+                        ${[1,2,3,4,5].map(n => `<button onclick="votar(${i}, ${n})" class="${p.rating >= n ? 'active' : ''}">★</button>`).join('')}
                     </div>
                 </div>
             `).join('');
+
+            // Sessão de Treino (Imagem e Pitch)
+            const history = JSON.parse(data.pc_history_v2 || "{}");
+            const drills = history[hojeData]?.drills || [];
+            document.getElementById('sessao-detalhe').innerHTML = drills.map((d,idx) => `
+                <div class="dashboard-card overflow-hidden">
+                    <div class="bg-slate-800 p-2 px-3 border-b border-white/5 flex justify-between items-center">
+                        <span class="text-[10px] font-black text-gold">${idx+1}. ${d.name}</span>
+                        <span class="text-[9px] opacity-50">${d.time} min</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <img src="${d.image || ''}" class="w-full h-48 object-contain bg-slate-900">
+                        <div class="p-3 text-[11px] text-white/70 italic border-t border-white/5">${d.desc || 'Sem descrição.'}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Microciclo (Seg a Dom)
+            const dias = ["SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO", "DOMINGO"];
+            document.getElementById('micro-grade').innerHTML = dias.map(d => `
+                <div class="micro-col p-2 h-full flex flex-col gap-2">
+                    <div class="bg-gold/10 text-gold text-[9px] font-black text-center py-1 rounded uppercase">${d}</div>
+                    <div class="flex-1 space-y-1">
+                        ${(micro[d]?.blocks || []).map(b => `<div class="tag ${b.color} text-center w-full block py-1">${b.label}</div>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            // Avisos
+            const notices = JSON.parse(data.pc_notices_list || "[]");
+            document.getElementById('dash-avisos').innerHTML = notices.slice(0,3).map(n => `<p>• ${n.text}</p>`).join('');
         });
     }
 
     function votar(idx, nota) {
         const uid = firebase.auth().currentUser.uid;
         db.collection('coachData').doc(uid).get().then(doc => {
-            const players = JSON.parse(doc.data().pc_players);
-            players[idx].rating = nota;
-            db.collection('coachData').doc(uid).update({ pc_players: JSON.stringify(players) });
+            const p = JSON.parse(doc.data().pc_players);
+            p[idx].rating = nota;
+            db.collection('coachData').doc(uid).update({ pc_players: JSON.stringify(p) });
+        });
+    }
+
+    function startVoice() {
+        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        rec.lang = 'pt-BR';
+        rec.onresult = e => document.getElementById('voice-output').value += e.results[0][0].transcript + " ";
+        rec.start();
+    }
+
+    function salvarNotaVoz() {
+        const text = document.getElementById('voice-output').value;
+        const uid = firebase.auth().currentUser.uid;
+        db.collection('coachData').doc(uid).get().then(doc => {
+            let list = JSON.parse(doc.data().pc_notices_list || "[]");
+            list.unshift({ id: Date.now(), date: new Date().toISOString().split('T')[0], text: "[VOZ]: " + text });
+            db.collection('coachData').doc(uid).update({ pc_notices_list: JSON.stringify(list) });
+            alert("Enviado!"); document.getElementById('voice-output').value = '';
         });
     }
 
@@ -170,13 +229,6 @@
         document.querySelectorAll('button[id^="t-"]').forEach(b => b.classList.remove('nav-active'));
         document.getElementById(n).classList.add('active');
         document.getElementById('t-' + n).classList.add('nav-active');
-    }
-
-    function startVoice() {
-        const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        rec.lang = 'pt-BR';
-        rec.onresult = e => document.getElementById('voice-output').value += e.results[0][0].transcript + " ";
-        rec.start();
     }
 </script>
 </body>
