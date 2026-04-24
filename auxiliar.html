@@ -14,11 +14,10 @@
         :root { --navy: #020617; --gold: #d4af37; }
         body { background-color: var(--navy); color: #f8fafc; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         
-        /* MENU COM ÍCONES MAIORES */
         .nav-container { @apply flex gap-3 p-4 bg-[#020617] sticky top-[85px] z-40 border-b-2 border-white/10 overflow-x-auto no-scrollbar; }
-        .nav-btn { @apply flex-none px-5 py-4 text-xs font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-1 min-w-[100px]; }
+        .nav-btn { @apply flex-none px-5 py-4 text-xs font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-1 min-w-[110px]; }
         .nav-active { @apply border-gold text-navy bg-gradient-to-br from-gold to-yellow-500 shadow-[0_10px_25px_rgba(212,175,55,0.4)] scale-105; }
-        .nav-icon { @apply text-2xl block; } /* Ícones ampliados */
+        .nav-icon { @apply text-3xl block drop-shadow-md; } 
         
         .dash-card { @apply bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-3xl border border-white/10 shadow-2xl overflow-hidden; }
         .tag { @apply px-3 py-1.5 rounded-lg text-xs font-black text-white uppercase shadow-md; }
@@ -36,18 +35,23 @@
 </head>
 <body>
 
+<div id="fullscreen-view" class="fixed inset-0 z-[99999] bg-black hidden flex-col justify-center items-center">
+    <button onclick="closeFullScreen()" class="absolute top-6 right-6 bg-red-600 hover:bg-red-700 text-white px-6 py-4 rounded-full font-black text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(220,38,38,0.5)] border-2 border-white/20 active:scale-95 transition-all">✖ FECHAR FOCO</button>
+    <img id="fullscreen-img" src="" class="w-full h-full object-contain p-4">
+</div>
+
 <div id="loading">
     <div class="text-5xl font-black italic text-gold animate-pulse drop-shadow-2xl">PROCOACH</div>
-    <div class="text-base font-bold opacity-50 uppercase tracking-[0.5em] mt-2">Módulo Campo</div>
+    <div class="text-sm font-bold opacity-50 uppercase tracking-[0.5em] mt-2">Módulo Campo</div>
 </div>
 
 <div id="auth-screen" class="fixed inset-0 z-[100] bg-slate-950 flex items-center justify-center p-4 hidden">
     <div class="bg-white p-10 rounded-[2rem] shadow-2xl w-full max-w-sm text-slate-900 text-center">
         <h1 class="text-4xl font-black italic mb-2 uppercase">PROCOACH</h1>
-        <p class="text-sm font-bold text-blue-600 uppercase mb-8 tracking-widest">Acesso da Comissão</p>
-        <input type="email" id="email" placeholder="E-mail da Nuvem" class="w-full border-b-2 py-4 mb-4 outline-none text-center font-bold text-lg focus:border-gold transition-colors">
-        <input type="password" id="pass" placeholder="Senha" class="w-full border-b-2 py-4 mb-8 outline-none text-center font-bold text-lg focus:border-gold transition-colors">
-        <button onclick="login()" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl shadow-2xl uppercase tracking-widest text-base active:scale-95 transition-transform">Sincronizar App</button>
+        <p class="text-xs font-bold text-blue-600 uppercase mb-8 tracking-widest">Acesso da Comissão</p>
+        <input type="email" id="email" placeholder="E-mail da Nuvem" class="w-full border-b-2 py-4 mb-4 outline-none text-center font-bold text-base focus:border-gold transition-colors">
+        <input type="password" id="pass" placeholder="Senha" class="w-full border-b-2 py-4 mb-8 outline-none text-center font-bold text-base focus:border-gold transition-colors">
+        <button onclick="login()" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl shadow-2xl uppercase tracking-widest text-sm active:scale-95 transition-transform">Sincronizar App</button>
     </div>
 </div>
 
@@ -73,13 +77,13 @@
     <div class="flex items-center gap-5">
         <div id="team-logo-display" class="w-16 h-16 rounded-full bg-white/5 border-2 border-white/20 flex items-center justify-center overflow-hidden shadow-2xl"></div>
         <div>
-            <p id="greeting-msg" class="text-xs font-black text-gold uppercase tracking-widest mb-1">BOM DIA</p>
-            <h2 id="team-name-display" class="text-white font-black italic text-3xl leading-none uppercase tracking-tighter drop-shadow-xl">EQUIPE</h2>
+            <p id="greeting-msg" class="text-[11px] font-black text-gold uppercase tracking-widest mb-1">BOM DIA</p>
+            <h2 id="team-name-display" class="text-white font-black italic text-2xl md:text-3xl leading-none uppercase tracking-tighter drop-shadow-xl">EQUIPE</h2>
         </div>
     </div>
     <div class="flex flex-col items-end gap-3">
         <button onclick="abrirConfig()" class="bg-black/30 p-3 rounded-full border border-white/20 shadow-lg active:scale-95">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
     </div>
 </div>
@@ -88,13 +92,14 @@
     <button onclick="showTab('dash')" id="btn-dash" class="nav-btn nav-active"><span class="nav-icon">📊</span> Início</button>
     <button onclick="showTab('sessao')" id="btn-sessao" class="nav-btn"><span class="nav-icon">⚽</span> Treino</button>
     <button onclick="showTab('micro')" id="btn-micro" class="nav-btn"><span class="nav-icon">🗓️</span> Micro</button>
-    <button onclick="showTab('calendario')" id="btn-calendario" class="nav-btn"><span class="nav-icon">📅</span> Histórico</button>
+    <button onclick="showTab('calendario')" id="btn-calendario" class="nav-btn"><span class="nav-icon">📅</span> Calend.</button>
     <button onclick="showTab('voz')" id="btn-voz" class="nav-btn"><span class="nav-icon">🎙️</span> Relato</button>
 </div>
 
 <div id="content" class="p-5 pb-32 space-y-6">
     
     <div id="tab-dash" class="tab-view space-y-6">
+        
         <div class="dash-card p-8 border-b-8 border-gold/40">
             <h3 class="text-gold text-sm font-black uppercase mb-6 tracking-[0.3em] text-center drop-shadow-md">🏆 Próximo Confronto</h3>
             <div class="flex flex-col items-center justify-center">
@@ -111,26 +116,45 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div class="dash-card p-6">
-                <h3 class="text-slate-400 text-sm font-black uppercase mb-5 tracking-widest border-b border-white/5 pb-3">📅 Agenda do Dia</h3>
+                <h3 class="text-slate-400 text-sm font-black uppercase mb-5 tracking-widest border-b border-white/5 pb-3 flex items-center gap-3">
+                    <span class="text-3xl">📅</span> AGENDA DO DIA
+                </h3>
                 <div id="agenda-hoje" class="space-y-4"></div>
             </div>
             <div class="dash-card p-6 border-l-8 border-yellow-500 bg-yellow-500/5">
-                <h3 class="text-yellow-500 text-sm font-black uppercase mb-5 tracking-widest border-b border-yellow-500/20 pb-3">📋 Avisos Oficiais</h3>
+                <h3 class="text-yellow-500 text-sm font-black uppercase mb-5 tracking-widest border-b border-yellow-500/20 pb-3 flex items-center gap-3">
+                    <span class="text-3xl">📋</span> QUADRO DE AVISOS
+                </h3>
                 <div id="avisos-lista" class="space-y-4 text-base text-white/90 font-bold"></div>
             </div>
         </div>
 
         <div class="grid grid-cols-3 gap-4">
-            <div class="dash-card p-5 border-b-4 border-gold text-center"><h4 class="text-xs font-black text-slate-400 uppercase mb-4 tracking-widest">⚽ Gols</h4><div id="gols-lista" class="text-sm font-black text-gold space-y-2 w-full truncate"></div></div>
-            <div class="dash-card p-5 border-b-4 border-red-500 text-center"><h4 class="text-xs font-black text-red-500 uppercase mb-4 tracking-widest">🏥 DM</h4><div id="dm-lista" class="text-sm font-black text-red-400 space-y-2 w-full truncate"></div></div>
-            <div class="dash-card p-5 border-b-4 border-yellow-500 text-center"><h4 class="text-xs font-black text-yellow-500 uppercase mb-4 tracking-widest">⚠️ Susp</h4><div id="susp-lista" class="text-sm font-black text-yellow-400 space-y-2 w-full truncate"></div></div>
+            <div class="dash-card p-6 border-b-4 border-gold text-center flex flex-col items-center">
+                <h4 class="text-sm font-black text-slate-400 uppercase mb-4 tracking-widest flex flex-col items-center gap-2">
+                    <span class="text-4xl drop-shadow-md">⚽</span> GOLS
+                </h4>
+                <div id="gols-lista" class="text-sm font-black text-gold space-y-2 w-full truncate"></div>
+            </div>
+            <div class="dash-card p-6 border-b-4 border-red-500 text-center flex flex-col items-center">
+                <h4 class="text-sm font-black text-red-500 uppercase mb-4 tracking-widest flex flex-col items-center gap-2">
+                    <span class="text-4xl drop-shadow-md">🏥</span> DM
+                </h4>
+                <div id="dm-lista" class="text-sm font-black text-red-400 space-y-2 w-full truncate"></div>
+            </div>
+            <div class="dash-card p-6 border-b-4 border-yellow-500 text-center flex flex-col items-center">
+                <h4 class="text-sm font-black text-yellow-500 uppercase mb-4 tracking-widest flex flex-col items-center gap-2">
+                    <span class="text-4xl drop-shadow-md">⚠️</span> SUSP
+                </h4>
+                <div id="susp-lista" class="text-sm font-black text-yellow-400 space-y-2 w-full truncate"></div>
+            </div>
         </div>
     </div>
 
     <div id="tab-sessao" class="tab-view hidden space-y-6">
         <div id="drills-lista" class="space-y-6"></div>
         
-        <div class="dash-card p-6 bg-gradient-to-t from-[#0f172a] to-[#1e293b] border-t-2 border-gold/50">
+        <div class="dash-card p-6 bg-gradient-to-t from-[#0f172a] to-[#1e293b] border-t-2 border-gold/50 mt-10">
             <h3 class="text-gold text-lg font-black uppercase mb-5 text-center tracking-[0.3em] drop-shadow-md">⭐ Avaliar Plantel</h3>
             
             <div class="flex gap-2 overflow-x-auto no-scrollbar py-2 mb-6" id="pos-filters">
@@ -159,18 +183,18 @@
 
     <div id="tab-calendario" class="tab-view hidden space-y-6">
         <div class="dash-card p-8 border-t-4 border-blue-500">
-            <h3 class="text-blue-400 text-sm font-black uppercase mb-6 tracking-widest text-center">📅 Buscar Treino Passado</h3>
+            <h3 class="text-blue-400 text-lg font-black uppercase mb-6 tracking-widest text-center">📅 Puxar Treino Histórico</h3>
             <input type="date" id="busca-data" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-5 text-xl text-white font-bold outline-none focus:border-blue-500 transition-colors shadow-inner text-center" onchange="buscarTreinoHistorico()">
-            <p class="text-center text-xs opacity-50 mt-4 uppercase font-bold tracking-widest">Selecione uma data para puxar a sessão</p>
+            <p class="text-center text-xs opacity-50 mt-4 uppercase font-bold tracking-widest">Selecione a data exata do treino anterior</p>
         </div>
         <div id="historico-lista" class="space-y-6">
-            <div class="dash-card p-12 text-center border-dashed border-2 border-white/10 bg-transparent shadow-none"><p class="opacity-30 text-sm font-black uppercase tracking-widest">Nenhuma data selecionada</p></div>
+            <div class="dash-card p-12 text-center border-dashed border-2 border-white/10 bg-transparent shadow-none"><p class="opacity-30 text-sm font-black uppercase tracking-widest">Aguardando Data...</p></div>
         </div>
     </div>
 
     <div id="tab-voz" class="tab-view hidden space-y-6">
         <div class="dash-card p-8 border border-gold/30">
-            <h3 class="text-gold text-sm font-black uppercase mb-6 tracking-widest text-center">🎙️ Gravar Ocorrência</h3>
+            <h3 class="text-gold text-sm font-black uppercase mb-8 tracking-widest text-center">🎙️ Gravar Ocorrência</h3>
             <textarea id="voice-txt" class="w-full bg-black/50 text-lg font-medium h-64 outline-none border-2 border-white/10 rounded-[2rem] p-6 text-white placeholder-white/30 focus:border-gold transition-colors shadow-inner resize-none" placeholder="Relate o que ocorreu no campo..."></textarea>
         </div>
         <button onclick="iniciarVoz()" class="w-full bg-gradient-to-r from-gold to-yellow-500 text-navy font-black py-8 rounded-[2rem] shadow-2xl active:scale-95 transition-all text-lg uppercase tracking-widest">
@@ -189,6 +213,21 @@
     let allPlayers = []; 
     let currentFilter = 'Todos';
 
+    // FUNÇÕES MODO FOCO TOTAL
+    function openFullScreen(imgSrc) {
+        if(!imgSrc) return;
+        const fs = document.getElementById('fullscreen-view');
+        document.getElementById('fullscreen-img').src = imgSrc;
+        fs.classList.remove('hidden');
+        fs.classList.add('flex');
+    }
+    
+    function closeFullScreen() {
+        const fs = document.getElementById('fullscreen-view');
+        fs.classList.add('hidden');
+        fs.classList.remove('flex');
+    }
+
     function atualizarSaudacao() {
         const hora = new Date().getHours();
         let s = "BOM DIA";
@@ -199,7 +238,6 @@
         const name = localStorage.getItem('pc_staff_name') || "";
         document.getElementById('greeting-msg').innerText = `${s}, ${role} ${name}`.toUpperCase();
         
-        // Preenche modal se existir
         document.getElementById('staff-name').value = name;
         document.getElementById('staff-role').value = role !== "COMISSÃO" ? role : "";
     }
@@ -207,7 +245,6 @@
     function abrirConfig() { document.getElementById('config-modal').classList.remove('hidden'); }
     function fecharConfig() { document.getElementById('config-modal').classList.add('hidden'); }
     
-    // Função SALVAR COM FEEDBACK
     function salvarPerfil() {
         const btn = document.getElementById('btn-salvar-perfil');
         localStorage.setItem('pc_staff_name', document.getElementById('staff-name').value);
@@ -278,19 +315,21 @@
             const history = JSON.parse(d.pc_history_v2 || "{}");
             const sessao = history[todayISO]?.drills || [];
             document.getElementById('drills-lista').innerHTML = sessao.map((ex,i) => `
-                <div class="dash-card overflow-hidden">
+                <div class="dash-card overflow-hidden relative group">
                     <div class="bg-black/50 p-5 flex justify-between items-center border-b border-white/5">
                         <span class="text-base font-black text-gold uppercase tracking-widest">${i+1}. ${ex.name}</span>
                         <span class="text-xs font-black bg-white/10 px-4 py-2 rounded-lg uppercase shadow-inner">${ex.time} min</span>
                     </div>
-                    <img src="${ex.image || ''}" class="w-full h-72 object-contain bg-black/60 p-2">
+                    <div class="relative">
+                        <img src="${ex.image || ''}" class="w-full h-72 object-contain bg-black/60 p-2">
+                        ${ex.image ? `<button onclick="openFullScreen('${ex.image}')" class="absolute bottom-4 right-4 bg-blue-600/90 text-white px-5 py-3 rounded-xl font-black text-xs shadow-xl backdrop-blur-md border border-white/30 uppercase tracking-widest hover:scale-105 transition-all">🔍 Tela Cheia</button>` : ''}
+                    </div>
                     ${ex.desc ? `<div class="p-5 text-sm text-white/70 italic border-t border-white/5 bg-[#1e293b] leading-relaxed">${ex.desc}</div>` : ''}
                 </div>
             `).join('') || '<div class="dash-card p-12 text-center"><p class="opacity-40 text-base font-black uppercase tracking-widest">Sem Exercícios Hoje</p></div>';
         });
     }
 
-    // BUSCA HISTÓRICO (CALENDÁRIO)
     function buscarTreinoHistorico() {
         const dateVal = document.getElementById('busca-data').value;
         if(!dateVal) return;
@@ -299,15 +338,18 @@
             const history = JSON.parse(doc.data().pc_history_v2 || "{}");
             const sessao = history[dateVal]?.drills || [];
             document.getElementById('historico-lista').innerHTML = sessao.map((ex,i) => `
-                <div class="dash-card overflow-hidden">
+                <div class="dash-card overflow-hidden relative">
                     <div class="bg-blue-900/40 p-5 flex justify-between items-center border-b border-white/5">
                         <span class="text-base font-black text-white uppercase tracking-widest">${i+1}. ${ex.name}</span>
                         <span class="text-xs font-black bg-black/40 px-4 py-2 rounded-lg uppercase text-gold">${ex.time} min</span>
                     </div>
-                    <img src="${ex.image || ''}" class="w-full h-72 object-contain bg-black/60 p-2">
+                    <div class="relative">
+                        <img src="${ex.image || ''}" class="w-full h-72 object-contain bg-black/60 p-2">
+                        ${ex.image ? `<button onclick="openFullScreen('${ex.image}')" class="absolute bottom-4 right-4 bg-blue-600/90 text-white px-5 py-3 rounded-xl font-black text-xs shadow-xl backdrop-blur-md border border-white/30 uppercase tracking-widest hover:scale-105 transition-all">🔍 Tela Cheia</button>` : ''}
+                    </div>
                     ${ex.desc ? `<div class="p-5 text-sm text-white/70 italic border-t border-white/5 bg-[#1e293b] leading-relaxed">${ex.desc}</div>` : ''}
                 </div>
-            `).join('') || `<div class="dash-card p-12 text-center border-dashed border-2 border-white/10 bg-transparent shadow-none"><p class="opacity-30 text-sm font-black uppercase tracking-widest">Nenhum treino salvo nesta data.</p></div>`;
+            `).join('') || `<div class="dash-card p-12 text-center border-dashed border-2 border-white/10 bg-transparent shadow-none"><p class="opacity-30 text-sm font-black uppercase tracking-widest">Nenhum treino nesta data.</p></div>`;
         });
     }
 
