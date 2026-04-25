@@ -33,7 +33,7 @@
         .modal-overlay { background: rgba(2,6,23,0.95); backdrop-filter: blur(10px); }
 
         /* TOAST DE FEEDBACK DE SINCRONIZAÇÃO */
-        #toast { visibility: hidden; min-width: 250px; background-color: #22c55e; color: #fff; text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 999999; left: 50%; transform: translateX(-50%); top: -50px; font-size: 12px; font-weight: black; text-transform: uppercase; box-shadow: 0px 10px 30px rgba(34, 197, 94, 0.5); opacity: 0; transition: all 0.4s ease-in-out; border: 2px solid white; }
+        #toast { visibility: hidden; min-width: 280px; background-color: #22c55e; color: #fff; text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 999999; left: 50%; transform: translateX(-50%); top: -50px; font-size: 13px; font-weight: black; text-transform: uppercase; box-shadow: 0px 10px 30px rgba(34, 197, 94, 0.5); opacity: 0; transition: all 0.4s ease-in-out; border: 2px solid white; }
         #toast.show { visibility: visible; opacity: 1; top: 30px; }
     </style>
 </head>
@@ -82,7 +82,7 @@
 <div class="bg-gradient-to-b from-[#1e293b] to-[#020617] border-b border-white/10 p-6 flex justify-between items-center sticky top-0 z-50">
     <div class="flex items-center gap-5">
         <div id="team-logo-display" class="w-16 h-16 rounded-full bg-white/5 border-2 border-white/20 flex items-center justify-center overflow-hidden shadow-2xl">
-            <span class="text-[8px] opacity-30 font-bold uppercase tracking-widest">Sem Logo</span>
+            <span class="text-[8px] opacity-30 font-bold uppercase tracking-widest">SEM LOGO</span>
         </div>
         <div>
             <p id="greeting-msg" class="text-[11px] font-black text-gold uppercase tracking-widest mb-1">BOM DIA</p>
@@ -110,7 +110,7 @@
         <div class="dash-card p-8 border-b-8 border-gold/40">
             <h3 class="text-gold text-sm font-black uppercase mb-6 tracking-[0.3em] text-center drop-shadow-md">🏆 Próximo Confronto</h3>
             <div class="flex flex-col items-center justify-center relative">
-                <div class="cursor-pointer transition-transform hover:scale-105 mb-4" onclick="adicionarLogoAdv()" title="Toque para adicionar o link do escudo">
+                <div class="cursor-pointer transition-transform hover:scale-105 mb-4" onclick="adicionarLogoAdv()" title="Toque para colar o link do escudo do adversário">
                     <div id="adv-logo-container" class="w-32 h-32 bg-black/50 rounded-[2rem] border-4 border-white/10 flex items-center justify-center overflow-hidden shadow-2xl">
                         <span class="text-sm opacity-20 italic font-black">ADV</span>
                     </div>
@@ -157,7 +157,7 @@
     <div id="tab-sessao" class="tab-view hidden space-y-6">
         <div id="drills-lista" class="space-y-6"></div>
         
-        <div class="dash-card p-6 bg-gradient-to-t from-[#0f172a] to-[#1e293b] border-t-2 border-gold/50 mt-10">
+        <div class="dash-card p-6 bg-gradient-to-t from-[#0f172a] to-[#1e293b] border-t-2 border-gold/50 mt-10 relative">
             <h3 class="text-gold text-lg font-black uppercase mb-5 text-center tracking-[0.3em] drop-shadow-md">⭐ Avaliar Plantel</h3>
             
             <div class="flex gap-2 overflow-x-auto no-scrollbar py-2 mb-6" id="pos-filters">
@@ -172,10 +172,17 @@
                 <button onclick="filtrarPosicao('Atacante')" id="f-Atacante" class="filter-btn">Atacantes</button>
             </div>
 
-            <div id="players-performance" class="space-y-4"></div>
+            <div id="players-performance" class="space-y-4 mb-6"></div>
             
-            <div id="status-treino-container">
-                </div>
+            <button id="btn-salvar-notas" onclick="sincronizarNotasNuvem()" class="w-full py-5 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(34,197,94,0.4)] active:scale-95 transition-all uppercase tracking-[0.1em] text-base mb-4">
+                ✓ SALVAR NOTAS NA NUVEM
+            </button>
+
+            <div id="status-treino-container" class="border-t border-white/10 pt-4">
+                <button onclick="finalizarTreino()" class="w-full py-5 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(220,38,38,0.4)] active:scale-95 transition-all uppercase tracking-[0.2em] text-sm">
+                    🛑 Encerrar Avaliações Diárias
+                </button>
+            </div>
         </div>
     </div>
 
@@ -185,7 +192,7 @@
 
     <div id="tab-calendario" class="tab-view hidden space-y-6">
         <div class="dash-card p-8 border-t-4 border-blue-500">
-            <h3 class="text-blue-400 text-lg font-black uppercase mb-6 tracking-widest text-center">📅 Treino Histórico</h3>
+            <h3 class="text-blue-400 text-lg font-black uppercase mb-6 tracking-widest text-center">📅 Puxar Treino Histórico</h3>
             <input type="date" id="busca-data" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-5 text-xl text-white font-bold outline-none focus:border-blue-500 transition-colors shadow-inner text-center" onchange="buscarTreinoHistorico()">
         </div>
         <div id="historico-lista" class="space-y-6">
@@ -195,8 +202,8 @@
 
     <div id="tab-voz" class="tab-view hidden space-y-6">
         <div class="dash-card p-8 border border-gold/30">
-            <h3 class="text-gold text-sm font-black uppercase mb-8 tracking-widest text-center">🎙️ Relato de Ocorrência</h3>
-            <textarea id="voice-txt" class="w-full bg-black/50 text-lg font-medium h-64 outline-none border-2 border-white/10 rounded-[2rem] p-6 text-white placeholder-white/30 focus:border-gold transition-colors shadow-inner resize-none" placeholder="Relate lesões ou atrasos do campo..."></textarea>
+            <h3 class="text-gold text-sm font-black uppercase mb-8 tracking-widest text-center">🎙️ Gravar Ocorrência</h3>
+            <textarea id="voice-txt" class="w-full bg-black/50 text-lg font-medium h-64 outline-none border-2 border-white/10 rounded-[2rem] p-6 text-white placeholder-white/30 focus:border-gold transition-colors shadow-inner resize-none" placeholder="Relate o que ocorreu no campo..."></textarea>
         </div>
         <button onclick="iniciarVoz()" class="w-full bg-gradient-to-r from-gold to-yellow-500 text-navy font-black py-8 rounded-[2rem] shadow-2xl active:scale-95 transition-all text-lg uppercase tracking-widest">
             🎤 Iniciar Ditado
@@ -220,7 +227,7 @@
         const t = document.getElementById("toast");
         t.innerText = msg;
         t.className = "show";
-        setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000);
+        setTimeout(() => { t.className = t.className.replace("show", ""); }, 3500);
     }
 
     // FOCO TOTAL
@@ -253,9 +260,19 @@
     function fecharConfig() { document.getElementById('config-modal').classList.add('hidden'); }
     
     function salvarPerfil() {
+        const btn = document.getElementById('btn-salvar-perfil');
         localStorage.setItem('pc_staff_name', document.getElementById('staff-name').value);
         localStorage.setItem('pc_staff_role', document.getElementById('staff-role').value || "Comissão");
-        atualizarSaudacao(); fecharConfig();
+        
+        btn.classList.replace('bg-blue-600', 'bg-green-500');
+        btn.innerText = "✓ SALVO COM SUCESSO!";
+        atualizarSaudacao();
+        
+        setTimeout(() => {
+            btn.classList.replace('bg-green-500', 'bg-blue-600');
+            btn.innerText = "Salvar e Manter";
+            fecharConfig();
+        }, 1000);
     }
 
     function adicionarLogoAdv() {
@@ -277,13 +294,15 @@
         else { document.getElementById('loading').style.display = 'none'; document.getElementById('auth-screen').style.display = 'flex'; }
     });
 
+    let syncAtivo = true; // Para não sobrepor dados enquanto o usuário clica
+
     function sync(uid) {
         db.collection('coachData').doc(uid).onSnapshot(doc => {
             if (!doc.exists) return;
             const d = doc.data();
             const todayName = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'][new Date().getDay()];
 
-            // RASTREADOR DE LOGO DA EQUIPE (Procura em todas as variáveis possíveis do App Oficial)
+            // LOGO DA EQUIPE: Busca em múltiplas variáveis do V2106
             const teamLogo = d.pc_team_logo_url || d.pc_logo || d.logo_url || d.team_logo || "";
             if(d.pc_team_name) document.getElementById('team-name-display').innerText = d.pc_team_name;
             if(teamLogo) {
@@ -308,8 +327,11 @@
             const avisos = JSON.parse(d.pc_notices_list || "[]");
             document.getElementById('avisos-lista').innerHTML = avisos.slice(0,3).map(n => `<p class="border-b border-white/5 pb-3 last:border-0 truncate text-lg">➤ ${n.text}</p>`).join('');
 
-            allPlayers = JSON.parse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
-            renderPlayers();
+            // Carrega Plantel apenas se não houver edições locais pendentes
+            if(syncAtivo) {
+                allPlayers = JSON.parse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
+                renderPlayers();
+            }
 
             document.getElementById('gols-lista').innerHTML = allPlayers.sort((a,b)=>(b.stats?.g||0)-(a.stats?.g||0)).slice(0,3).map(p=>`<div class="flex justify-between border-b border-white/5 pb-1"><span class="uppercase">${p.name}</span><span class="text-gold font-black">${p.stats?.g||0}</span></div>`).join('');
             document.getElementById('dm-lista').innerHTML = allPlayers.filter(p=>p.injured).map(p=>`<div class="border-b border-red-500/20 pb-1 uppercase">• ${p.name}</div>`).join('') || '<span class="opacity-30 uppercase">Vazio</span>';
@@ -342,19 +364,21 @@
                 </div>
             `).join('') || '<div class="dash-card p-12 text-center"><p class="opacity-40 text-base font-black uppercase tracking-widest">Sem Exercícios Hoje</p></div>';
 
-            // LÓGICA DE BOTÃO FINALIZAR / REABRIR SESSÃO
+            // ATUALIZAÇÃO DO STATUS FINALIZADO
             if(d.pc_training_finished === todayISO) {
                 document.getElementById('status-treino-container').innerHTML = `
-                    <button onclick="reabrirTreino()" class="w-full py-6 bg-green-600/20 border-2 border-green-500 text-green-400 font-black rounded-2xl shadow-inner uppercase tracking-[0.2em] text-sm mt-10 text-center flex justify-center items-center gap-3 active:scale-95 transition-all">
+                    <button onclick="reabrirTreino()" class="w-full py-6 bg-green-600/20 border-2 border-green-500 text-green-400 font-black rounded-2xl shadow-inner uppercase tracking-[0.2em] text-sm text-center flex justify-center items-center gap-3 active:scale-95 transition-all">
                         <span class="text-2xl">✅</span> SESSÃO FINALIZADA (TOCAR P/ REABRIR)
                     </button>
                 `;
+                document.getElementById('btn-salvar-notas').style.display = 'none';
             } else {
                 document.getElementById('status-treino-container').innerHTML = `
-                    <button onclick="finalizarTreino()" class="w-full py-6 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(220,38,38,0.4)] active:scale-95 transition-all uppercase tracking-[0.2em] text-base mt-10">
-                        🛑 Encerrar Avaliações
+                    <button onclick="finalizarTreino()" class="w-full py-6 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(220,38,38,0.4)] active:scale-95 transition-all uppercase tracking-[0.2em] text-base">
+                        🛑 Encerrar Avaliações Diárias
                     </button>
                 `;
+                document.getElementById('btn-salvar-notas').style.display = 'block';
             }
         });
     }
@@ -407,51 +431,66 @@
         `).join('') || `<p class="text-center text-sm opacity-40 py-8 uppercase font-bold tracking-widest">Vazio no momento.</p>`;
     }
 
-    // SINCRONIZAÇÃO BLINDADA COM APP PRINCIPAL
+    // AÇÃO DE VOTAR: AGORA APENAS VISUAL (SALVA EM LOTE NO BOTÃO VERDE)
     function votar(idx, nota) {
-        nota = parseInt(nota); // Garante que é número
+        syncAtivo = false; // Pausa sincronização para não apagar a estrela antes de salvar
+        nota = parseInt(nota);
         
-        // 1. Atualiza cor da estrela instantaneamente no celular/tablet
         document.querySelectorAll(`#stars-${idx} button`).forEach((btn, i) => {
             if (i < nota) btn.classList.add('active');
             else btn.classList.remove('active');
         });
         
-        // 2. Envia para a Nuvem de forma agressiva
+        allPlayers[idx].rating = nota;
+        allPlayers[idx].stars = nota;
+        allPlayers[idx].nota = nota;
+        allPlayers[idx].avg = nota; // Força a média para o App Oficial
+        
+        const btnSalvar = document.getElementById('btn-salvar-notas');
+        btnSalvar.classList.replace('bg-green-600', 'bg-yellow-500');
+        btnSalvar.innerText = "⚠️ SALVAR ALTERAÇÕES PENDENTES";
+    }
+
+    // SINCRONIZAÇÃO EM BLOCO PARA FORÇAR O APP OFICIAL A LER
+    function sincronizarNotasNuvem() {
         const uid = auth.currentUser.uid;
+        
+        // Limpa o array para o formato original antes de salvar
+        const playersToSave = allPlayers.map(p => {
+            let cleanP = {...p};
+            delete cleanP.originalIndex;
+            return cleanP;
+        });
+
         db.collection('coachData').doc(uid).get().then(doc => {
-            const data = doc.data();
-            const p = JSON.parse(data.pc_players || "[]");
+            let data = doc.data();
             
-            if(p[idx]) {
-                p[idx].rating = nota; // Variável padrão
-                p[idx].stars = nota;  // Proteção
-                p[idx].nota = nota;   // Proteção
-                
-                let updatePayload = { 
-                    pc_players: JSON.stringify(p),
-                    pc_last_update: Date.now() // Força o app oficial a reler os dados
-                };
+            // Dupla Gravação: Atualiza no perfil E no histórico da sessão
+            let hist = JSON.parse(data.pc_history_v2 || "{}");
+            if(!hist[todayISO]) hist[todayISO] = { drills: [] };
+            if(!hist[todayISO].ratings) hist[todayISO].ratings = {};
+            
+            playersToSave.forEach(p => {
+                if(p.rating) hist[todayISO].ratings[p.name] = p.rating;
+            });
 
-                // Tenta gravar também no histórico diário (se o App Oficial ler dali)
-                try {
-                    let hist = JSON.parse(data.pc_history_v2 || "{}");
-                    if(hist[todayISO]) {
-                        if(!hist[todayISO].ratings) hist[todayISO].ratings = {};
-                        hist[todayISO].ratings[p[idx].name] = nota;
-                        updatePayload.pc_history_v2 = JSON.stringify(hist);
-                    }
-                } catch(e) {}
-
-                db.collection('coachData').doc(uid).update(updatePayload).then(() => {
-                    mostrarToast(`⭐ NOTA SALVA PARA: ${p[idx].name}`);
-                }).catch(err => alert("Erro de conexão. Tente novamente."));
-            }
+            db.collection('coachData').doc(uid).update({
+                pc_players: JSON.stringify(playersToSave),
+                pc_history_v2: JSON.stringify(hist),
+                pc_last_update: Date.now() // Força atualização de gráficos no V2106
+            }).then(() => {
+                syncAtivo = true; // Libera sincronização
+                const btn = document.getElementById('btn-salvar-notas');
+                btn.classList.replace('bg-yellow-500', 'bg-green-600');
+                btn.innerText = "✓ NOTAS SALVAS NO OFICIAL";
+                mostrarToast("⭐ NOTAS SINCRONIZADAS COM SUCESSO!");
+            });
         });
     }
 
     function finalizarTreino() {
         if(!confirm("Atenção: Encerrar e travar avaliações de hoje?")) return;
+        sincronizarNotasNuvem(); // Força salvar as notas antes de encerrar
         const uid = auth.currentUser.uid;
         const staff = (localStorage.getItem('pc_staff_role')||"Comissão") + " " + (localStorage.getItem('pc_staff_name')||"");
         db.collection('coachData').doc(uid).get().then(doc => {
