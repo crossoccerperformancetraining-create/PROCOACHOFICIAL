@@ -15,7 +15,7 @@
         body { background-color: var(--navy); color: #f8fafc; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         
         .nav-container { @apply flex gap-3 p-4 bg-[#020617] sticky top-[85px] z-40 border-b-2 border-white/10 overflow-x-auto no-scrollbar; }
-        .nav-btn { @apply flex-none px-5 py-4 text-xs font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-1 min-w-[110px]; }
+        .nav-btn { @apply flex-none px-5 py-4 text-xs font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-2 min-w-[110px]; }
         .nav-active { @apply border-gold text-navy bg-gradient-to-br from-gold to-yellow-500 shadow-[0_10px_25px_rgba(212,175,55,0.4)] scale-105; }
         .nav-icon { @apply text-3xl block drop-shadow-md; } 
         
@@ -104,12 +104,11 @@
         
         <div class="dash-card p-8 border-b-8 border-gold/40">
             <h3 class="text-gold text-sm font-black uppercase mb-6 tracking-[0.3em] text-center drop-shadow-md">🏆 Próximo Confronto</h3>
-            <div class="flex flex-col items-center justify-center relative">
-                <div class="relative group cursor-pointer" onclick="adicionarLogoAdv()">
-                    <div id="adv-logo" class="w-32 h-32 bg-black/80 rounded-[2rem] border-4 border-white/10 flex items-center justify-center overflow-hidden shadow-2xl mb-3 transition-transform hover:scale-105">
-                        <span class="text-sm opacity-30 font-black">ADV</span>
+            <div class="flex flex-col items-center justify-center">
+                <div class="cursor-pointer transition-transform hover:scale-105 mb-4" onclick="adicionarLogoAdv()" title="Toque para adicionar o link do escudo">
+                    <div id="adv-logo-container" class="w-32 h-32 bg-black/50 rounded-[2rem] border-4 border-white/10 flex items-center justify-center overflow-hidden shadow-2xl">
+                        <span class="text-sm opacity-20 italic font-black">ADV</span>
                     </div>
-                    <div class="absolute -bottom-2 -right-2 bg-blue-600 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-lg border-2 border-navy">✏️ ADD LOGO</div>
                 </div>
                 
                 <span id="adv-nome" class="text-4xl md:text-5xl font-black italic text-white drop-shadow-xl mb-4 uppercase text-center tracking-tighter">A DEFINIR</span>
@@ -123,30 +122,30 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div class="dash-card p-6">
                 <h3 class="text-slate-400 text-sm font-black uppercase mb-5 tracking-widest border-b border-white/5 pb-3 flex items-center gap-3">
-                    <span class="text-3xl">📅</span> AGENDA DO DIA
+                    <span class="text-2xl">📅</span> AGENDA DO DIA
                 </h3>
                 <div id="agenda-hoje" class="space-y-4"></div>
             </div>
             <div class="dash-card p-6 border-l-8 border-yellow-500 bg-yellow-500/5">
                 <h3 class="text-yellow-500 text-sm font-black uppercase mb-5 tracking-widest border-b border-yellow-500/20 pb-3 flex items-center gap-3">
-                    <span class="text-3xl">📋</span> QUADRO DE AVISOS
+                    <span class="text-2xl">📋</span> QUADRO DE AVISOS
                 </h3>
                 <div id="avisos-lista" class="space-y-4 text-base text-white/90 font-bold"></div>
             </div>
         </div>
 
         <div class="grid grid-cols-3 gap-4">
-            <div class="dash-card p-6 border-b-4 border-gold text-center flex flex-col items-center">
-                <h4 class="text-sm font-black text-slate-400 uppercase mb-4 tracking-widest flex flex-col items-center gap-2"><span class="text-4xl drop-shadow-md">⚽</span> GOLS</h4>
-                <div id="gols-lista" class="text-sm font-black text-gold space-y-2 w-full truncate"></div>
+            <div class="dash-card p-6 border-b-4 border-gold">
+                <h4 class="text-xs font-black text-slate-400 uppercase mb-4 tracking-widest flex items-center gap-2"><span class="text-2xl">⚽</span> GOLS</h4>
+                <div id="gols-lista" class="text-sm font-black text-white space-y-2 w-full text-left"></div>
             </div>
-            <div class="dash-card p-6 border-b-4 border-red-500 text-center flex flex-col items-center">
-                <h4 class="text-sm font-black text-red-500 uppercase mb-4 tracking-widest flex flex-col items-center gap-2"><span class="text-4xl drop-shadow-md">🏥</span> DM</h4>
-                <div id="dm-lista" class="text-sm font-black text-red-400 space-y-2 w-full truncate"></div>
+            <div class="dash-card p-6 border-b-4 border-red-500">
+                <h4 class="text-xs font-black text-red-500 uppercase mb-4 tracking-widest flex items-center gap-2"><span class="text-2xl">🏥</span> DM</h4>
+                <div id="dm-lista" class="text-sm font-black text-red-400 space-y-2 w-full text-left"></div>
             </div>
-            <div class="dash-card p-6 border-b-4 border-yellow-500 text-center flex flex-col items-center">
-                <h4 class="text-sm font-black text-yellow-500 uppercase mb-4 tracking-widest flex flex-col items-center gap-2"><span class="text-4xl drop-shadow-md">⚠️</span> SUSP</h4>
-                <div id="susp-lista" class="text-sm font-black text-yellow-400 space-y-2 w-full truncate"></div>
+            <div class="dash-card p-6 border-b-4 border-yellow-500">
+                <h4 class="text-xs font-black text-yellow-500 uppercase mb-4 tracking-widest flex items-center gap-2"><span class="text-2xl">⚠️</span> SUSP</h4>
+                <div id="susp-lista" class="text-sm font-black text-yellow-400 space-y-2 w-full text-left"></div>
             </div>
         </div>
     </div>
@@ -228,7 +227,6 @@
         fs.classList.add('hidden'); fs.classList.remove('flex');
     }
 
-    // SAUDAÇÃO E PERFIL
     function atualizarSaudacao() {
         const hora = new Date().getHours();
         let s = "BOM DIA";
@@ -262,7 +260,7 @@
         }, 1000);
     }
 
-    // ADD LOGO ADVERSÁRIO (NOVA FUNÇÃO)
+    // ADD LOGO ADVERSÁRIO DIRETO NO CLIQUE DO ESCUDO
     function adicionarLogoAdv() {
         const url = prompt("Cole o link (URL) da imagem do escudo do adversário:");
         if(url && url.trim() !== "") {
@@ -271,7 +269,6 @@
                 let s = JSON.parse(doc.data().pc_scouting || "{}");
                 s.logo = url;
                 db.collection('coachData').doc(uid).update({ pc_scouting: JSON.stringify(s) });
-                alert("Escudo do adversário atualizado!");
             });
         }
     }
@@ -289,18 +286,16 @@
             const d = doc.data();
             const todayName = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'][new Date().getDay()];
 
-            // ESCUDO EQUIPE (Corrigido para object-contain preencher bem)
             if(d.pc_team_name) document.getElementById('team-name-display').innerText = d.pc_team_name;
             if(d.pc_team_logo_url) document.getElementById('team-logo-display').innerHTML = `<img src="${d.pc_team_logo_url}" class="w-full h-full object-contain">`;
 
-            // ADVERSÁRIO E LOGO
             if(d.pc_scouting) {
                 const s = JSON.parse(d.pc_scouting);
                 if(s.opponent) {
                     document.getElementById('adv-nome').innerText = s.opponent;
                     document.getElementById('jogo-data').innerText = s.date ? s.date.split('-').reverse().join('/') : "A DEFINIR";
                     document.getElementById('jogo-sistema').innerText = "SIS: " + (s.system || "-");
-                    if(s.logo) document.getElementById('adv-logo').innerHTML = `<img src="${s.logo}" class="w-full h-full object-contain">`;
+                    if(s.logo) document.getElementById('adv-logo-container').innerHTML = `<img src="${s.logo}" class="w-full h-full object-contain p-2">`;
                 }
             }
 
@@ -313,9 +308,10 @@
             allPlayers = JSON.parse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
             renderPlayers();
 
-            document.getElementById('gols-lista').innerHTML = allPlayers.sort((a,b)=>(b.stats?.g||0)-(a.stats?.g||0)).slice(0,3).map(p=>`<div class="truncate">${p.name}: ${p.stats?.g||0}</div>`).join('');
-            document.getElementById('dm-lista').innerHTML = allPlayers.filter(p=>p.injured).map(p=>`<div class="truncate">${p.name}</div>`).join('') || '<span class="opacity-30">Vazio</span>';
-            document.getElementById('susp-lista').innerHTML = allPlayers.filter(p=>p.suspended).map(p=>`<div class="truncate">${p.name}</div>`).join('') || '<span class="opacity-30">Vazio</span>';
+            // GOLS, DM, SUSP (Estilo Original Lista Esquerda)
+            document.getElementById('gols-lista').innerHTML = allPlayers.sort((a,b)=>(b.stats?.g||0)-(a.stats?.g||0)).slice(0,3).map(p=>`<div class="flex justify-between border-b border-white/5 pb-1"><span class="uppercase">${p.name}</span><span class="text-gold font-black">${p.stats?.g||0}</span></div>`).join('');
+            document.getElementById('dm-lista').innerHTML = allPlayers.filter(p=>p.injured).map(p=>`<div class="border-b border-red-500/20 pb-1 uppercase">• ${p.name}</div>`).join('') || '<span class="opacity-30 uppercase">Vazio</span>';
+            document.getElementById('susp-lista').innerHTML = allPlayers.filter(p=>p.suspended).map(p=>`<div class="border-b border-yellow-500/20 pb-1 uppercase">• ${p.name}</div>`).join('') || '<span class="opacity-30 uppercase">Vazio</span>';
 
             const dias = ["SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO", "DOMINGO"];
             document.getElementById('micro-flex').innerHTML = dias.map(dia => `
@@ -344,11 +340,11 @@
                 </div>
             `).join('') || '<div class="dash-card p-12 text-center"><p class="opacity-40 text-base font-black uppercase tracking-widest">Sem Exercícios Hoje</p></div>';
 
-            // VERIFICAÇÃO SE O TREINO JÁ FOI FINALIZADO
+            // CONTROLE DO STATUS FINALIZADO
             if(d.pc_training_finished === todayISO) {
                 document.getElementById('status-treino-container').innerHTML = `
-                    <div class="w-full py-6 bg-green-600/20 border-2 border-green-500 text-green-400 font-black rounded-2xl shadow-inner uppercase tracking-widest text-base mt-10 text-center flex justify-center items-center gap-2">
-                        <span>✅</span> SESSÃO FINALIZADA
+                    <div class="w-full py-6 bg-green-600/20 border-2 border-green-500 text-green-400 font-black rounded-2xl shadow-inner uppercase tracking-[0.2em] text-base mt-10 text-center flex justify-center items-center gap-3">
+                        <span class="text-2xl">✅</span> SESSÃO FINALIZADA
                     </div>
                 `;
             } else {
@@ -402,23 +398,32 @@
                         <span class="text-xs font-bold text-gold uppercase opacity-80 mt-1 tracking-widest">${p.pos || 'POSIÇÃO'}</span>
                     </div>
                 </div>
-                <div class="flex gap-2 star-rating">
+                <div class="flex gap-2 star-rating" id="stars-${p.originalIndex}">
                     ${[1,2,3,4,5].map(n => `<button onclick="votar(${p.originalIndex}, ${n})" class="${(p.rating||0) >= n ? 'active' : ''}">★</button>`).join('')}
                 </div>
             </div>
         `).join('') || `<p class="text-center text-sm opacity-40 py-8 uppercase font-bold tracking-widest">Vazio no momento.</p>`;
     }
 
+    // VOTAR COM FEEDBACK INSTANTÂNEO E ENVIO FORÇADO PARA A NUVEM
     function votar(idx, nota) {
+        // 1. Atualiza visualmente na hora para o utilizador
+        document.querySelectorAll(`#stars-${idx} button`).forEach((btn, i) => {
+            if (i < nota) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        
+        // 2. Envia para o Firebase
         const uid = auth.currentUser.uid;
         db.collection('coachData').doc(uid).get().then(doc => {
-            const p = JSON.parse(doc.data().pc_players);
-            p[idx].rating = nota;
-            db.collection('coachData').doc(uid).update({ pc_players: JSON.stringify(p) });
+            const p = JSON.parse(doc.data().pc_players || "[]");
+            if(p[idx]) {
+                p[idx].rating = nota;
+                db.collection('coachData').doc(uid).update({ pc_players: JSON.stringify(p) });
+            }
         });
     }
 
-    // FINALIZA E SOME COM O BOTÃO
     function finalizarTreino() {
         if(!confirm("Atenção: Encerrar e travar avaliações de hoje?")) return;
         const uid = auth.currentUser.uid;
