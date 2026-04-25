@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ProCoach Auxiliar - V2106 MAX</title>
+    <title>ProCoach Auxiliar - MAX SYNC</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
@@ -32,14 +32,14 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .modal-overlay { background: rgba(2,6,23,0.95); backdrop-filter: blur(10px); }
 
-        /* TOAST NOTIFICATION */
-        #toast { visibility: hidden; min-width: 250px; background-color: #22c55e; color: #fff; text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 999999; left: 50%; transform: translateX(-50%); top: -50px; font-size: 12px; font-weight: black; text-transform: uppercase; box-shadow: 0px 10px 30px rgba(34, 197, 94, 0.5); opacity: 0; transition: all 0.4s ease-in-out; }
+        /* TOAST DE FEEDBACK DE SINCRONIZAÇÃO */
+        #toast { visibility: hidden; min-width: 250px; background-color: #22c55e; color: #fff; text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 999999; left: 50%; transform: translateX(-50%); top: -50px; font-size: 12px; font-weight: black; text-transform: uppercase; box-shadow: 0px 10px 30px rgba(34, 197, 94, 0.5); opacity: 0; transition: all 0.4s ease-in-out; border: 2px solid white; }
         #toast.show { visibility: visible; opacity: 1; top: 30px; }
     </style>
 </head>
 <body>
 
-<div id="toast">⭐ NOTA SINCRONIZADA!</div>
+<div id="toast">⭐ Sincronizado com o Oficial!</div>
 
 <div id="fullscreen-view" class="fixed inset-0 z-[99999] bg-black hidden flex-col justify-center items-center">
     <button onclick="closeFullScreen()" class="absolute top-6 right-6 bg-red-600 hover:bg-red-700 text-white px-6 py-4 rounded-full font-black text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(220,38,38,0.5)] border-2 border-white/20 active:scale-95 transition-all">✖ FECHAR FOCO</button>
@@ -66,14 +66,14 @@
         <h2 class="text-gold font-black uppercase text-center mb-6 tracking-widest border-b border-white/10 pb-4 text-lg">⚙️ Identificação</h2>
         <div class="space-y-6">
             <div>
-                <label class="text-sm font-black text-slate-400 uppercase tracking-widest">Nome do Profissional</label>
+                <label class="text-sm font-black text-slate-400 uppercase tracking-widest">Seu Nome</label>
                 <input type="text" id="staff-name" placeholder="Ex: Silva" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-4 text-lg font-bold text-white outline-none mt-2 focus:border-gold/50">
             </div>
             <div>
                 <label class="text-sm font-black text-slate-400 uppercase tracking-widest">Sua Função</label>
                 <input type="text" id="staff-role" placeholder="Ex: Prep. Físico" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-4 text-lg font-bold text-gold uppercase outline-none mt-2 focus:border-gold/50">
             </div>
-            <button id="btn-salvar-perfil" onclick="salvarPerfil()" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl mt-4 uppercase tracking-widest text-base active:scale-95 transition-all">Salvar e Manter</button>
+            <button id="btn-salvar-perfil" onclick="salvarPerfil()" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl mt-4 uppercase tracking-widest text-base active:scale-95 transition-all">Salvar Perfil</button>
             <button onclick="fecharConfig()" class="w-full bg-transparent text-slate-400 hover:text-white font-bold py-3 rounded-2xl text-sm uppercase transition-colors">Fechar</button>
         </div>
     </div>
@@ -82,7 +82,7 @@
 <div class="bg-gradient-to-b from-[#1e293b] to-[#020617] border-b border-white/10 p-6 flex justify-between items-center sticky top-0 z-50">
     <div class="flex items-center gap-5">
         <div id="team-logo-display" class="w-16 h-16 rounded-full bg-white/5 border-2 border-white/20 flex items-center justify-center overflow-hidden shadow-2xl">
-            <span class="text-[8px] opacity-30">LOGO</span>
+            <span class="text-[8px] opacity-30 font-bold uppercase tracking-widest">Sem Logo</span>
         </div>
         <div>
             <p id="greeting-msg" class="text-[11px] font-black text-gold uppercase tracking-widest mb-1">BOM DIA</p>
@@ -100,14 +100,13 @@
     <button onclick="showTab('dash')" id="btn-dash" class="nav-btn nav-active"><span class="nav-icon">📊</span> Início</button>
     <button onclick="showTab('sessao')" id="btn-sessao" class="nav-btn"><span class="nav-icon">⚽</span> Treino</button>
     <button onclick="showTab('micro')" id="btn-micro" class="nav-btn"><span class="nav-icon">🗓️</span> Micro</button>
-    <button onclick="showTab('calendario')" id="btn-calendario" class="nav-btn"><span class="nav-icon">📅</span> Calend.</button>
+    <button onclick="showTab('calendario')" id="btn-calendario" class="nav-btn"><span class="nav-icon">📅</span> Histórico</button>
     <button onclick="showTab('voz')" id="btn-voz" class="nav-btn"><span class="nav-icon">🎙️</span> Relato</button>
 </div>
 
 <div id="content" class="p-5 pb-32 space-y-6">
     
     <div id="tab-dash" class="tab-view space-y-6">
-        
         <div class="dash-card p-8 border-b-8 border-gold/40">
             <h3 class="text-gold text-sm font-black uppercase mb-6 tracking-[0.3em] text-center drop-shadow-md">🏆 Próximo Confronto</h3>
             <div class="flex flex-col items-center justify-center relative">
@@ -116,7 +115,6 @@
                         <span class="text-sm opacity-20 italic font-black">ADV</span>
                     </div>
                 </div>
-                
                 <span id="adv-nome" class="text-4xl md:text-5xl font-black italic text-white drop-shadow-xl mb-4 uppercase text-center tracking-tighter">A DEFINIR</span>
                 <div class="flex gap-3">
                     <span id="jogo-data" class="bg-white/10 px-6 py-3 rounded-xl text-sm font-black text-gold uppercase tracking-widest border border-white/5 shadow-inner">--/--</span>
@@ -127,26 +125,30 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div class="dash-card p-6">
-                <h3 class="text-slate-400 text-sm font-black uppercase mb-5 tracking-widest border-b border-white/5 pb-3 flex items-center gap-3"><span class="text-2xl">📅</span> AGENDA DO DIA</h3>
+                <h3 class="text-slate-400 text-sm font-black uppercase mb-5 tracking-widest border-b border-white/5 pb-3 flex items-center gap-3">
+                    <span class="text-3xl">📅</span> AGENDA DO DIA
+                </h3>
                 <div id="agenda-hoje" class="space-y-4"></div>
             </div>
             <div class="dash-card p-6 border-l-8 border-yellow-500 bg-yellow-500/5">
-                <h3 class="text-yellow-500 text-sm font-black uppercase mb-5 tracking-widest border-b border-yellow-500/20 pb-3 flex items-center gap-3"><span class="text-2xl">📋</span> QUADRO DE AVISOS</h3>
+                <h3 class="text-yellow-500 text-sm font-black uppercase mb-5 tracking-widest border-b border-yellow-500/20 pb-3 flex items-center gap-3">
+                    <span class="text-3xl">📋</span> QUADRO DE AVISOS
+                </h3>
                 <div id="avisos-lista" class="space-y-4 text-base text-white/90 font-bold"></div>
             </div>
         </div>
 
         <div class="grid grid-cols-3 gap-4">
             <div class="dash-card p-6 border-b-4 border-gold">
-                <h4 class="text-xs font-black text-slate-400 uppercase mb-4 tracking-widest flex items-center gap-2"><span class="text-2xl">⚽</span> GOLS</h4>
+                <h4 class="text-xs font-black text-slate-400 uppercase mb-4 tracking-widest flex items-center gap-2"><span class="text-3xl">⚽</span> GOLS</h4>
                 <div id="gols-lista" class="text-sm font-black text-white space-y-2 w-full text-left"></div>
             </div>
             <div class="dash-card p-6 border-b-4 border-red-500">
-                <h4 class="text-xs font-black text-red-500 uppercase mb-4 tracking-widest flex items-center gap-2"><span class="text-2xl">🏥</span> DM</h4>
+                <h4 class="text-xs font-black text-red-500 uppercase mb-4 tracking-widest flex items-center gap-2"><span class="text-3xl">🏥</span> DM</h4>
                 <div id="dm-lista" class="text-sm font-black text-red-400 space-y-2 w-full text-left"></div>
             </div>
             <div class="dash-card p-6 border-b-4 border-yellow-500">
-                <h4 class="text-xs font-black text-yellow-500 uppercase mb-4 tracking-widest flex items-center gap-2"><span class="text-2xl">⚠️</span> SUSP</h4>
+                <h4 class="text-xs font-black text-yellow-500 uppercase mb-4 tracking-widest flex items-center gap-2"><span class="text-3xl">⚠️</span> SUSP</h4>
                 <div id="susp-lista" class="text-sm font-black text-yellow-400 space-y-2 w-full text-left"></div>
             </div>
         </div>
@@ -183,9 +185,8 @@
 
     <div id="tab-calendario" class="tab-view hidden space-y-6">
         <div class="dash-card p-8 border-t-4 border-blue-500">
-            <h3 class="text-blue-400 text-lg font-black uppercase mb-6 tracking-widest text-center">📅 Puxar Treino Histórico</h3>
+            <h3 class="text-blue-400 text-lg font-black uppercase mb-6 tracking-widest text-center">📅 Treino Histórico</h3>
             <input type="date" id="busca-data" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-5 text-xl text-white font-bold outline-none focus:border-blue-500 transition-colors shadow-inner text-center" onchange="buscarTreinoHistorico()">
-            <p class="text-center text-xs opacity-50 mt-4 uppercase font-bold tracking-widest">Selecione a data exata do treino anterior</p>
         </div>
         <div id="historico-lista" class="space-y-6">
             <div class="dash-card p-12 text-center border-dashed border-2 border-white/10 bg-transparent shadow-none"><p class="opacity-30 text-sm font-black uppercase tracking-widest">Aguardando Data...</p></div>
@@ -194,8 +195,8 @@
 
     <div id="tab-voz" class="tab-view hidden space-y-6">
         <div class="dash-card p-8 border border-gold/30">
-            <h3 class="text-gold text-sm font-black uppercase mb-8 tracking-widest text-center">🎙️ Gravar Ocorrência</h3>
-            <textarea id="voice-txt" class="w-full bg-black/50 text-lg font-medium h-64 outline-none border-2 border-white/10 rounded-[2rem] p-6 text-white placeholder-white/30 focus:border-gold transition-colors shadow-inner resize-none" placeholder="Relate o que ocorreu no campo..."></textarea>
+            <h3 class="text-gold text-sm font-black uppercase mb-8 tracking-widest text-center">🎙️ Relato de Ocorrência</h3>
+            <textarea id="voice-txt" class="w-full bg-black/50 text-lg font-medium h-64 outline-none border-2 border-white/10 rounded-[2rem] p-6 text-white placeholder-white/30 focus:border-gold transition-colors shadow-inner resize-none" placeholder="Relate lesões ou atrasos do campo..."></textarea>
         </div>
         <button onclick="iniciarVoz()" class="w-full bg-gradient-to-r from-gold to-yellow-500 text-navy font-black py-8 rounded-[2rem] shadow-2xl active:scale-95 transition-all text-lg uppercase tracking-widest">
             🎤 Iniciar Ditado
@@ -214,7 +215,7 @@
     let currentFilter = 'Todos';
     const todayISO = new Date().toISOString().split('T')[0];
 
-    // TOAST NOTIFICATION
+    // TOAST FEEDBACK
     function mostrarToast(msg) {
         const t = document.getElementById("toast");
         t.innerText = msg;
@@ -252,19 +253,9 @@
     function fecharConfig() { document.getElementById('config-modal').classList.add('hidden'); }
     
     function salvarPerfil() {
-        const btn = document.getElementById('btn-salvar-perfil');
         localStorage.setItem('pc_staff_name', document.getElementById('staff-name').value);
         localStorage.setItem('pc_staff_role', document.getElementById('staff-role').value || "Comissão");
-        
-        btn.classList.replace('bg-blue-600', 'bg-green-500');
-        btn.innerText = "✓ SALVO COM SUCESSO!";
-        atualizarSaudacao();
-        
-        setTimeout(() => {
-            btn.classList.replace('bg-green-500', 'bg-blue-600');
-            btn.innerText = "Salvar e Manter";
-            fecharConfig();
-        }, 1000);
+        atualizarSaudacao(); fecharConfig();
     }
 
     function adicionarLogoAdv() {
@@ -292,10 +283,14 @@
             const d = doc.data();
             const todayName = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'][new Date().getDay()];
 
-            // LOGO DA EQUIPE
-            const teamLogo = d.pc_logo || d.pc_team_logo_url;
+            // RASTREADOR DE LOGO DA EQUIPE (Procura em todas as variáveis possíveis do App Oficial)
+            const teamLogo = d.pc_team_logo_url || d.pc_logo || d.logo_url || d.team_logo || "";
             if(d.pc_team_name) document.getElementById('team-name-display').innerText = d.pc_team_name;
-            if(teamLogo) document.getElementById('team-logo-display').innerHTML = `<img src="${teamLogo}" class="w-full h-full object-contain">`;
+            if(teamLogo) {
+                document.getElementById('team-logo-display').innerHTML = `<img src="${teamLogo}" class="w-full h-full object-contain p-1">`;
+            } else {
+                document.getElementById('team-logo-display').innerHTML = `<span class="text-[8px] opacity-30 font-black uppercase">SEM LOGO</span>`;
+            }
 
             if(d.pc_scouting) {
                 const s = JSON.parse(d.pc_scouting);
@@ -347,7 +342,7 @@
                 </div>
             `).join('') || '<div class="dash-card p-12 text-center"><p class="opacity-40 text-base font-black uppercase tracking-widest">Sem Exercícios Hoje</p></div>';
 
-            // REABRIR TREINO
+            // LÓGICA DE BOTÃO FINALIZAR / REABRIR SESSÃO
             if(d.pc_training_finished === todayISO) {
                 document.getElementById('status-treino-container').innerHTML = `
                     <button onclick="reabrirTreino()" class="w-full py-6 bg-green-600/20 border-2 border-green-500 text-green-400 font-black rounded-2xl shadow-inner uppercase tracking-[0.2em] text-sm mt-10 text-center flex justify-center items-center gap-3 active:scale-95 transition-all">
@@ -412,35 +407,51 @@
         `).join('') || `<p class="text-center text-sm opacity-40 py-8 uppercase font-bold tracking-widest">Vazio no momento.</p>`;
     }
 
-    // SINCRONIZAÇÃO BLINDADA COM O APP OFICIAL
+    // SINCRONIZAÇÃO BLINDADA COM APP PRINCIPAL
     function votar(idx, nota) {
-        // Feedback visual imediato na tela
+        nota = parseInt(nota); // Garante que é número
+        
+        // 1. Atualiza cor da estrela instantaneamente no celular/tablet
         document.querySelectorAll(`#stars-${idx} button`).forEach((btn, i) => {
             if (i < nota) btn.classList.add('active');
             else btn.classList.remove('active');
         });
         
+        // 2. Envia para a Nuvem de forma agressiva
         const uid = auth.currentUser.uid;
         db.collection('coachData').doc(uid).get().then(doc => {
             const data = doc.data();
             const p = JSON.parse(data.pc_players || "[]");
+            
             if(p[idx]) {
-                p[idx].rating = nota;
-                p[idx].nota = nota; // Proteção adicional para compatibilidade
-                p[idx].stars = nota; // Proteção adicional
+                p[idx].rating = nota; // Variável padrão
+                p[idx].stars = nota;  // Proteção
+                p[idx].nota = nota;   // Proteção
                 
-                db.collection('coachData').doc(uid).update({ 
+                let updatePayload = { 
                     pc_players: JSON.stringify(p),
-                    pc_last_update: Date.now() // Força o app principal a atualizar os gráficos
-                }).then(() => {
-                    mostrarToast(`⭐ NOTA SALVA: ${p[idx].name}`);
-                }).catch(e => alert("Erro ao sincronizar: " + e.message));
+                    pc_last_update: Date.now() // Força o app oficial a reler os dados
+                };
+
+                // Tenta gravar também no histórico diário (se o App Oficial ler dali)
+                try {
+                    let hist = JSON.parse(data.pc_history_v2 || "{}");
+                    if(hist[todayISO]) {
+                        if(!hist[todayISO].ratings) hist[todayISO].ratings = {};
+                        hist[todayISO].ratings[p[idx].name] = nota;
+                        updatePayload.pc_history_v2 = JSON.stringify(hist);
+                    }
+                } catch(e) {}
+
+                db.collection('coachData').doc(uid).update(updatePayload).then(() => {
+                    mostrarToast(`⭐ NOTA SALVA PARA: ${p[idx].name}`);
+                }).catch(err => alert("Erro de conexão. Tente novamente."));
             }
         });
     }
 
     function finalizarTreino() {
-        if(!confirm("Atenção: Encerrar avaliações de hoje?")) return;
+        if(!confirm("Atenção: Encerrar e travar avaliações de hoje?")) return;
         const uid = auth.currentUser.uid;
         const staff = (localStorage.getItem('pc_staff_role')||"Comissão") + " " + (localStorage.getItem('pc_staff_name')||"");
         db.collection('coachData').doc(uid).get().then(doc => {
