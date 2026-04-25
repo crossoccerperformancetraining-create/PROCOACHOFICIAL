@@ -15,7 +15,7 @@
         body { background-color: var(--navy); color: #f8fafc; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         
         .nav-container { @apply flex gap-3 p-4 bg-[#020617] sticky top-[85px] z-40 border-b-2 border-white/10 overflow-x-auto no-scrollbar; }
-        .nav-btn { @apply flex-none px-5 py-4 text-xs font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-2 min-w-[110px]; }
+        .nav-btn { @apply flex-none px-5 py-4 text-xs font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-1 min-w-[110px]; }
         .nav-active { @apply border-gold text-navy bg-gradient-to-br from-gold to-yellow-500 shadow-[0_10px_25px_rgba(212,175,55,0.4)] scale-105; }
         .nav-icon { @apply text-3xl block drop-shadow-md; } 
         
@@ -25,7 +25,7 @@
         .filter-btn { @apply px-5 py-3 rounded-xl border border-white/10 text-sm font-black uppercase whitespace-nowrap bg-black/40 text-slate-400 transition-colors shadow-sm; }
         .filter-active { @apply bg-blue-600 text-white border-blue-400 shadow-[0_0_15px_rgba(37,99,235,0.5)]; }
 
-        .star-rating button { font-size: 32px; color: #334155; transition: 0.2s; drop-shadow: 0 4px 6px rgba(0,0,0,0.6); }
+        .star-rating button { font-size: 32px; color: #334155; transition: 0.2s; drop-shadow: 0 4px 6px rgba(0,0,0,0.6); outline: none; -webkit-tap-highlight-color: transparent; }
         .star-rating button.active { color: #facc15; text-shadow: 0 0 15px rgba(250,204,21,0.7); }
 
         #loading { position: fixed; inset: 0; background: #020617; color: white; display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; gap: 15px; }
@@ -104,7 +104,7 @@
         
         <div class="dash-card p-8 border-b-8 border-gold/40">
             <h3 class="text-gold text-sm font-black uppercase mb-6 tracking-[0.3em] text-center drop-shadow-md">🏆 Próximo Confronto</h3>
-            <div class="flex flex-col items-center justify-center">
+            <div class="flex flex-col items-center justify-center relative">
                 <div class="cursor-pointer transition-transform hover:scale-105 mb-4" onclick="adicionarLogoAdv()" title="Toque para adicionar o link do escudo">
                     <div id="adv-logo-container" class="w-32 h-32 bg-black/50 rounded-[2rem] border-4 border-white/10 flex items-center justify-center overflow-hidden shadow-2xl">
                         <span class="text-sm opacity-20 italic font-black">ADV</span>
@@ -260,7 +260,6 @@
         }, 1000);
     }
 
-    // ADD LOGO ADVERSÁRIO DIRETO NO CLIQUE DO ESCUDO
     function adicionarLogoAdv() {
         const url = prompt("Cole o link (URL) da imagem do escudo do adversário:");
         if(url && url.trim() !== "") {
@@ -286,8 +285,10 @@
             const d = doc.data();
             const todayName = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'][new Date().getDay()];
 
+            // LOGO DA EQUIPE CORRIGIDO PARA pc_logo
+            const teamLogo = d.pc_logo || d.pc_team_logo_url;
             if(d.pc_team_name) document.getElementById('team-name-display').innerText = d.pc_team_name;
-            if(d.pc_team_logo_url) document.getElementById('team-logo-display').innerHTML = `<img src="${d.pc_team_logo_url}" class="w-full h-full object-contain">`;
+            if(teamLogo) document.getElementById('team-logo-display').innerHTML = `<img src="${teamLogo}" class="w-full h-full object-contain">`;
 
             if(d.pc_scouting) {
                 const s = JSON.parse(d.pc_scouting);
@@ -308,7 +309,6 @@
             allPlayers = JSON.parse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
             renderPlayers();
 
-            // GOLS, DM, SUSP (Estilo Original Lista Esquerda)
             document.getElementById('gols-lista').innerHTML = allPlayers.sort((a,b)=>(b.stats?.g||0)-(a.stats?.g||0)).slice(0,3).map(p=>`<div class="flex justify-between border-b border-white/5 pb-1"><span class="uppercase">${p.name}</span><span class="text-gold font-black">${p.stats?.g||0}</span></div>`).join('');
             document.getElementById('dm-lista').innerHTML = allPlayers.filter(p=>p.injured).map(p=>`<div class="border-b border-red-500/20 pb-1 uppercase">• ${p.name}</div>`).join('') || '<span class="opacity-30 uppercase">Vazio</span>';
             document.getElementById('susp-lista').innerHTML = allPlayers.filter(p=>p.suspended).map(p=>`<div class="border-b border-yellow-500/20 pb-1 uppercase">• ${p.name}</div>`).join('') || '<span class="opacity-30 uppercase">Vazio</span>';
@@ -340,12 +340,12 @@
                 </div>
             `).join('') || '<div class="dash-card p-12 text-center"><p class="opacity-40 text-base font-black uppercase tracking-widest">Sem Exercícios Hoje</p></div>';
 
-            // CONTROLE DO STATUS FINALIZADO
+            // LÓGICA CORRIGIDA: SESSÃO FINALIZADA OU ABERTA
             if(d.pc_training_finished === todayISO) {
                 document.getElementById('status-treino-container').innerHTML = `
-                    <div class="w-full py-6 bg-green-600/20 border-2 border-green-500 text-green-400 font-black rounded-2xl shadow-inner uppercase tracking-[0.2em] text-base mt-10 text-center flex justify-center items-center gap-3">
-                        <span class="text-2xl">✅</span> SESSÃO FINALIZADA
-                    </div>
+                    <button onclick="reabrirTreino()" class="w-full py-6 bg-green-600/20 border-2 border-green-500 text-green-400 font-black rounded-2xl shadow-inner uppercase tracking-[0.2em] text-sm mt-10 text-center flex justify-center items-center gap-3 active:scale-95 transition-all">
+                        <span class="text-2xl">✅</span> FINALIZADA (TOCAR PARA REABRIR)
+                    </button>
                 `;
             } else {
                 document.getElementById('status-treino-container').innerHTML = `
@@ -405,15 +405,13 @@
         `).join('') || `<p class="text-center text-sm opacity-40 py-8 uppercase font-bold tracking-widest">Vazio no momento.</p>`;
     }
 
-    // VOTAR COM FEEDBACK INSTANTÂNEO E ENVIO FORÇADO PARA A NUVEM
+    // VOTAÇÃO OTIMIZADA PARA O TOQUE NO IPAD
     function votar(idx, nota) {
-        // 1. Atualiza visualmente na hora para o utilizador
         document.querySelectorAll(`#stars-${idx} button`).forEach((btn, i) => {
             if (i < nota) btn.classList.add('active');
             else btn.classList.remove('active');
         });
         
-        // 2. Envia para o Firebase
         const uid = auth.currentUser.uid;
         db.collection('coachData').doc(uid).get().then(doc => {
             const p = JSON.parse(doc.data().pc_players || "[]");
@@ -436,6 +434,13 @@
                 pc_training_finished: todayISO
             });
         });
+    }
+
+    // REABRIR O TREINO CASO TENHA CLICADO POR ENGANO
+    function reabrirTreino() {
+        if(!confirm("Deseja reabrir a sessão para alterar notas?")) return;
+        const uid = auth.currentUser.uid;
+        db.collection('coachData').doc(uid).update({ pc_training_finished: "" });
     }
 
     function showTab(t) {
