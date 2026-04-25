@@ -15,9 +15,9 @@
         body { background-color: var(--navy); color: #f8fafc; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         
         .nav-container { @apply flex gap-3 p-4 bg-[#020617] sticky top-[85px] z-40 border-b-2 border-white/10 overflow-x-auto no-scrollbar; }
-        .nav-btn { @apply flex-none px-5 py-4 text-xs font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-1 min-w-[100px]; }
+        .nav-btn { @apply flex-none px-5 py-4 text-xs font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-1 min-w-[110px]; }
         .nav-active { @apply border-gold text-navy bg-gradient-to-br from-gold to-yellow-500 shadow-[0_10px_25px_rgba(212,175,55,0.4)] scale-105; }
-        .nav-icon { @apply text-2xl block drop-shadow-md; } 
+        .nav-icon { @apply text-3xl block drop-shadow-md; } 
         
         .dash-card { @apply bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-3xl border border-white/10 shadow-2xl overflow-hidden; }
         .tag { @apply px-3 py-1.5 rounded-lg text-xs font-black text-white uppercase shadow-md; }
@@ -36,7 +36,7 @@
 <body>
 
 <div id="fullscreen-view" class="fixed inset-0 z-[99999] bg-black hidden flex-col justify-center items-center">
-    <button onclick="closeFullScreen()" class="absolute top-8 right-6 bg-red-600 hover:bg-red-700 text-white px-6 py-4 rounded-full font-black text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(220,38,38,0.5)] border-2 border-white/20 active:scale-95 transition-all">✖ FECHAR FOCO</button>
+    <button onclick="closeFullScreen()" class="absolute top-6 right-6 bg-red-600 hover:bg-red-700 text-white px-6 py-4 rounded-full font-black text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(220,38,38,0.5)] border-2 border-white/20 active:scale-95 transition-all">✖ FECHAR FOCO</button>
     <img id="fullscreen-img" src="" class="w-full h-full object-contain p-4">
 </div>
 
@@ -64,7 +64,7 @@
                 <input type="text" id="staff-name" placeholder="Ex: Silva" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-4 text-lg font-bold text-white outline-none mt-2 focus:border-gold/50">
             </div>
             <div>
-                <label class="text-sm font-black text-slate-400 uppercase tracking-widest">Sua Função (Texto Livre)</label>
+                <label class="text-sm font-black text-slate-400 uppercase tracking-widest">Sua Função</label>
                 <input type="text" id="staff-role" placeholder="Ex: Prep. Físico" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-4 text-lg font-bold text-gold uppercase outline-none mt-2 focus:border-gold/50">
             </div>
             <button id="btn-salvar-perfil" onclick="salvarPerfil()" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl mt-4 uppercase tracking-widest text-base active:scale-95 transition-all">Salvar e Manter</button>
@@ -75,7 +75,9 @@
 
 <div class="bg-gradient-to-b from-[#1e293b] to-[#020617] border-b border-white/10 p-6 flex justify-between items-center sticky top-0 z-50">
     <div class="flex items-center gap-5">
-        <div id="team-logo-display" class="w-16 h-16 rounded-full bg-white/5 border-2 border-white/20 flex items-center justify-center overflow-hidden shadow-2xl"></div>
+        <div id="team-logo-display" class="w-16 h-16 rounded-full bg-white/5 border-2 border-white/20 flex items-center justify-center overflow-hidden shadow-2xl">
+            <span class="text-[8px] opacity-30">LOGO</span>
+        </div>
         <div>
             <p id="greeting-msg" class="text-[11px] font-black text-gold uppercase tracking-widest mb-1">BOM DIA</p>
             <h2 id="team-name-display" class="text-white font-black italic text-2xl md:text-3xl leading-none uppercase tracking-tighter drop-shadow-xl">EQUIPE</h2>
@@ -85,10 +87,6 @@
         <button onclick="abrirConfig()" class="bg-black/30 p-3 rounded-full border border-white/20 shadow-lg active:scale-95">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
-        <div class="flex items-center gap-1.5">
-            <span id="status-text" class="text-[8px] font-black text-green-400 uppercase tracking-widest">ON</span>
-            <div id="status-dot" class="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e] animate-pulse"></div>
-        </div>
     </div>
 </div>
 
@@ -96,19 +94,24 @@
     <button onclick="showTab('dash')" id="btn-dash" class="nav-btn nav-active"><span class="nav-icon">📊</span> Início</button>
     <button onclick="showTab('sessao')" id="btn-sessao" class="nav-btn"><span class="nav-icon">⚽</span> Treino</button>
     <button onclick="showTab('micro')" id="btn-micro" class="nav-btn"><span class="nav-icon">🗓️</span> Micro</button>
-    <button onclick="showTab('calendario')" id="btn-calendario" class="nav-btn"><span class="nav-icon">📅</span> Histórico</button>
+    <button onclick="showTab('calendario')" id="btn-calendario" class="nav-btn"><span class="nav-icon">📅</span> Calend.</button>
     <button onclick="showTab('voz')" id="btn-voz" class="nav-btn"><span class="nav-icon">🎙️</span> Relato</button>
 </div>
 
 <div id="content" class="p-5 pb-32 space-y-6">
     
     <div id="tab-dash" class="tab-view space-y-6">
+        
         <div class="dash-card p-8 border-b-8 border-gold/40">
             <h3 class="text-gold text-sm font-black uppercase mb-6 tracking-[0.3em] text-center drop-shadow-md">🏆 Próximo Confronto</h3>
-            <div class="flex flex-col items-center justify-center">
-                <div id="adv-logo" class="w-32 h-32 bg-black/50 rounded-[2rem] border-4 border-white/10 flex items-center justify-center overflow-hidden shadow-2xl mb-5">
-                    <span class="text-sm opacity-20 italic font-black">ADV</span>
+            <div class="flex flex-col items-center justify-center relative">
+                <div class="relative group cursor-pointer" onclick="adicionarLogoAdv()">
+                    <div id="adv-logo" class="w-32 h-32 bg-black/80 rounded-[2rem] border-4 border-white/10 flex items-center justify-center overflow-hidden shadow-2xl mb-3 transition-transform hover:scale-105">
+                        <span class="text-sm opacity-30 font-black">ADV</span>
+                    </div>
+                    <div class="absolute -bottom-2 -right-2 bg-blue-600 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-lg border-2 border-navy">✏️ ADD LOGO</div>
                 </div>
+                
                 <span id="adv-nome" class="text-4xl md:text-5xl font-black italic text-white drop-shadow-xl mb-4 uppercase text-center tracking-tighter">A DEFINIR</span>
                 <div class="flex gap-3">
                     <span id="jogo-data" class="bg-white/10 px-6 py-3 rounded-xl text-sm font-black text-gold uppercase tracking-widest border border-white/5 shadow-inner">--/--</span>
@@ -168,9 +171,11 @@
 
             <div id="players-performance" class="space-y-4"></div>
             
-            <button onclick="finalizarTreino()" class="w-full py-6 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(220,38,38,0.4)] active:scale-95 transition-all uppercase tracking-[0.2em] text-base mt-10">
-                🛑 Encerrar Avaliações
-            </button>
+            <div id="status-treino-container">
+                <button onclick="finalizarTreino()" class="w-full py-6 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(220,38,38,0.4)] active:scale-95 transition-all uppercase tracking-[0.2em] text-base mt-10">
+                    🛑 Encerrar Avaliações
+                </button>
+            </div>
         </div>
     </div>
 
@@ -182,7 +187,7 @@
         <div class="dash-card p-8 border-t-4 border-blue-500">
             <h3 class="text-blue-400 text-lg font-black uppercase mb-6 tracking-widest text-center">📅 Puxar Treino Histórico</h3>
             <input type="date" id="busca-data" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-5 text-xl text-white font-bold outline-none focus:border-blue-500 transition-colors shadow-inner text-center" onchange="buscarTreinoHistorico()">
-            <p class="text-center text-xs opacity-50 mt-4 uppercase font-bold tracking-widest">Selecione a data da sessão anterior</p>
+            <p class="text-center text-xs opacity-50 mt-4 uppercase font-bold tracking-widest">Selecione a data exata do treino anterior</p>
         </div>
         <div id="historico-lista" class="space-y-6">
             <div class="dash-card p-12 text-center border-dashed border-2 border-white/10 bg-transparent shadow-none"><p class="opacity-30 text-sm font-black uppercase tracking-widest">Aguardando Data...</p></div>
@@ -207,46 +212,23 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // ATIVANDO MODO OFFLINE NATIVO DO FIREBASE
-    db.enablePersistence({synchronizeTabs:true}).catch(function(err) {
-        console.log("Offline Mode Error:", err.code);
-    });
-
     let allPlayers = []; 
     let currentFilter = 'Todos';
+    const todayISO = new Date().toISOString().split('T')[0];
 
-    // GERENCIAMENTO DE CONEXÃO UI
-    const statusDot = document.getElementById('status-dot');
-    const statusText = document.getElementById('status-text');
-
-    function updateOnlineStatus() {
-        if (navigator.onLine) {
-            statusDot.className = "w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e] animate-pulse";
-            statusText.innerText = "ON";
-            statusText.className = "text-[8px] font-black text-green-400 uppercase tracking-widest";
-        } else {
-            statusDot.className = "w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444]";
-            statusText.innerText = "OFF (LOCAL)";
-            statusText.className = "text-[8px] font-black text-red-400 uppercase tracking-widest";
-        }
-    }
-    window.addEventListener('online', updateOnlineStatus);
-    window.addEventListener('offline', updateOnlineStatus);
-    updateOnlineStatus();
-
+    // FOCO TOTAL
     function openFullScreen(imgSrc) {
         if(!imgSrc) return;
         const fs = document.getElementById('fullscreen-view');
         document.getElementById('fullscreen-img').src = imgSrc;
-        fs.classList.remove('hidden');
-        fs.classList.add('flex');
+        fs.classList.remove('hidden'); fs.classList.add('flex');
     }
     function closeFullScreen() {
         const fs = document.getElementById('fullscreen-view');
-        fs.classList.add('hidden');
-        fs.classList.remove('flex');
+        fs.classList.add('hidden'); fs.classList.remove('flex');
     }
 
+    // SAUDAÇÃO E PERFIL
     function atualizarSaudacao() {
         const hora = new Date().getHours();
         let s = "BOM DIA";
@@ -280,6 +262,20 @@
         }, 1000);
     }
 
+    // ADD LOGO ADVERSÁRIO (NOVA FUNÇÃO)
+    function adicionarLogoAdv() {
+        const url = prompt("Cole o link (URL) da imagem do escudo do adversário:");
+        if(url && url.trim() !== "") {
+            const uid = auth.currentUser.uid;
+            db.collection('coachData').doc(uid).get().then(doc => {
+                let s = JSON.parse(doc.data().pc_scouting || "{}");
+                s.logo = url;
+                db.collection('coachData').doc(uid).update({ pc_scouting: JSON.stringify(s) });
+                alert("Escudo do adversário atualizado!");
+            });
+        }
+    }
+
     function login() { auth.signInWithEmailAndPassword(document.getElementById('email').value, document.getElementById('pass').value); }
 
     auth.onAuthStateChanged(user => {
@@ -291,19 +287,20 @@
         db.collection('coachData').doc(uid).onSnapshot(doc => {
             if (!doc.exists) return;
             const d = doc.data();
-            const todayISO = new Date().toISOString().split('T')[0];
             const todayName = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'][new Date().getDay()];
 
+            // ESCUDO EQUIPE (Corrigido para object-contain preencher bem)
             if(d.pc_team_name) document.getElementById('team-name-display').innerText = d.pc_team_name;
-            if(d.pc_team_logo_url) document.getElementById('team-logo-display').innerHTML = `<img src="${d.pc_team_logo_url}" class="w-full h-full object-contain p-1">`;
+            if(d.pc_team_logo_url) document.getElementById('team-logo-display').innerHTML = `<img src="${d.pc_team_logo_url}" class="w-full h-full object-contain">`;
 
+            // ADVERSÁRIO E LOGO
             if(d.pc_scouting) {
                 const s = JSON.parse(d.pc_scouting);
                 if(s.opponent) {
                     document.getElementById('adv-nome').innerText = s.opponent;
                     document.getElementById('jogo-data').innerText = s.date ? s.date.split('-').reverse().join('/') : "A DEFINIR";
                     document.getElementById('jogo-sistema').innerText = "SIS: " + (s.system || "-");
-                    if(s.logo) document.getElementById('adv-logo').innerHTML = `<img src="${s.logo}" class="w-full h-full object-contain p-2">`;
+                    if(s.logo) document.getElementById('adv-logo').innerHTML = `<img src="${s.logo}" class="w-full h-full object-contain">`;
                 }
             }
 
@@ -341,11 +338,26 @@
                     </div>
                     <div class="relative">
                         <img src="${ex.image || ''}" class="w-full h-72 object-contain bg-black/60 p-2">
-                        ${ex.image ? `<button onclick="openFullScreen('${ex.image}')" class="absolute bottom-4 right-4 bg-blue-600/90 text-white px-5 py-3 rounded-xl font-black text-xs shadow-xl backdrop-blur-md border border-white/30 uppercase tracking-widest hover:scale-105 transition-all">🔍 Tela Cheia</button>` : ''}
+                        ${ex.image ? `<button onclick="openFullScreen('${ex.image}')" class="absolute bottom-4 right-4 bg-blue-600/90 text-white px-5 py-3 rounded-xl font-black text-xs shadow-xl backdrop-blur-md border border-white/30 uppercase tracking-widest active:scale-95 transition-all">🔍 Foco Total</button>` : ''}
                     </div>
                     ${ex.desc ? `<div class="p-5 text-sm text-white/70 italic border-t border-white/5 bg-[#1e293b] leading-relaxed">${ex.desc}</div>` : ''}
                 </div>
             `).join('') || '<div class="dash-card p-12 text-center"><p class="opacity-40 text-base font-black uppercase tracking-widest">Sem Exercícios Hoje</p></div>';
+
+            // VERIFICAÇÃO SE O TREINO JÁ FOI FINALIZADO
+            if(d.pc_training_finished === todayISO) {
+                document.getElementById('status-treino-container').innerHTML = `
+                    <div class="w-full py-6 bg-green-600/20 border-2 border-green-500 text-green-400 font-black rounded-2xl shadow-inner uppercase tracking-widest text-base mt-10 text-center flex justify-center items-center gap-2">
+                        <span>✅</span> SESSÃO FINALIZADA
+                    </div>
+                `;
+            } else {
+                document.getElementById('status-treino-container').innerHTML = `
+                    <button onclick="finalizarTreino()" class="w-full py-6 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(220,38,38,0.4)] active:scale-95 transition-all uppercase tracking-[0.2em] text-base mt-10">
+                        🛑 Encerrar Avaliações
+                    </button>
+                `;
+            }
         });
     }
 
@@ -364,7 +376,7 @@
                     </div>
                     <div class="relative">
                         <img src="${ex.image || ''}" class="w-full h-72 object-contain bg-black/60 p-2">
-                        ${ex.image ? `<button onclick="openFullScreen('${ex.image}')" class="absolute bottom-4 right-4 bg-blue-600/90 text-white px-5 py-3 rounded-xl font-black text-xs shadow-xl backdrop-blur-md border border-white/30 uppercase tracking-widest hover:scale-105 transition-all">🔍 Tela Cheia</button>` : ''}
+                        ${ex.image ? `<button onclick="openFullScreen('${ex.image}')" class="absolute bottom-4 right-4 bg-blue-600/90 text-white px-5 py-3 rounded-xl font-black text-xs shadow-xl backdrop-blur-md border border-white/30 uppercase tracking-widest active:scale-95 transition-all">🔍 Foco Total</button>` : ''}
                     </div>
                     ${ex.desc ? `<div class="p-5 text-sm text-white/70 italic border-t border-white/5 bg-[#1e293b] leading-relaxed">${ex.desc}</div>` : ''}
                 </div>
@@ -406,15 +418,18 @@
         });
     }
 
+    // FINALIZA E SOME COM O BOTÃO
     function finalizarTreino() {
-        if(!confirm("Atenção: Encerrar e sincronizar com a Nuvem?")) return;
+        if(!confirm("Atenção: Encerrar e travar avaliações de hoje?")) return;
         const uid = auth.currentUser.uid;
         const staff = (localStorage.getItem('pc_staff_role')||"Comissão") + " " + (localStorage.getItem('pc_staff_name')||"");
         db.collection('coachData').doc(uid).get().then(doc => {
             let list = JSON.parse(doc.data().pc_notices_list || "[]");
-            list.unshift({ id: Date.now(), date: new Date().toISOString().split('T')[0], text: `🏁 [INFO]: Sessão finalizada por ${staff.trim()}.` });
-            db.collection('coachData').doc(uid).update({ pc_notices_list: JSON.stringify(list) });
-            alert("Sistema Atualizado!");
+            list.unshift({ id: Date.now(), date: todayISO, text: `🏁 [INFO]: Sessão finalizada por ${staff.trim()}.` });
+            db.collection('coachData').doc(uid).update({ 
+                pc_notices_list: JSON.stringify(list),
+                pc_training_finished: todayISO
+            });
         });
     }
 
@@ -423,11 +438,9 @@
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
         document.getElementById('tab-' + t).classList.remove('hidden');
         document.getElementById('btn-' + t).classList.add('nav-active');
-        window.scrollTo({ top: 0, behavior: 'smooth' }); 
     }
 
     function iniciarVoz() {
-        if (!navigator.onLine) return alert("A gravação de voz precisa de internet para funcionar.");
         const r = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         r.lang = 'pt-BR';
         r.onresult = e => document.getElementById('voice-txt').value += e.results[0][0].transcript + " ";
@@ -441,7 +454,7 @@
         const role = localStorage.getItem('pc_staff_role') || "Comissão";
         db.collection('coachData').doc(uid).get().then(doc => {
             let list = JSON.parse(doc.data().pc_notices_list || "[]");
-            list.unshift({ id: Date.now(), date: new Date().toISOString().split('T')[0], text: `[${role.toUpperCase()}]: ${txt}` });
+            list.unshift({ id: Date.now(), date: todayISO, text: `[${role.toUpperCase()}]: ${txt}` });
             db.collection('coachData').doc(uid).update({ pc_notices_list: JSON.stringify(list) });
             alert("Enviado para a Nuvem!"); document.getElementById('voice-txt').value = '';
         });
