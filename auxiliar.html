@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ProCoach Auxiliar - OFICIAL SYNC</title>
+    <title>ProCoach Auxiliar - SMART SYNC</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
@@ -24,6 +24,10 @@
         
         .filter-btn { @apply px-5 py-3 rounded-xl border border-white/10 text-sm font-black uppercase whitespace-nowrap bg-black/40 text-slate-400 transition-colors shadow-sm; }
         .filter-active { @apply bg-blue-600 text-white border-blue-400 shadow-[0_0_15px_rgba(37,99,235,0.5)]; }
+
+        /* TAGS DE AVISOS */
+        .aviso-tag { @apply border-2 py-3 rounded-xl text-xs font-black uppercase transition-all shadow-md active:scale-95 opacity-50; }
+        .aviso-tag.active { @apply opacity-100 scale-105 shadow-xl; }
 
         .star-rating button { font-size: 32px; color: #334155; transition: 0.2s; drop-shadow: 0 4px 6px rgba(0,0,0,0.6); outline: none; -webkit-tap-highlight-color: transparent; }
         .star-rating button.active { color: #facc15; text-shadow: 0 0 15px rgba(250,204,21,0.7); }
@@ -90,7 +94,7 @@
     </div>
     <div class="flex flex-col items-end gap-3">
         <button onclick="abrirConfig()" class="bg-black/30 p-3 rounded-full border border-white/20 shadow-lg active:scale-95">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
     </div>
 </div>
@@ -100,7 +104,7 @@
     <button onclick="showTab('sessao')" id="btn-sessao" class="nav-btn"><span class="nav-icon">⚽</span> Treino</button>
     <button onclick="showTab('micro')" id="btn-micro" class="nav-btn"><span class="nav-icon">🗓️</span> Micro</button>
     <button onclick="showTab('calendario')" id="btn-calendario" class="nav-btn"><span class="nav-icon">📅</span> Calend.</button>
-    <button onclick="showTab('voz')" id="btn-voz" class="nav-btn"><span class="nav-icon">🎙️</span> Relato</button>
+    <button onclick="showTab('avisos')" id="btn-avisos" class="nav-btn"><span class="nav-icon">📢</span> Avisos</button>
 </div>
 
 <div id="content" class="p-5 pb-32 space-y-6">
@@ -174,14 +178,8 @@
             <div id="players-performance" class="space-y-4 mb-6"></div>
             
             <button id="btn-salvar-notas" onclick="sincronizarNotasNuvem()" class="w-full py-5 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(34,197,94,0.4)] active:scale-95 transition-all uppercase tracking-[0.1em] text-base mb-4">
-                ✓ SALVAR NOTAS E AVISAR O MISTER
+                ✓ ENVIAR NOTAS PARA O COMPUTADOR
             </button>
-
-            <div id="status-treino-container" class="border-t border-white/10 pt-4">
-                <button onclick="finalizarTreino()" class="w-full py-5 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(220,38,38,0.4)] active:scale-95 transition-all uppercase tracking-[0.2em] text-sm">
-                    🛑 Enviar Aviso de Fim de Sessão
-                </button>
-            </div>
         </div>
     </div>
 
@@ -199,15 +197,29 @@
         </div>
     </div>
 
-    <div id="tab-voz" class="tab-view hidden space-y-6">
+    <div id="tab-avisos" class="tab-view hidden space-y-6">
         <div class="dash-card p-8 border border-gold/30">
-            <h3 class="text-gold text-sm font-black uppercase mb-8 tracking-widest text-center">🎙️ Gravar Ocorrência</h3>
-            <textarea id="voice-txt" class="w-full bg-black/50 text-lg font-medium h-64 outline-none border-2 border-white/10 rounded-[2rem] p-6 text-white placeholder-white/30 focus:border-gold transition-colors shadow-inner resize-none" placeholder="Relate o que ocorreu no campo..."></textarea>
+            <h3 class="text-gold text-sm font-black uppercase mb-6 tracking-widest text-center flex justify-center items-center gap-2">
+                <span class="text-2xl">📢</span> Enviar Aviso ao Mister
+            </h3>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                <button id="tag-lesao" onclick="selecionarEtiqueta('lesao', '🚑 LESÃO')" class="aviso-tag bg-red-500/20 text-red-400 border-red-500/50 hover:bg-red-500/30">🚑 Lesão</button>
+                <button id="tag-atraso" onclick="selecionarEtiqueta('atraso', '⏰ ATRASO')" class="aviso-tag bg-yellow-500/20 text-yellow-400 border-yellow-500/50 hover:bg-yellow-500/30">⏰ Atraso</button>
+                <button id="tag-tatica" onclick="selecionarEtiqueta('tatica', '💡 TÁTICA')" class="aviso-tag bg-blue-500/20 text-blue-400 border-blue-500/50 hover:bg-blue-500/30">💡 Tática</button>
+                <button id="tag-geral" onclick="selecionarEtiqueta('geral', '⚠️ GERAL')" class="aviso-tag bg-slate-500/20 text-slate-300 border-slate-500/50 hover:bg-slate-500/30 active">⚠️ Geral</button>
+            </div>
+
+            <textarea id="voice-txt" class="w-full bg-black/50 text-lg font-medium h-48 outline-none border-2 border-white/10 rounded-[2rem] p-6 text-white placeholder-white/30 focus:border-gold transition-colors shadow-inner resize-none" placeholder="Escreva ou dite o detalhe do aviso aqui..."></textarea>
         </div>
-        <button onclick="iniciarVoz()" class="w-full bg-gradient-to-r from-gold to-yellow-500 text-navy font-black py-8 rounded-[2rem] shadow-2xl active:scale-95 transition-all text-lg uppercase tracking-widest">
-            🎤 Iniciar Ditado
+
+        <button onclick="iniciarVoz()" class="w-full bg-gradient-to-r from-gold to-yellow-500 text-navy font-black py-8 rounded-[2rem] shadow-2xl active:scale-95 transition-all text-lg uppercase tracking-widest flex justify-center items-center gap-3">
+            <span class="text-3xl">🎤</span> Ditar Aviso
         </button>
-        <button onclick="enviarVoz()" class="w-full bg-blue-600 text-white font-black py-6 rounded-[2rem] text-base uppercase mt-2 tracking-widest shadow-lg active:scale-95 transition-transform">Salvar na Nuvem</button>
+
+        <button onclick="enviarAviso()" class="w-full bg-blue-600 text-white font-black py-6 rounded-[2rem] text-base uppercase mt-2 tracking-widest shadow-lg active:scale-95 transition-transform">
+            ✓ Publicar no Quadro do PC
+        </button>
     </div>
 </div>
 
@@ -219,16 +231,15 @@
 
     let allPlayers = []; 
     let currentFilter = 'Todos';
-    let localRatings = {}; // Variável que segura as notas no celular antes de salvar
+    let localRatings = {}; 
+    let tagAtual = '⚠️ GERAL'; // Etiqueta padrão dos avisos
     const todayISO = new Date().toISOString().split('T')[0];
 
-    // FUNÇÃO QUE LIMPA AS ASPAS QUE O APP OFICIAL CRIA ("JSON.stringify bug")
     function safeParse(val) {
         if (!val) return "";
         if (typeof val !== 'string') return val;
         try { 
             const parsed = JSON.parse(val); 
-            // Se o resultado do parse ainda for uma string "AC SOCCER", devolve o texto limpo
             return typeof parsed === 'string' ? parsed : parsed;
         } catch(e) { 
             return val; 
@@ -321,7 +332,6 @@
             const d = doc.data();
             const todayName = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'][new Date().getDay()];
 
-            // LOGO DA EQUIPE COM CÓDIGO LIMPO (Sem aspas)
             const teamLogo = safeParse(d.pc_team_logo_url);
             const teamName = safeParse(d.pc_team_name);
             
@@ -352,15 +362,13 @@
             const avisos = safeParse(d.pc_notices_list || "[]");
             document.getElementById('avisos-lista').innerHTML = avisos.slice(0,3).map(n => `<p class="border-b border-white/5 pb-3 last:border-0 truncate text-lg">➤ ${n.text}</p>`).join('');
 
-            // CARREGAMENTO DOS JOGADORES 
+            // CARREGAMENTO DOS JOGADORES (Sincronizado com App Oficial)
             if(Object.keys(localRatings).length === 0) {
-                allPlayers = safeParse(d.pc_players || "[]");
+                allPlayers = safeParse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
                 
                 try {
                     const hist = safeParse(d.pc_history_v2 || "{}");
                     if(hist[todayISO] && hist[todayISO].ratings) {
-                        // O V2106 usa a posição (0, 1, 2) da lista de APTOS como ID. 
-                        // Mapeamos isso de volta para o Auxiliar.
                         let offRatings = hist[todayISO].ratings;
                         let aptoIndex = 0;
                         allPlayers.forEach(p => {
@@ -469,14 +477,11 @@
 
     function votar(offIndex, nota) {
         nota = parseInt(nota);
-        
-        // Atualiza a interface
         document.querySelectorAll(`#stars-${offIndex} button`).forEach((btn, i) => {
             if (i < nota) btn.classList.add('active');
             else btn.classList.remove('active');
         });
         
-        // Guarda na memória a nota ligada ao ÍNDICE OFICIAL (ex: "0": 5, "1": 4)
         localRatings[offIndex] = nota;
         
         const btnSalvar = document.getElementById('btn-salvar-notas');
@@ -484,7 +489,6 @@
         btnSalvar.innerText = "⚠️ CLIQUE AQUI PARA ENVIAR PARA O COMPUTADOR";
     }
 
-    // A MÁGICA FINAL: ENVIANDO DADOS EXATAMENTE COMO O SEU APP LÊ
     function sincronizarNotasNuvem() {
         const uid = auth.currentUser.uid;
         const btn = document.getElementById('btn-salvar-notas');
@@ -492,16 +496,12 @@
 
         db.collection('coachData').doc(uid).get().then(doc => {
             let data = doc.data();
-            
-            // Lê o Histórico do App Oficial e limpa as aspas de proteção
             let hist = safeParse(data.pc_history_v2 || "{}");
             if(!hist[todayISO]) hist[todayISO] = { drills: [], header: {} };
             if(!hist[todayISO].ratings) hist[todayISO].ratings = {};
             
-            // Adiciona as notas usando o INDEX NUMÉRICO exigido pelo V2106 Oficial
             hist[todayISO].ratings = { ...hist[todayISO].ratings, ...localRatings };
 
-            // Envia de volta protegido para o App Oficial ler
             db.collection('coachData').doc(uid).update({
                 pc_history_v2: JSON.stringify(hist),
                 pc_last_update: firebase.firestore.FieldValue.serverTimestamp()
@@ -516,31 +516,15 @@
         });
     }
 
-    function finalizarTreino() {
-        if(!confirm("Avisar ao Professor que o treino acabou?")) return;
-        const uid = auth.currentUser.uid;
-        const staff = safeParse(localStorage.getItem('pc_staff_role')||"Comissão") + " " + safeParse(localStorage.getItem('pc_staff_name')||"");
-        
-        db.collection('coachData').doc(uid).get().then(doc => {
-            const data = doc.data();
-            let list = safeParse(data.pc_notices_list || "[]");
-            let msg = `🏁 [INFO]: Sessão finalizada por ${staff.trim()}.`;
-            
-            list.unshift({ id: Date.now(), date: todayISO, text: msg });
-
-            db.collection('coachData').doc(uid).update({ 
-                pc_notices_list: JSON.stringify(list)
-            }).then(() => {
-                mostrarToast("✅ AVISO ENVIADO AO MURAL");
-            });
-        });
-    }
-
-    function showTab(t) {
-        document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
-        document.getElementById('tab-' + t).classList.remove('hidden');
-        document.getElementById('btn-' + t).classList.add('nav-active');
+    /* -------------------------------------
+       NOVAS FUNÇÕES DE ETIQUETAS E AVISOS
+    --------------------------------------*/
+    function selecionarEtiqueta(idBtn, tagTexto) {
+        tagAtual = tagTexto;
+        // Limpa todas as tags
+        document.querySelectorAll('.aviso-tag').forEach(b => b.classList.remove('active'));
+        // Ativa a selecionada
+        document.getElementById('tag-' + idBtn).classList.add('active');
     }
 
     function iniciarVoz() {
@@ -550,26 +534,38 @@
         r.start();
     }
 
-    function enviarVoz() {
+    function enviarAviso() {
         const txt = document.getElementById('voice-txt').value;
-        if(!txt) return alert("Grave algo primeiro.");
+        if(!txt) return alert("Grave ou digite um aviso primeiro.");
+        
         const uid = auth.currentUser.uid;
         const role = safeParse(localStorage.getItem('pc_staff_role')) || "Comissão";
+        const name = safeParse(localStorage.getItem('pc_staff_name')) || "";
+        const autor = name ? `${role} ${name}` : role;
         
         db.collection('coachData').doc(uid).get().then(doc => {
             const data = doc.data();
             let list = safeParse(data.pc_notices_list || "[]");
-            let msg = `[${role.toUpperCase()}]: ${txt}`;
+            
+            // Formata o texto final com a Etiqueta Inteligente
+            let msg = `[${tagAtual} - ${autor.toUpperCase()}]: ${txt}`;
             
             list.unshift({ id: Date.now(), date: todayISO, text: msg });
 
             db.collection('coachData').doc(uid).update({ 
                 pc_notices_list: JSON.stringify(list)
             }).then(() => {
-                mostrarToast("🎙️ RELATO ENVIADO AO MURAL");
+                mostrarToast("✅ PUBLICADO NO QUADRO OFICIAL!");
                 document.getElementById('voice-txt').value = '';
             });
         });
+    }
+
+    function showTab(t) {
+        document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
+        document.getElementById('tab-' + t).classList.remove('hidden');
+        document.getElementById('btn-' + t).classList.add('nav-active');
     }
 </script>
 </body>
