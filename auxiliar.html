@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ProCoach Auxiliar - MAX SYNC</title>
+    <title>ProCoach Auxiliar - MAX SYNC V2106</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
@@ -11,119 +11,82 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
     <style>
-        :root { --navy: #020617; --gold: #d4af37; }
-        body { background-color: var(--navy); color: #f8fafc; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        :root { --navy: #020617; --gold: #d4af37; --success: #22c55e; }
+        body { background-color: var(--navy); color: #f8fafc; font-family: 'Inter', sans-serif; }
         
-        .nav-container { @apply flex gap-3 p-4 bg-[#020617] sticky top-[85px] z-40 border-b-2 border-white/10 overflow-x-auto no-scrollbar; }
-        .nav-btn { @apply flex-none px-5 py-4 text-xs font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-1 min-w-[110px]; }
+        .nav-btn { @apply flex-none px-5 py-4 text-xs font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 flex flex-col items-center gap-1 min-w-[110px]; }
         .nav-active { @apply border-gold text-navy bg-gradient-to-br from-gold to-yellow-500 shadow-[0_10px_25px_rgba(212,175,55,0.4)] scale-105; }
-        .nav-icon { @apply text-3xl block drop-shadow-md; } 
         
-        .dash-card { @apply bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-3xl border border-white/10 shadow-2xl overflow-hidden; }
-        .tag { @apply px-3 py-1.5 rounded-lg text-xs font-black text-white uppercase shadow-md; }
-        
-        .filter-btn { @apply px-5 py-3 rounded-xl border border-white/10 text-sm font-black uppercase whitespace-nowrap bg-black/40 text-slate-400 transition-colors shadow-sm; }
-        .filter-active { @apply bg-blue-600 text-white border-blue-400 shadow-[0_0_15px_rgba(37,99,235,0.5)]; }
-
-        .star-rating button { font-size: 32px; color: #334155; transition: 0.2s; outline: none; -webkit-tap-highlight-color: transparent; }
+        .star-rating button { font-size: 32px; color: #334155; transition: 0.2s; outline: none; }
         .star-rating button.active { color: #facc15; text-shadow: 0 0 15px rgba(250,204,21,0.7); }
 
-        #loading { position: fixed; inset: 0; background: #020617; color: white; display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; gap: 15px; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        /* Status de Conexão igual ao Desktop */
+        .status-online { @apply flex items-center gap-2 bg-green-500/10 text-green-500 px-3 py-1 rounded-full text-[10px] font-black uppercase border border-green-500/20; }
         
-        #toast { visibility: hidden; min-width: 280px; background-color: #22c55e; color: #fff; text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 999999; left: 50%; transform: translateX(-50%); top: -50px; font-size: 13px; font-weight: black; text-transform: uppercase; box-shadow: 0px 10px 30px rgba(34, 197, 94, 0.5); opacity: 0; transition: all 0.4s ease-in-out; border: 2px solid white; }
-        #toast.show { visibility: visible; opacity: 1; top: 30px; }
+        #toast { visibility: hidden; min-width: 280px; background-color: var(--success); color: #fff; text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 999999; left: 50%; transform: translateX(-50%); top: 30px; opacity: 0; transition: 0.4s; border: 2px solid white; font-weight: 900; }
+        #toast.show { visibility: visible; opacity: 1; }
     </style>
 </head>
 <body>
 
-<div id="toast">⭐ Sincronizado com o Oficial!</div>
+<div id="toast">⭐ SINCRONIZADO COM V2106</div>
 
-<div id="fullscreen-view" class="fixed inset-0 z-[99999] bg-black hidden flex-col justify-center items-center">
-    <button onclick="closeFullScreen()" class="absolute top-6 right-6 bg-red-600 text-white px-6 py-4 rounded-full font-black text-sm uppercase border-2 border-white/20">✖ FECHAR FOCO</button>
-    <img id="fullscreen-img" src="" class="w-full h-full object-contain p-4">
-</div>
-
-<div id="loading">
-    <div class="text-5xl font-black italic text-gold animate-pulse">PROCOACH</div>
-    <div class="text-sm font-bold opacity-50 uppercase tracking-[0.5em] mt-2">Módulo Campo</div>
-</div>
-
-<div id="auth-screen" class="fixed inset-0 z-[100] bg-slate-950 flex items-center justify-center p-4 hidden">
-    <div class="bg-white p-10 rounded-[2rem] shadow-2xl w-full max-w-sm text-slate-900 text-center">
-        <h1 class="text-4xl font-black italic mb-2 uppercase">PROCOACH</h1>
-        <input type="email" id="email" placeholder="E-mail" class="w-full border-b-2 py-4 mb-4 outline-none text-center font-bold">
-        <input type="password" id="pass" placeholder="Senha" class="w-full border-b-2 py-4 mb-8 outline-none text-center font-bold">
-        <button onclick="login()" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl uppercase tracking-widest text-sm">Sincronizar App</button>
-    </div>
-</div>
-
-<div class="bg-gradient-to-b from-[#1e293b] to-[#020617] border-b border-white/10 p-6 flex justify-between items-center sticky top-0 z-50">
-    <div class="flex items-center gap-5">
-        <div id="team-logo-display" class="w-16 h-16 rounded-full bg-white/5 border-2 border-white/20 flex items-center justify-center overflow-hidden"></div>
+<div class="bg-[#020617] border-b border-white/10 p-5 flex justify-between items-center sticky top-0 z-50">
+    <div class="flex items-center gap-4">
+        <div id="team-logo-display" class="w-12 h-12 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden">
+            <span class="text-[10px] opacity-20">LOGO</span>
+        </div>
         <div>
-            <p id="greeting-msg" class="text-[11px] font-black text-gold uppercase tracking-widest mb-1">CARREGANDO...</p>
-            <h2 id="team-name-display" class="text-white font-black italic text-2xl uppercase tracking-tighter">EQUIPE</h2>
+            <h2 id="team-name-display" class="text-white font-black italic text-xl uppercase tracking-tighter">AC SOCCER</h2>
+            <div class="status-online"><span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Online</div>
         </div>
+    </div>
+    <div class="text-right">
+        <p id="current-date" class="text-gold font-black text-xs">26 de abr. de 2026</p>
+        <p class="text-slate-500 font-bold text-[10px] uppercase">Módulo Auxiliar</p>
     </div>
 </div>
 
-<div class="nav-container">
-    <button onclick="showTab('dash')" id="btn-dash" class="nav-btn nav-active"><span class="nav-icon">📊</span> Início</button>
-    <button onclick="showTab('sessao')" id="btn-sessao" class="nav-btn"><span class="nav-icon">⚽</span> Treino</button>
-    <button onclick="showTab('micro')" id="btn-micro" class="nav-btn"><span class="nav-icon">🗓️</span> Micro</button>
-    <button onclick="showTab('voz')" id="btn-voz" class="nav-btn"><span class="nav-icon">🎙️</span> Relato</button>
+<div class="flex gap-3 p-4 bg-[#020617] sticky top-[85px] z-40 border-b border-white/5 overflow-x-auto no-scrollbar">
+    <button onclick="showTab('sessao')" id="btn-sessao" class="nav-btn nav-active"><span>⚽</span> SESSÃO</button>
+    <button onclick="showTab('dash')" id="btn-dash" class="nav-btn"><span>📊</span> INÍCIO</button>
+    <button onclick="showTab('voz')" id="btn-voz" class="nav-btn"><span>🎙️</span> RELATO</button>
 </div>
 
-<div id="content" class="p-5 pb-32 space-y-6">
-    <div id="tab-dash" class="tab-view space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div class="dash-card p-6 border-l-8 border-gold">
-                <h3 class="text-slate-400 text-sm font-black uppercase mb-5 tracking-widest flex items-center gap-3">
-                    <span class="text-3xl">📅</span> AGENDA DE HOJE
-                </h3>
-                <div id="agenda-hoje" class="space-y-4"></div>
-            </div>
-            <div class="dash-card p-6 border-l-8 border-yellow-500 bg-yellow-500/5">
-                <h3 class="text-yellow-500 text-sm font-black uppercase mb-5 tracking-widest flex items-center gap-3">
-                    <span class="text-3xl">📋</span> AVISOS
-                </h3>
-                <div id="avisos-lista" class="space-y-4 text-base text-white/90 font-bold"></div>
-            </div>
+<div id="content" class="p-5 pb-32">
+    
+    <div id="tab-sessao" class="tab-view space-y-6">
+        <div id="drills-header" class="bg-blue-600 rounded-2xl p-4 flex justify-between items-center shadow-lg">
+            <span class="text-white font-black uppercase text-sm">Treino do Dia</span>
+            <span id="sessao-timer" class="bg-black/20 text-white px-3 py-1 rounded-lg text-xs font-bold">90 min</span>
         </div>
-    </div>
 
-    <div id="tab-sessao" class="tab-view hidden space-y-6">
-        <div id="drills-lista" class="space-y-6"></div>
-        
-        <div class="dash-card p-6 bg-gradient-to-t from-[#0f172a] to-[#1e293b] border-t-2 border-gold/50 mt-10">
-            <h3 class="text-gold text-lg font-black uppercase mb-5 text-center tracking-widest">⭐ Avaliar Desempenho</h3>
-            
-            <div class="flex gap-2 overflow-x-auto no-scrollbar py-2 mb-6" id="pos-filters">
-                <button onclick="filtrarPosicao('Todos')" id="f-Todos" class="filter-btn filter-active">Todos</button>
-                </div>
+        <div id="players-list" class="space-y-3">
+            </div>
 
-            <div id="players-performance" class="space-y-4 mb-6"></div>
-            
-            <button id="btn-salvar-notas" onclick="sincronizarNotasNuvem()" class="w-full py-5 bg-green-600 text-white font-black rounded-2xl shadow-lg uppercase text-base mb-4">
-                ✓ SALVAR NOTAS NA NUVEM
+        <div id="action-area" class="pt-6 border-t border-white/10">
+            <button id="btn-finalizar" onclick="finalizarESincronizar()" class="w-full py-6 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-2xl active:scale-95 transition-all uppercase tracking-widest flex justify-center items-center gap-3">
+                <span id="btn-text">✅ FINALIZAR E ENVIAR NOTAS</span>
             </button>
         </div>
     </div>
 
-    <div id="tab-voz" class="tab-view hidden space-y-6">
-        <div class="dash-card p-8">
-            <h3 class="text-gold text-sm font-black uppercase mb-8 tracking-widest text-center">🎙️ Gravar Ocorrência</h3>
-            <textarea id="voice-txt" class="w-full bg-black/50 text-lg h-64 outline-none border-2 border-white/10 rounded-[2rem] p-6 text-white" placeholder="Fale sobre o treino..."></textarea>
+    <div id="tab-dash" class="tab-view hidden space-y-4">
+        <div class="bg-[#1e293b] p-6 rounded-2xl border border-white/10">
+            <h3 class="text-slate-400 font-black text-xs uppercase mb-4 tracking-widest">Resumo de Performance</h3>
+            <div id="mini-rank" class="space-y-2">
+                </div>
         </div>
-        <button onclick="iniciarVoz()" class="w-full bg-gradient-to-r from-gold to-yellow-500 text-navy font-black py-8 rounded-[2rem] text-lg uppercase">
-            🎤 Iniciar Ditado
-        </button>
+    </div>
+
+    <div id="tab-voz" class="tab-view hidden space-y-4">
+        <textarea id="voice-txt" class="w-full bg-black/50 border-2 border-white/10 rounded-3xl p-6 text-white h-60" placeholder="Relate ocorrências aqui..."></textarea>
+        <button onclick="iniciarVoz()" class="w-full bg-gold text-navy font-black py-6 rounded-2xl uppercase tracking-widest">🎤 INICIAR DITADO</button>
     </div>
 </div>
 
 <script>
-    // Configurações do seu Firebase
+    // Configurações do Firebase
     const firebaseConfig = { 
         apiKey: "AIzaSyBURvWmrRe-q-l1h2XKaQepeRQoNcmi7nk", 
         authDomain: "procoachoficial.firebaseapp.com", 
@@ -133,112 +96,119 @@
         appId: "1:128403842399:web:c54259e2b6a5622fb942ea" 
     };
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
     const db = firebase.firestore();
+    const auth = firebase.auth();
 
-    let allPlayers = []; 
-    let currentFilter = 'Todos';
-    let syncBloqueado = false;
+    let allPlayers = [];
     const todayISO = new Date().toISOString().split('T')[0];
 
-    // INICIALIZAÇÃO E SYNC
+    // Login automático para testes (Substitua se necessário)
     auth.onAuthStateChanged(user => {
-        if (user) { 
-            document.getElementById('loading').style.display = 'none'; 
-            document.getElementById('auth-screen').style.display = 'none'; 
-            startSync(user.uid); 
-        } else {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('auth-screen').style.display = 'flex';
-        }
+        if(user) syncData(user.uid);
+        else auth.signInWithEmailAndPassword("seu-email@teste.com", "sua-senha");
     });
 
-    function startSync(uid) {
+    function syncData(uid) {
         db.collection('coachData').doc(uid).onSnapshot(doc => {
-            if (!doc.exists || syncBloqueado) return;
-            const d = doc.data();
+            if(!doc.exists) return;
+            const data = doc.data();
             
-            // Dados da Equipe
-            document.getElementById('team-name-display').innerText = d.pc_team_name || "EQUIPE";
-            const teamLogo = d.pc_team_logo_url || d.pc_logo || "";
-            document.getElementById('team-logo-display').innerHTML = teamLogo ? `<img src="${teamLogo}" class="w-full h-full object-contain">` : "";
+            // Sincroniza Nome e Logo conforme Imagem 2
+            document.getElementById('team-name-display').innerText = data.pc_team_name || "AC SOCCER";
+            if(data.pc_logo) document.getElementById('team-logo-display').innerHTML = `<img src="${data.pc_logo}" class="w-full h-full object-cover">`;
 
-            // Agenda e Treinos
-            const micro = JSON.parse(d.pc_micro_v7 || "{}");
-            const todayName = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'][new Date().getDay()];
-            const drills = JSON.parse(d.pc_history_v2 || "{}")[todayISO]?.drills || [];
-            
-            renderDrills(drills);
-            
-            // Plantel (Apenas se não estivermos editando notas agora)
-            allPlayers = JSON.parse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
+            // Sincroniza Plantel
+            allPlayers = JSON.parse(data.pc_players || "[]");
             renderPlayers();
+
+            // Verifica se a sessão já foi fechada hoje
+            if(data.pc_training_finished === todayISO) {
+                travarInterface();
+            }
         });
     }
 
-    function renderDrills(drills) {
-        document.getElementById('drills-lista').innerHTML = drills.map((ex, i) => `
-            <div class="dash-card">
-                <div class="bg-black/50 p-4 flex justify-between items-center">
-                    <span class="text-gold font-black uppercase text-sm">${i+1}. ${ex.name}</span>
-                    <span class="text-xs font-bold text-white/50">${ex.time} MIN</span>
-                </div>
-                <div class="relative h-64 bg-black/20">
-                    <img src="${ex.image}" class="w-full h-full object-contain p-2">
-                    <button onclick="openFullScreen('${ex.image}')" class="absolute bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-lg font-black text-xs">🔍 FOCO</button>
-                </div>
-            </div>
-        `).join('') || '<p class="text-center opacity-30">Nenhum treino planejado para hoje.</p>';
-    }
-
     function renderPlayers() {
-        const f = allPlayers.filter(p => !p.injured && (currentFilter === 'Todos' || p.pos === currentFilter));
-        document.getElementById('players-performance').innerHTML = f.map(p => `
-            <div class="flex items-center justify-between p-4 bg-black/40 rounded-2xl border border-white/5">
-                <div class="flex items-center gap-4">
-                    <img src="${p.image}" class="w-12 h-12 rounded-full border border-white/10 object-cover">
-                    <span class="font-black text-sm uppercase">${p.name}</span>
+        const container = document.getElementById('players-list');
+        container.innerHTML = allPlayers.map((p, idx) => `
+            <div class="bg-[#1e293b]/50 p-4 rounded-2xl border border-white/5 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-black text-xs text-white">
+                        ${p.image ? `<img src="${p.image}" class="w-full h-full rounded-full object-cover">` : p.name.charAt(0)}
+                    </div>
+                    <div>
+                        <p class="text-white font-black text-sm uppercase">${p.name}</p>
+                        <p class="text-slate-500 font-bold text-[10px] uppercase">${p.pos || 'Atleta'}</p>
+                    </div>
                 </div>
-                <div class="flex gap-1 star-rating" id="stars-${p.originalIndex}">
-                    ${[1,2,3,4,5].map(n => `<button onclick="votar(${p.originalIndex}, ${n})" class="${(p.rating||0) >= n ? 'active' : ''}">★</button>`).join('')}
+                <div class="flex gap-1 star-rating" id="stars-${idx}">
+                    ${[1,2,3,4,5].map(n => `<button onclick="atribuirNota(${idx}, ${n})" class="${(p.temp_rating || 0) >= n ? 'active' : ''}">★</button>`).join('')}
                 </div>
             </div>
         `).join('');
     }
 
-    function votar(idx, nota) {
-        syncBloqueado = true; // Pausa o recebimento de dados para não sobrescrever a UI enquanto vota
-        allPlayers[idx].rating = nota;
-        allPlayers[idx].stars = nota;
-        allPlayers[idx].avg = nota; // Compatibilidade com gráficos do ProCoach MAX
-        
-        // Atualiza UI instantaneamente
-        document.querySelectorAll(`#stars-${idx} button`).forEach((btn, i) => {
-            btn.classList.toggle('active', i < nota);
-        });
-
-        document.getElementById('btn-salvar-notas').classList.replace('bg-green-600', 'bg-yellow-500');
-        document.getElementById('btn-salvar-notas').innerText = "⚠️ SALVAR ALTERAÇÕES";
+    function atribuirNota(pIdx, nota) {
+        allPlayers[pIdx].temp_rating = nota; // Nota temporária da sessão
+        renderPlayers();
     }
 
-    function sincronizarNotasNuvem() {
+    async function finalizarESincronizar() {
         const uid = auth.currentUser.uid;
-        const playersToSave = allPlayers.map(p => {
-            let cp = {...p}; delete cp.originalIndex; return cp;
-        });
+        document.getElementById('btn-finalizar').disabled = true;
+        document.getElementById('btn-text').innerText = "SINCRONIZANDO...";
 
-        db.collection('coachData').doc(uid).update({
-            pc_players: JSON.stringify(playersToSave),
-            pc_last_update: Date.now()
-        }).then(() => {
-            syncBloqueado = false;
-            mostrarToast("⭐ SINCRONIZADO!");
-            document.getElementById('btn-salvar-notas').classList.replace('bg-yellow-500', 'bg-green-600');
-            document.getElementById('btn-salvar-notas').innerText = "✓ SALVAR NOTAS NA NUVEM";
-        });
+        try {
+            const docRef = db.collection('coachData').doc(uid);
+            const doc = await docRef.get();
+            const data = doc.data();
+
+            // 1. Atualiza as médias na aba "PERFORMA" (Imagem 3)
+            let updatedPlayers = allPlayers.map(p => {
+                if(p.temp_rating) {
+                    p.rating = p.temp_rating; // Define a nova nota
+                    p.avg = p.temp_rating;    // Atualiza a média exibida no V2106
+                }
+                return p;
+            });
+
+            // 2. Vincula as notas ao histórico da "SESSÃO" (Imagem 2)
+            let history = JSON.parse(data.pc_history_v2 || "{}");
+            if(!history[todayISO]) history[todayISO] = { drills: [], ratings: {} };
+            
+            allPlayers.forEach(p => {
+                if(p.temp_rating) history[todayISO].ratings[p.name] = p.temp_rating;
+            });
+
+            // 3. Gravação Única no Firebase
+            await docRef.update({
+                pc_players: JSON.stringify(updatedPlayers),
+                pc_history_v2: JSON.stringify(history),
+                pc_training_finished: todayISO, // Trava a sessão
+                pc_last_update: Date.now()      // Notifica o Desktop que houve mudança
+            });
+
+            mostrarToast("SESSÃO FINALIZADA E ENVIADA!");
+            travarInterface();
+
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao sincronizar. Verifique a internet.");
+            document.getElementById('btn-finalizar').disabled = false;
+        }
     }
 
-    // UTILITÁRIOS
+    function travarInterface() {
+        document.getElementById('btn-finalizar').classList.replace('bg-green-600', 'bg-slate-700');
+        document.getElementById('btn-text').innerText = "SESSÃO FINALIZADA ✅";
+        document.getElementById('btn-finalizar').onclick = () => {
+            if(confirm("Deseja reabrir para corrigir notas?")) {
+                db.collection('coachData').doc(auth.currentUser.uid).update({ pc_training_finished: "" });
+                location.reload();
+            }
+        };
+    }
+
     function showTab(t) {
         document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
@@ -250,15 +220,6 @@
         const t = document.getElementById("toast");
         t.innerText = msg; t.classList.add("show");
         setTimeout(() => t.classList.remove("show"), 3000);
-    }
-
-    function openFullScreen(src) {
-        document.getElementById('fullscreen-img').src = src;
-        document.getElementById('fullscreen-view').classList.replace('hidden', 'flex');
-    }
-
-    function closeFullScreen() {
-        document.getElementById('fullscreen-view').classList.replace('flex', 'hidden');
     }
 
     function iniciarVoz() {
