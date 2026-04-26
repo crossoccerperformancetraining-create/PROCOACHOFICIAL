@@ -25,14 +25,12 @@
         .filter-btn { @apply px-5 py-3 rounded-xl border border-white/10 text-sm font-black uppercase whitespace-nowrap bg-black/40 text-slate-400 transition-colors shadow-sm; }
         .filter-active { @apply bg-blue-600 text-white border-blue-400 shadow-[0_0_15px_rgba(37,99,235,0.5)]; }
 
-        .star-rating button { font-size: 32px; color: #334155; transition: 0.2s; drop-shadow: 0 4px 6px rgba(0,0,0,0.6); outline: none; -webkit-tap-highlight-color: transparent; }
+        .star-rating button { font-size: 32px; color: #334155; transition: 0.2s; outline: none; -webkit-tap-highlight-color: transparent; }
         .star-rating button.active { color: #facc15; text-shadow: 0 0 15px rgba(250,204,21,0.7); }
 
         #loading { position: fixed; inset: 0; background: #020617; color: white; display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; gap: 15px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .modal-overlay { background: rgba(2,6,23,0.95); backdrop-filter: blur(10px); }
-
-        /* TOAST DE FEEDBACK DE SINCRONIZAÇÃO */
+        
         #toast { visibility: hidden; min-width: 280px; background-color: #22c55e; color: #fff; text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 999999; left: 50%; transform: translateX(-50%); top: -50px; font-size: 13px; font-weight: black; text-transform: uppercase; box-shadow: 0px 10px 30px rgba(34, 197, 94, 0.5); opacity: 0; transition: all 0.4s ease-in-out; border: 2px solid white; }
         #toast.show { visibility: visible; opacity: 1; top: 30px; }
     </style>
@@ -42,57 +40,31 @@
 <div id="toast">⭐ Sincronizado com o Oficial!</div>
 
 <div id="fullscreen-view" class="fixed inset-0 z-[99999] bg-black hidden flex-col justify-center items-center">
-    <button onclick="closeFullScreen()" class="absolute top-6 right-6 bg-red-600 hover:bg-red-700 text-white px-6 py-4 rounded-full font-black text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(220,38,38,0.5)] border-2 border-white/20 active:scale-95 transition-all">✖ FECHAR FOCO</button>
+    <button onclick="closeFullScreen()" class="absolute top-6 right-6 bg-red-600 text-white px-6 py-4 rounded-full font-black text-sm uppercase border-2 border-white/20">✖ FECHAR FOCO</button>
     <img id="fullscreen-img" src="" class="w-full h-full object-contain p-4">
 </div>
 
 <div id="loading">
-    <div class="text-5xl font-black italic text-gold animate-pulse drop-shadow-2xl">PROCOACH</div>
+    <div class="text-5xl font-black italic text-gold animate-pulse">PROCOACH</div>
     <div class="text-sm font-bold opacity-50 uppercase tracking-[0.5em] mt-2">Módulo Campo</div>
 </div>
 
 <div id="auth-screen" class="fixed inset-0 z-[100] bg-slate-950 flex items-center justify-center p-4 hidden">
     <div class="bg-white p-10 rounded-[2rem] shadow-2xl w-full max-w-sm text-slate-900 text-center">
         <h1 class="text-4xl font-black italic mb-2 uppercase">PROCOACH</h1>
-        <p class="text-xs font-bold text-blue-600 uppercase mb-8 tracking-widest">Acesso da Comissão</p>
-        <input type="email" id="email" placeholder="E-mail da Nuvem" class="w-full border-b-2 py-4 mb-4 outline-none text-center font-bold text-base focus:border-gold transition-colors">
-        <input type="password" id="pass" placeholder="Senha" class="w-full border-b-2 py-4 mb-8 outline-none text-center font-bold text-base focus:border-gold transition-colors">
-        <button onclick="login()" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl shadow-2xl uppercase tracking-widest text-sm active:scale-95 transition-transform">Sincronizar App</button>
-    </div>
-</div>
-
-<div id="config-modal" class="fixed inset-0 z-[200] modal-overlay flex items-center justify-center p-4 hidden">
-    <div class="bg-[#1e293b] p-8 rounded-3xl shadow-2xl w-full max-w-sm border-2 border-white/10">
-        <h2 class="text-gold font-black uppercase text-center mb-6 tracking-widest border-b border-white/10 pb-4 text-lg">⚙️ Identificação</h2>
-        <div class="space-y-6">
-            <div>
-                <label class="text-sm font-black text-slate-400 uppercase tracking-widest">Seu Nome</label>
-                <input type="text" id="staff-name" placeholder="Ex: Silva" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-4 text-lg font-bold text-white outline-none mt-2 focus:border-gold/50">
-            </div>
-            <div>
-                <label class="text-sm font-black text-slate-400 uppercase tracking-widest">Sua Função</label>
-                <input type="text" id="staff-role" placeholder="Ex: Prep. Físico" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-4 text-lg font-bold text-gold uppercase outline-none mt-2 focus:border-gold/50">
-            </div>
-            <button id="btn-salvar-perfil" onclick="salvarPerfil()" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl mt-4 uppercase tracking-widest text-base active:scale-95 transition-all">Salvar Perfil</button>
-            <button onclick="fecharConfig()" class="w-full bg-transparent text-slate-400 hover:text-white font-bold py-3 rounded-2xl text-sm uppercase transition-colors">Fechar</button>
-        </div>
+        <input type="email" id="email" placeholder="E-mail" class="w-full border-b-2 py-4 mb-4 outline-none text-center font-bold">
+        <input type="password" id="pass" placeholder="Senha" class="w-full border-b-2 py-4 mb-8 outline-none text-center font-bold">
+        <button onclick="login()" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl uppercase tracking-widest text-sm">Sincronizar App</button>
     </div>
 </div>
 
 <div class="bg-gradient-to-b from-[#1e293b] to-[#020617] border-b border-white/10 p-6 flex justify-between items-center sticky top-0 z-50">
     <div class="flex items-center gap-5">
-        <div id="team-logo-display" class="w-16 h-16 rounded-full bg-white/5 border-2 border-white/20 flex items-center justify-center overflow-hidden shadow-2xl">
-            <span class="text-[8px] opacity-30 font-bold uppercase tracking-widest">SEM LOGO</span>
-        </div>
+        <div id="team-logo-display" class="w-16 h-16 rounded-full bg-white/5 border-2 border-white/20 flex items-center justify-center overflow-hidden"></div>
         <div>
-            <p id="greeting-msg" class="text-[11px] font-black text-gold uppercase tracking-widest mb-1">BOM DIA</p>
-            <h2 id="team-name-display" class="text-white font-black italic text-2xl md:text-3xl leading-none uppercase tracking-tighter drop-shadow-xl">EQUIPE</h2>
+            <p id="greeting-msg" class="text-[11px] font-black text-gold uppercase tracking-widest mb-1">CARREGANDO...</p>
+            <h2 id="team-name-display" class="text-white font-black italic text-2xl uppercase tracking-tighter">EQUIPE</h2>
         </div>
-    </div>
-    <div class="flex flex-col items-end gap-3">
-        <button onclick="abrirConfig()" class="bg-black/30 p-3 rounded-full border border-white/20 shadow-lg active:scale-95">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        </button>
     </div>
 </div>
 
@@ -100,56 +72,23 @@
     <button onclick="showTab('dash')" id="btn-dash" class="nav-btn nav-active"><span class="nav-icon">📊</span> Início</button>
     <button onclick="showTab('sessao')" id="btn-sessao" class="nav-btn"><span class="nav-icon">⚽</span> Treino</button>
     <button onclick="showTab('micro')" id="btn-micro" class="nav-btn"><span class="nav-icon">🗓️</span> Micro</button>
-    <button onclick="showTab('calendario')" id="btn-calendario" class="nav-btn"><span class="nav-icon">📅</span> Histórico</button>
     <button onclick="showTab('voz')" id="btn-voz" class="nav-btn"><span class="nav-icon">🎙️</span> Relato</button>
 </div>
 
 <div id="content" class="p-5 pb-32 space-y-6">
-    
     <div id="tab-dash" class="tab-view space-y-6">
-        <div class="dash-card p-8 border-b-8 border-gold/40">
-            <h3 class="text-gold text-sm font-black uppercase mb-6 tracking-[0.3em] text-center drop-shadow-md">🏆 Próximo Confronto</h3>
-            <div class="flex flex-col items-center justify-center relative">
-                <div class="cursor-pointer transition-transform hover:scale-105 mb-4" onclick="adicionarLogoAdv()" title="Toque para colar o link do escudo do adversário">
-                    <div id="adv-logo-container" class="w-32 h-32 bg-black/50 rounded-[2rem] border-4 border-white/10 flex items-center justify-center overflow-hidden shadow-2xl">
-                        <span class="text-sm opacity-20 italic font-black">ADV</span>
-                    </div>
-                </div>
-                <span id="adv-nome" class="text-4xl md:text-5xl font-black italic text-white drop-shadow-xl mb-4 uppercase text-center tracking-tighter">A DEFINIR</span>
-                <div class="flex gap-3">
-                    <span id="jogo-data" class="bg-white/10 px-6 py-3 rounded-xl text-sm font-black text-gold uppercase tracking-widest border border-white/5 shadow-inner">--/--</span>
-                    <span id="jogo-sistema" class="bg-white/10 px-6 py-3 rounded-xl text-sm font-black text-white/60 uppercase tracking-widest border border-white/5 shadow-inner">SIS: -</span>
-                </div>
-            </div>
-        </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div class="dash-card p-6">
-                <h3 class="text-slate-400 text-sm font-black uppercase mb-5 tracking-widest border-b border-white/5 pb-3 flex items-center gap-3">
-                    <span class="text-3xl">📅</span> AGENDA DO DIA
+            <div class="dash-card p-6 border-l-8 border-gold">
+                <h3 class="text-slate-400 text-sm font-black uppercase mb-5 tracking-widest flex items-center gap-3">
+                    <span class="text-3xl">📅</span> AGENDA DE HOJE
                 </h3>
                 <div id="agenda-hoje" class="space-y-4"></div>
             </div>
             <div class="dash-card p-6 border-l-8 border-yellow-500 bg-yellow-500/5">
-                <h3 class="text-yellow-500 text-sm font-black uppercase mb-5 tracking-widest border-b border-yellow-500/20 pb-3 flex items-center gap-3">
-                    <span class="text-3xl">📋</span> QUADRO DE AVISOS
+                <h3 class="text-yellow-500 text-sm font-black uppercase mb-5 tracking-widest flex items-center gap-3">
+                    <span class="text-3xl">📋</span> AVISOS
                 </h3>
                 <div id="avisos-lista" class="space-y-4 text-base text-white/90 font-bold"></div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-3 gap-4">
-            <div class="dash-card p-6 border-b-4 border-gold">
-                <h4 class="text-xs font-black text-slate-400 uppercase mb-4 tracking-widest flex items-center gap-2"><span class="text-3xl">⚽</span> GOLS</h4>
-                <div id="gols-lista" class="text-sm font-black text-white space-y-2 w-full text-left"></div>
-            </div>
-            <div class="dash-card p-6 border-b-4 border-red-500">
-                <h4 class="text-xs font-black text-red-500 uppercase mb-4 tracking-widest flex items-center gap-2"><span class="text-3xl">🏥</span> DM</h4>
-                <div id="dm-lista" class="text-sm font-black text-red-400 space-y-2 w-full text-left"></div>
-            </div>
-            <div class="dash-card p-6 border-b-4 border-yellow-500">
-                <h4 class="text-xs font-black text-yellow-500 uppercase mb-4 tracking-widest flex items-center gap-2"><span class="text-3xl">⚠️</span> SUSP</h4>
-                <div id="susp-lista" class="text-sm font-black text-yellow-400 space-y-2 w-full text-left"></div>
             </div>
         </div>
     </div>
@@ -157,362 +96,149 @@
     <div id="tab-sessao" class="tab-view hidden space-y-6">
         <div id="drills-lista" class="space-y-6"></div>
         
-        <div class="dash-card p-6 bg-gradient-to-t from-[#0f172a] to-[#1e293b] border-t-2 border-gold/50 mt-10 relative">
-            <h3 class="text-gold text-lg font-black uppercase mb-5 text-center tracking-[0.3em] drop-shadow-md">⭐ Avaliar Plantel</h3>
+        <div class="dash-card p-6 bg-gradient-to-t from-[#0f172a] to-[#1e293b] border-t-2 border-gold/50 mt-10">
+            <h3 class="text-gold text-lg font-black uppercase mb-5 text-center tracking-widest">⭐ Avaliar Desempenho</h3>
             
             <div class="flex gap-2 overflow-x-auto no-scrollbar py-2 mb-6" id="pos-filters">
                 <button onclick="filtrarPosicao('Todos')" id="f-Todos" class="filter-btn filter-active">Todos</button>
-                <button onclick="filtrarPosicao('Goleiro')" id="f-Goleiro" class="filter-btn">Goleiros</button>
-                <button onclick="filtrarPosicao('Zagueiro')" id="f-Zagueiro" class="filter-btn">Zagueiros</button>
-                <button onclick="filtrarPosicao('Lat. Dir.')" id="f-LatDir" class="filter-btn">Lat Dir.</button>
-                <button onclick="filtrarPosicao('Lat. Esq.')" id="f-LatEsq" class="filter-btn">Lat Esq.</button>
-                <button onclick="filtrarPosicao('Volante')" id="f-Volante" class="filter-btn">Volantes</button>
-                <button onclick="filtrarPosicao('Meia')" id="f-Meia" class="filter-btn">Meias</button>
-                <button onclick="filtrarPosicao('Extremo')" id="f-Extremo" class="filter-btn">Extremos</button>
-                <button onclick="filtrarPosicao('Atacante')" id="f-Atacante" class="filter-btn">Atacantes</button>
-            </div>
+                </div>
 
             <div id="players-performance" class="space-y-4 mb-6"></div>
             
-            <button id="btn-salvar-notas" onclick="sincronizarNotasNuvem()" class="w-full py-5 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(34,197,94,0.4)] active:scale-95 transition-all uppercase tracking-[0.1em] text-base mb-4">
+            <button id="btn-salvar-notas" onclick="sincronizarNotasNuvem()" class="w-full py-5 bg-green-600 text-white font-black rounded-2xl shadow-lg uppercase text-base mb-4">
                 ✓ SALVAR NOTAS NA NUVEM
             </button>
-
-            <div id="status-treino-container" class="border-t border-white/10 pt-4">
-                <button onclick="finalizarTreino()" class="w-full py-5 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(220,38,38,0.4)] active:scale-95 transition-all uppercase tracking-[0.2em] text-sm">
-                    🛑 Encerrar Avaliações Diárias
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="tab-micro" class="tab-view hidden overflow-x-auto pb-8 no-scrollbar">
-        <div id="micro-flex" class="flex gap-5 min-w-max"></div>
-    </div>
-
-    <div id="tab-calendario" class="tab-view hidden space-y-6">
-        <div class="dash-card p-8 border-t-4 border-blue-500">
-            <h3 class="text-blue-400 text-lg font-black uppercase mb-6 tracking-widest text-center">📅 Puxar Treino Histórico</h3>
-            <input type="date" id="busca-data" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-5 text-xl text-white font-bold outline-none focus:border-blue-500 transition-colors shadow-inner text-center" onchange="buscarTreinoHistorico()">
-        </div>
-        <div id="historico-lista" class="space-y-6">
-            <div class="dash-card p-12 text-center border-dashed border-2 border-white/10 bg-transparent shadow-none"><p class="opacity-30 text-sm font-black uppercase tracking-widest">Aguardando Data...</p></div>
         </div>
     </div>
 
     <div id="tab-voz" class="tab-view hidden space-y-6">
-        <div class="dash-card p-8 border border-gold/30">
+        <div class="dash-card p-8">
             <h3 class="text-gold text-sm font-black uppercase mb-8 tracking-widest text-center">🎙️ Gravar Ocorrência</h3>
-            <textarea id="voice-txt" class="w-full bg-black/50 text-lg font-medium h-64 outline-none border-2 border-white/10 rounded-[2rem] p-6 text-white placeholder-white/30 focus:border-gold transition-colors shadow-inner resize-none" placeholder="Relate o que ocorreu no campo..."></textarea>
+            <textarea id="voice-txt" class="w-full bg-black/50 text-lg h-64 outline-none border-2 border-white/10 rounded-[2rem] p-6 text-white" placeholder="Fale sobre o treino..."></textarea>
         </div>
-        <button onclick="iniciarVoz()" class="w-full bg-gradient-to-r from-gold to-yellow-500 text-navy font-black py-8 rounded-[2rem] shadow-2xl active:scale-95 transition-all text-lg uppercase tracking-widest">
+        <button onclick="iniciarVoz()" class="w-full bg-gradient-to-r from-gold to-yellow-500 text-navy font-black py-8 rounded-[2rem] text-lg uppercase">
             🎤 Iniciar Ditado
         </button>
-        <button onclick="enviarVoz()" class="w-full bg-blue-600 text-white font-black py-6 rounded-[2rem] text-base uppercase mt-2 tracking-widest shadow-lg active:scale-95 transition-transform">Salvar na Nuvem</button>
     </div>
 </div>
 
 <script>
-    const firebaseConfig = { apiKey: "AIzaSyBURvWmrRe-q-l1h2XKaQepeRQoNcmi7nk", authDomain: "procoachoficial.firebaseapp.com", projectId: "procoachoficial", storageBucket: "procoachoficial.firebasestorage.app", messagingSenderId: "128403842399", appId: "1:128403842399:web:c54259e2b6a5622fb942ea" };
+    // Configurações do seu Firebase
+    const firebaseConfig = { 
+        apiKey: "AIzaSyBURvWmrRe-q-l1h2XKaQepeRQoNcmi7nk", 
+        authDomain: "procoachoficial.firebaseapp.com", 
+        projectId: "procoachoficial", 
+        storageBucket: "procoachoficial.firebasestorage.app", 
+        messagingSenderId: "128403842399", 
+        appId: "1:128403842399:web:c54259e2b6a5622fb942ea" 
+    };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
     let allPlayers = []; 
     let currentFilter = 'Todos';
+    let syncBloqueado = false;
     const todayISO = new Date().toISOString().split('T')[0];
 
-    // TOAST FEEDBACK
-    function mostrarToast(msg) {
-        const t = document.getElementById("toast");
-        t.innerText = msg;
-        t.className = "show";
-        setTimeout(() => { t.className = t.className.replace("show", ""); }, 3500);
-    }
-
-    // FOCO TOTAL
-    function openFullScreen(imgSrc) {
-        if(!imgSrc) return;
-        const fs = document.getElementById('fullscreen-view');
-        document.getElementById('fullscreen-img').src = imgSrc;
-        fs.classList.remove('hidden'); fs.classList.add('flex');
-    }
-    function closeFullScreen() {
-        const fs = document.getElementById('fullscreen-view');
-        fs.classList.add('hidden'); fs.classList.remove('flex');
-    }
-
-    function atualizarSaudacao() {
-        const hora = new Date().getHours();
-        let s = "BOM DIA";
-        if (hora >= 12 && hora < 18) s = "BOA TARDE";
-        else if (hora >= 18) s = "BOA NOITE";
-        
-        const role = localStorage.getItem('pc_staff_role') || "COMISSÃO";
-        const name = localStorage.getItem('pc_staff_name') || "";
-        document.getElementById('greeting-msg').innerText = `${s}, ${role} ${name}`.toUpperCase();
-        
-        document.getElementById('staff-name').value = name;
-        document.getElementById('staff-role').value = role !== "COMISSÃO" ? role : "";
-    }
-    
-    function abrirConfig() { document.getElementById('config-modal').classList.remove('hidden'); }
-    function fecharConfig() { document.getElementById('config-modal').classList.add('hidden'); }
-    
-    function salvarPerfil() {
-        const btn = document.getElementById('btn-salvar-perfil');
-        localStorage.setItem('pc_staff_name', document.getElementById('staff-name').value);
-        localStorage.setItem('pc_staff_role', document.getElementById('staff-role').value || "Comissão");
-        
-        btn.classList.replace('bg-blue-600', 'bg-green-500');
-        btn.innerText = "✓ SALVO COM SUCESSO!";
-        atualizarSaudacao();
-        
-        setTimeout(() => {
-            btn.classList.replace('bg-green-500', 'bg-blue-600');
-            btn.innerText = "Salvar e Manter";
-            fecharConfig();
-        }, 1000);
-    }
-
-    function adicionarLogoAdv() {
-        const url = prompt("Cole o link (URL) da imagem do escudo do adversário:");
-        if(url && url.trim() !== "") {
-            const uid = auth.currentUser.uid;
-            db.collection('coachData').doc(uid).get().then(doc => {
-                let s = JSON.parse(doc.data().pc_scouting || "{}");
-                s.logo = url;
-                db.collection('coachData').doc(uid).update({ pc_scouting: JSON.stringify(s) });
-            });
-        }
-    }
-
-    function login() { auth.signInWithEmailAndPassword(document.getElementById('email').value, document.getElementById('pass').value); }
-
+    // INICIALIZAÇÃO E SYNC
     auth.onAuthStateChanged(user => {
-        if (user) { document.getElementById('loading').style.display = 'none'; document.getElementById('auth-screen').style.display = 'none'; atualizarSaudacao(); sync(user.uid); } 
-        else { document.getElementById('loading').style.display = 'none'; document.getElementById('auth-screen').style.display = 'flex'; }
+        if (user) { 
+            document.getElementById('loading').style.display = 'none'; 
+            document.getElementById('auth-screen').style.display = 'none'; 
+            startSync(user.uid); 
+        } else {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('auth-screen').style.display = 'flex';
+        }
     });
 
-    let syncAtivo = true; // Para não sobrepor dados enquanto o usuário clica
-
-    function sync(uid) {
+    function startSync(uid) {
         db.collection('coachData').doc(uid).onSnapshot(doc => {
-            if (!doc.exists) return;
+            if (!doc.exists || syncBloqueado) return;
             const d = doc.data();
-            const todayName = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'][new Date().getDay()];
-
-            // LOGO DA EQUIPE: Busca em múltiplas variáveis do V2106
-            const teamLogo = d.pc_team_logo_url || d.pc_logo || d.logo_url || d.team_logo || "";
-            if(d.pc_team_name) document.getElementById('team-name-display').innerText = d.pc_team_name;
-            if(teamLogo) {
-                document.getElementById('team-logo-display').innerHTML = `<img src="${teamLogo}" class="w-full h-full object-contain p-1">`;
-            } else {
-                document.getElementById('team-logo-display').innerHTML = `<span class="text-[8px] opacity-30 font-black uppercase">SEM LOGO</span>`;
-            }
-
-            if(d.pc_scouting) {
-                const s = JSON.parse(d.pc_scouting);
-                if(s.opponent) {
-                    document.getElementById('adv-nome').innerText = s.opponent;
-                    document.getElementById('jogo-data').innerText = s.date ? s.date.split('-').reverse().join('/') : "A DEFINIR";
-                    document.getElementById('jogo-sistema').innerText = "SIS: " + (s.system || "-");
-                    if(s.logo) document.getElementById('adv-logo-container').innerHTML = `<img src="${s.logo}" class="w-full h-full object-contain p-2">`;
-                }
-            }
-
-            const micro = JSON.parse(d.pc_micro_v7 || "{}");
-            document.getElementById('agenda-hoje').innerHTML = (micro[todayName]?.blocks || []).map(b => `<div class="flex items-center gap-4"><span class="text-xs font-black opacity-40 w-12">${b.period}</span><span class="tag ${b.color} text-sm py-2">${b.label}</span></div>`).join('') || '<p class="opacity-30 text-sm italic font-bold">Livre.</p>';
             
-            const avisos = JSON.parse(d.pc_notices_list || "[]");
-            document.getElementById('avisos-lista').innerHTML = avisos.slice(0,3).map(n => `<p class="border-b border-white/5 pb-3 last:border-0 truncate text-lg">➤ ${n.text}</p>`).join('');
+            // Dados da Equipe
+            document.getElementById('team-name-display').innerText = d.pc_team_name || "EQUIPE";
+            const teamLogo = d.pc_team_logo_url || d.pc_logo || "";
+            document.getElementById('team-logo-display').innerHTML = teamLogo ? `<img src="${teamLogo}" class="w-full h-full object-contain">` : "";
 
-            // Carrega Plantel apenas se não houver edições locais pendentes
-            if(syncAtivo) {
-                allPlayers = JSON.parse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
-                renderPlayers();
-            }
-
-            document.getElementById('gols-lista').innerHTML = allPlayers.sort((a,b)=>(b.stats?.g||0)-(a.stats?.g||0)).slice(0,3).map(p=>`<div class="flex justify-between border-b border-white/5 pb-1"><span class="uppercase">${p.name}</span><span class="text-gold font-black">${p.stats?.g||0}</span></div>`).join('');
-            document.getElementById('dm-lista').innerHTML = allPlayers.filter(p=>p.injured).map(p=>`<div class="border-b border-red-500/20 pb-1 uppercase">• ${p.name}</div>`).join('') || '<span class="opacity-30 uppercase">Vazio</span>';
-            document.getElementById('susp-lista').innerHTML = allPlayers.filter(p=>p.suspended).map(p=>`<div class="border-b border-yellow-500/20 pb-1 uppercase">• ${p.name}</div>`).join('') || '<span class="opacity-30 uppercase">Vazio</span>';
-
-            const dias = ["SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO", "DOMINGO"];
-            document.getElementById('micro-flex').innerHTML = dias.map(dia => `
-                <div class="min-w-[200px] bg-[#1e293b] rounded-3xl border border-white/10 flex flex-col shadow-2xl h-auto pb-4">
-                    <div class="bg-blue-900/60 text-white font-black text-sm p-5 text-center border-b border-gold/20 uppercase tracking-[0.2em] rounded-t-3xl">${dia}</div>
-                    <div class="px-5 py-4 space-y-5">
-                        <div><p class="text-[10px] font-black text-slate-500 uppercase mb-3">Manhã</p>${(micro[dia]?.blocks || []).filter(x=>x.period==='M').map(x=>`<div class="tag ${x.color} w-full block text-center py-3 mb-2 shadow-md text-xs">${x.label}</div>`).join('') || '<span class="text-sm opacity-20">-</span>'}</div>
-                        <div><p class="text-[10px] font-black text-slate-500 uppercase mb-3">Tarde</p>${(micro[dia]?.blocks || []).filter(x=>x.period==='T').map(x=>`<div class="tag ${x.color} w-full block text-center py-3 mb-2 shadow-md text-xs">${x.label}</div>`).join('') || '<span class="text-sm opacity-20">-</span>'}</div>
-                    </div>
-                </div>
-            `).join('');
-
-            const history = JSON.parse(d.pc_history_v2 || "{}");
-            const sessao = history[todayISO]?.drills || [];
-            document.getElementById('drills-lista').innerHTML = sessao.map((ex,i) => `
-                <div class="dash-card overflow-hidden relative group">
-                    <div class="bg-black/50 p-5 flex justify-between items-center border-b border-white/5">
-                        <span class="text-base font-black text-gold uppercase tracking-widest">${i+1}. ${ex.name}</span>
-                        <span class="text-xs font-black bg-white/10 px-4 py-2 rounded-lg uppercase shadow-inner">${ex.time} min</span>
-                    </div>
-                    <div class="relative">
-                        <img src="${ex.image || ''}" class="w-full h-72 object-contain bg-black/60 p-2">
-                        ${ex.image ? `<button onclick="openFullScreen('${ex.image}')" class="absolute bottom-4 right-4 bg-blue-600/90 text-white px-5 py-3 rounded-xl font-black text-xs shadow-xl backdrop-blur-md border border-white/30 uppercase tracking-widest active:scale-95 transition-all">🔍 Foco Total</button>` : ''}
-                    </div>
-                    ${ex.desc ? `<div class="p-5 text-sm text-white/70 italic border-t border-white/5 bg-[#1e293b] leading-relaxed">${ex.desc}</div>` : ''}
-                </div>
-            `).join('') || '<div class="dash-card p-12 text-center"><p class="opacity-40 text-base font-black uppercase tracking-widest">Sem Exercícios Hoje</p></div>';
-
-            // ATUALIZAÇÃO DO STATUS FINALIZADO
-            if(d.pc_training_finished === todayISO) {
-                document.getElementById('status-treino-container').innerHTML = `
-                    <button onclick="reabrirTreino()" class="w-full py-6 bg-green-600/20 border-2 border-green-500 text-green-400 font-black rounded-2xl shadow-inner uppercase tracking-[0.2em] text-sm text-center flex justify-center items-center gap-3 active:scale-95 transition-all">
-                        <span class="text-2xl">✅</span> SESSÃO FINALIZADA (TOCAR P/ REABRIR)
-                    </button>
-                `;
-                document.getElementById('btn-salvar-notas').style.display = 'none';
-            } else {
-                document.getElementById('status-treino-container').innerHTML = `
-                    <button onclick="finalizarTreino()" class="w-full py-6 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(220,38,38,0.4)] active:scale-95 transition-all uppercase tracking-[0.2em] text-base">
-                        🛑 Encerrar Avaliações Diárias
-                    </button>
-                `;
-                document.getElementById('btn-salvar-notas').style.display = 'block';
-            }
+            // Agenda e Treinos
+            const micro = JSON.parse(d.pc_micro_v7 || "{}");
+            const todayName = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'][new Date().getDay()];
+            const drills = JSON.parse(d.pc_history_v2 || "{}")[todayISO]?.drills || [];
+            
+            renderDrills(drills);
+            
+            // Plantel (Apenas se não estivermos editando notas agora)
+            allPlayers = JSON.parse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
+            renderPlayers();
         });
     }
 
-    function buscarTreinoHistorico() {
-        const dateVal = document.getElementById('busca-data').value;
-        if(!dateVal) return;
-        const uid = auth.currentUser.uid;
-        db.collection('coachData').doc(uid).get().then(doc => {
-            const history = JSON.parse(doc.data().pc_history_v2 || "{}");
-            const sessao = history[dateVal]?.drills || [];
-            document.getElementById('historico-lista').innerHTML = sessao.map((ex,i) => `
-                <div class="dash-card overflow-hidden relative">
-                    <div class="bg-blue-900/40 p-5 flex justify-between items-center border-b border-white/5">
-                        <span class="text-base font-black text-white uppercase tracking-widest">${i+1}. ${ex.name}</span>
-                        <span class="text-xs font-black bg-black/40 px-4 py-2 rounded-lg uppercase text-gold">${ex.time} min</span>
-                    </div>
-                    <div class="relative">
-                        <img src="${ex.image || ''}" class="w-full h-72 object-contain bg-black/60 p-2">
-                        ${ex.image ? `<button onclick="openFullScreen('${ex.image}')" class="absolute bottom-4 right-4 bg-blue-600/90 text-white px-5 py-3 rounded-xl font-black text-xs shadow-xl backdrop-blur-md border border-white/30 uppercase tracking-widest active:scale-95 transition-all">🔍 Foco Total</button>` : ''}
-                    </div>
-                    ${ex.desc ? `<div class="p-5 text-sm text-white/70 italic border-t border-white/5 bg-[#1e293b] leading-relaxed">${ex.desc}</div>` : ''}
+    function renderDrills(drills) {
+        document.getElementById('drills-lista').innerHTML = drills.map((ex, i) => `
+            <div class="dash-card">
+                <div class="bg-black/50 p-4 flex justify-between items-center">
+                    <span class="text-gold font-black uppercase text-sm">${i+1}. ${ex.name}</span>
+                    <span class="text-xs font-bold text-white/50">${ex.time} MIN</span>
                 </div>
-            `).join('') || `<div class="dash-card p-12 text-center border-dashed border-2 border-white/10 bg-transparent shadow-none"><p class="opacity-30 text-sm font-black uppercase tracking-widest">Nenhum treino nesta data.</p></div>`;
-        });
-    }
-
-    function filtrarPosicao(pos) {
-        currentFilter = pos;
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('filter-active'));
-        document.getElementById('f-' + pos.replace(/[^a-zA-Z]/g, '')).classList.add('filter-active');
-        renderPlayers();
+                <div class="relative h-64 bg-black/20">
+                    <img src="${ex.image}" class="w-full h-full object-contain p-2">
+                    <button onclick="openFullScreen('${ex.image}')" class="absolute bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-lg font-black text-xs">🔍 FOCO</button>
+                </div>
+            </div>
+        `).join('') || '<p class="text-center opacity-30">Nenhum treino planejado para hoje.</p>';
     }
 
     function renderPlayers() {
         const f = allPlayers.filter(p => !p.injured && (currentFilter === 'Todos' || p.pos === currentFilter));
         document.getElementById('players-performance').innerHTML = f.map(p => `
-            <div class="flex flex-col md:flex-row items-center justify-between p-5 bg-black/30 rounded-2xl border border-white/5 gap-4">
-                <div class="flex items-center gap-5 w-full md:w-auto">
-                    <img src="${p.image || ''}" class="w-16 h-16 rounded-full border-2 border-white/10 shadow-lg object-cover">
-                    <div class="flex flex-col">
-                        <span class="text-base font-black uppercase tracking-wider text-white">${p.name}</span>
-                        <span class="text-xs font-bold text-gold uppercase opacity-80 mt-1 tracking-widest">${p.pos || 'POSIÇÃO'}</span>
-                    </div>
+            <div class="flex items-center justify-between p-4 bg-black/40 rounded-2xl border border-white/5">
+                <div class="flex items-center gap-4">
+                    <img src="${p.image}" class="w-12 h-12 rounded-full border border-white/10 object-cover">
+                    <span class="font-black text-sm uppercase">${p.name}</span>
                 </div>
-                <div class="flex gap-2 star-rating" id="stars-${p.originalIndex}">
+                <div class="flex gap-1 star-rating" id="stars-${p.originalIndex}">
                     ${[1,2,3,4,5].map(n => `<button onclick="votar(${p.originalIndex}, ${n})" class="${(p.rating||0) >= n ? 'active' : ''}">★</button>`).join('')}
                 </div>
             </div>
-        `).join('') || `<p class="text-center text-sm opacity-40 py-8 uppercase font-bold tracking-widest">Vazio no momento.</p>`;
+        `).join('');
     }
 
-    // AÇÃO DE VOTAR: AGORA APENAS VISUAL (SALVA EM LOTE NO BOTÃO VERDE)
     function votar(idx, nota) {
-        syncAtivo = false; // Pausa sincronização para não apagar a estrela antes de salvar
-        nota = parseInt(nota);
-        
-        document.querySelectorAll(`#stars-${idx} button`).forEach((btn, i) => {
-            if (i < nota) btn.classList.add('active');
-            else btn.classList.remove('active');
-        });
-        
+        syncBloqueado = true; // Pausa o recebimento de dados para não sobrescrever a UI enquanto vota
         allPlayers[idx].rating = nota;
         allPlayers[idx].stars = nota;
-        allPlayers[idx].nota = nota;
-        allPlayers[idx].avg = nota; // Força a média para o App Oficial
+        allPlayers[idx].avg = nota; // Compatibilidade com gráficos do ProCoach MAX
         
-        const btnSalvar = document.getElementById('btn-salvar-notas');
-        btnSalvar.classList.replace('bg-green-600', 'bg-yellow-500');
-        btnSalvar.innerText = "⚠️ SALVAR ALTERAÇÕES PENDENTES";
+        // Atualiza UI instantaneamente
+        document.querySelectorAll(`#stars-${idx} button`).forEach((btn, i) => {
+            btn.classList.toggle('active', i < nota);
+        });
+
+        document.getElementById('btn-salvar-notas').classList.replace('bg-green-600', 'bg-yellow-500');
+        document.getElementById('btn-salvar-notas').innerText = "⚠️ SALVAR ALTERAÇÕES";
     }
 
-    // SINCRONIZAÇÃO EM BLOCO PARA FORÇAR O APP OFICIAL A LER
     function sincronizarNotasNuvem() {
         const uid = auth.currentUser.uid;
-        
-        // Limpa o array para o formato original antes de salvar
         const playersToSave = allPlayers.map(p => {
-            let cleanP = {...p};
-            delete cleanP.originalIndex;
-            return cleanP;
+            let cp = {...p}; delete cp.originalIndex; return cp;
         });
 
-        db.collection('coachData').doc(uid).get().then(doc => {
-            let data = doc.data();
-            
-            // Dupla Gravação: Atualiza no perfil E no histórico da sessão
-            let hist = JSON.parse(data.pc_history_v2 || "{}");
-            if(!hist[todayISO]) hist[todayISO] = { drills: [] };
-            if(!hist[todayISO].ratings) hist[todayISO].ratings = {};
-            
-            playersToSave.forEach(p => {
-                if(p.rating) hist[todayISO].ratings[p.name] = p.rating;
-            });
-
-            db.collection('coachData').doc(uid).update({
-                pc_players: JSON.stringify(playersToSave),
-                pc_history_v2: JSON.stringify(hist),
-                pc_last_update: Date.now() // Força atualização de gráficos no V2106
-            }).then(() => {
-                syncAtivo = true; // Libera sincronização
-                const btn = document.getElementById('btn-salvar-notas');
-                btn.classList.replace('bg-yellow-500', 'bg-green-600');
-                btn.innerText = "✓ NOTAS SALVAS NO OFICIAL";
-                mostrarToast("⭐ NOTAS SINCRONIZADAS COM SUCESSO!");
-            });
-        });
-    }
-
-    function finalizarTreino() {
-        if(!confirm("Atenção: Encerrar e travar avaliações de hoje?")) return;
-        sincronizarNotasNuvem(); // Força salvar as notas antes de encerrar
-        const uid = auth.currentUser.uid;
-        const staff = (localStorage.getItem('pc_staff_role')||"Comissão") + " " + (localStorage.getItem('pc_staff_name')||"");
-        db.collection('coachData').doc(uid).get().then(doc => {
-            let list = JSON.parse(doc.data().pc_notices_list || "[]");
-            list.unshift({ id: Date.now(), date: todayISO, text: `🏁 [INFO]: Sessão finalizada por ${staff.trim()}.` });
-            db.collection('coachData').doc(uid).update({ 
-                pc_notices_list: JSON.stringify(list),
-                pc_training_finished: todayISO,
-                pc_last_update: Date.now()
-            });
-        });
-    }
-
-    function reabrirTreino() {
-        if(!confirm("Deseja reabrir a sessão para alterar notas?")) return;
-        const uid = auth.currentUser.uid;
-        db.collection('coachData').doc(uid).update({ 
-            pc_training_finished: "",
+        db.collection('coachData').doc(uid).update({
+            pc_players: JSON.stringify(playersToSave),
             pc_last_update: Date.now()
+        }).then(() => {
+            syncBloqueado = false;
+            mostrarToast("⭐ SINCRONIZADO!");
+            document.getElementById('btn-salvar-notas').classList.replace('bg-yellow-500', 'bg-green-600');
+            document.getElementById('btn-salvar-notas').innerText = "✓ SALVAR NOTAS NA NUVEM";
         });
     }
 
+    // UTILITÁRIOS
     function showTab(t) {
         document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
@@ -520,27 +246,26 @@
         document.getElementById('btn-' + t).classList.add('nav-active');
     }
 
+    function mostrarToast(msg) {
+        const t = document.getElementById("toast");
+        t.innerText = msg; t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 3000);
+    }
+
+    function openFullScreen(src) {
+        document.getElementById('fullscreen-img').src = src;
+        document.getElementById('fullscreen-view').classList.replace('hidden', 'flex');
+    }
+
+    function closeFullScreen() {
+        document.getElementById('fullscreen-view').classList.replace('flex', 'hidden');
+    }
+
     function iniciarVoz() {
         const r = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         r.lang = 'pt-BR';
         r.onresult = e => document.getElementById('voice-txt').value += e.results[0][0].transcript + " ";
         r.start();
-    }
-
-    function enviarVoz() {
-        const txt = document.getElementById('voice-txt').value;
-        if(!txt) return alert("Grave algo primeiro.");
-        const uid = auth.currentUser.uid;
-        const role = localStorage.getItem('pc_staff_role') || "Comissão";
-        db.collection('coachData').doc(uid).get().then(doc => {
-            let list = JSON.parse(doc.data().pc_notices_list || "[]");
-            list.unshift({ id: Date.now(), date: todayISO, text: `[${role.toUpperCase()}]: ${txt}` });
-            db.collection('coachData').doc(uid).update({ 
-                pc_notices_list: JSON.stringify(list),
-                pc_last_update: Date.now()
-            });
-            alert("Enviado para a Nuvem!"); document.getElementById('voice-txt').value = '';
-        });
     }
 </script>
 </body>
