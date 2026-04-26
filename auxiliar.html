@@ -174,7 +174,7 @@
             <div id="players-performance" class="space-y-4 mb-6"></div>
             
             <button id="btn-salvar-notas" onclick="sincronizarNotasNuvem()" class="w-full py-5 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(34,197,94,0.4)] active:scale-95 transition-all uppercase tracking-[0.1em] text-base mb-4">
-                ✓ SALVAR NOTAS NO APP OFICIAL
+                ✓ ENVIAR NOTAS PARA O COMPUTADOR
             </button>
 
             <div id="status-treino-container" class="border-t border-white/10 pt-4">
@@ -219,10 +219,9 @@
 
     let allPlayers = []; 
     let currentFilter = 'Todos';
-    let localRatings = {}; // Armazena as notas temporárias antes de salvar na nuvem
+    let localRatings = {}; // Variável que segura as notas no celular antes de salvar
     const todayISO = new Date().toISOString().split('T')[0];
 
-    // TOAST FEEDBACK
     function mostrarToast(msg) {
         const t = document.getElementById("toast");
         t.innerText = msg;
@@ -230,7 +229,6 @@
         setTimeout(() => { t.className = t.className.replace("show", ""); }, 3500);
     }
 
-    // FOCO TOTAL
     function openFullScreen(imgSrc) {
         if(!imgSrc) return;
         const fs = document.getElementById('fullscreen-view');
@@ -275,7 +273,7 @@
         }, 1000);
     }
 
-    // SALVAR LOGOS DIRETAMENTE NAS VARIÁVEIS OFICIAIS DO V2106
+    // SALVAR LOGO DA EQUIPE COM VARIÁVEL EXATA DO V2106 (pc_team_logo_url)
     function adicionarLogoEquipe() {
         const url = prompt("Cole o link (URL) da imagem do ESCUDO DA SUA EQUIPA:");
         if(url && url.trim() !== "") {
@@ -311,7 +309,7 @@
             const d = doc.data();
             const todayName = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'][new Date().getDay()];
 
-            // LOGO DA EQUIPE BASEADO NO CÓDIGO DO APP OFICIAL
+            // LOGO DA EQUIPE EXATO
             const teamLogo = d.pc_team_logo_url;
             if(d.pc_team_name) document.getElementById('team-name-display').innerText = d.pc_team_name;
             if(teamLogo && teamLogo.trim() !== "") {
@@ -340,15 +338,24 @@
             const avisos = JSON.parse(d.pc_notices_list || "[]");
             document.getElementById('avisos-lista').innerHTML = avisos.slice(0,3).map(n => `<p class="border-b border-white/5 pb-3 last:border-0 truncate text-lg">➤ ${n.text}</p>`).join('');
 
-            // CARREGAMENTO DOS JOGADORES (APENAS 1 VEZ AO ABRIR OU SE NÃO HOUVER NOTAS PENDENTES)
+            // CARREGA OS ATLETAS UMA VEZ
             if(Object.keys(localRatings).length === 0) {
                 allPlayers = JSON.parse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
                 
-                // Tenta puxar as notas do histórico diário (onde o V2106 Oficial guarda)
                 try {
                     const hist = JSON.parse(d.pc_history_v2 || "{}");
                     if(hist[todayISO] && hist[todayISO].ratings) {
-                        localRatings = hist[todayISO].ratings; // Ex: {"ADRIANO": 5}
+                        // Mapeia do índice numérico oficial (ex: "0": 5) para a memória do app auxiliar
+                        let offRatings = hist[todayISO].ratings;
+                        let indexNaoMachucado = 0;
+                        allPlayers.forEach(p => {
+                            if(!p.injured) {
+                                if(offRatings[indexNaoMachucado]) {
+                                    localRatings[p.name] = offRatings[indexNaoMachucado];
+                                }
+                                indexNaoMachucado++;
+                            }
+                        });
                     }
                 } catch(e) {}
                 
@@ -421,8 +428,7 @@
     function renderPlayers() {
         const f = allPlayers.filter(p => !p.injured && (currentFilter === 'Todos' || p.pos === currentFilter));
         document.getElementById('players-performance').innerHTML = f.map(p => {
-            // Busca nota se já existir (do Firebase Histórico ou do toque local)
-            let currNota = localRatings[p.name] || p.rating || 0;
+            let currNota = localRatings[p.name] || 0;
             return `
                 <div class="flex flex-col md:flex-row items-center justify-between p-5 bg-black/30 rounded-2xl border border-white/5 gap-4">
                     <div class="flex items-center gap-5 w-full md:w-auto">
@@ -440,26 +446,21 @@
         }).join('') || `<p class="text-center text-sm opacity-40 py-8 uppercase font-bold tracking-widest">Vazio no momento.</p>`;
     }
 
-    // AÇÃO DE VOTAR (SALVA LOCALMENTE E ALTERA O BOTÃO)
     function votar(idx, playerName, nota) {
         nota = parseInt(nota);
-        
-        // Atualiza a interface
         document.querySelectorAll(`#stars-${idx} button`).forEach((btn, i) => {
             if (i < nota) btn.classList.add('active');
             else btn.classList.remove('active');
         });
         
-        // Guarda na memória (O índice agora é o NOME DO JOGADOR, igual ao App Oficial)
         localRatings[playerName] = nota;
         
-        // Avisa que precisa salvar
         const btnSalvar = document.getElementById('btn-salvar-notas');
         btnSalvar.classList.replace('bg-green-600', 'bg-yellow-500');
-        btnSalvar.innerText = "⚠️ SALVAR NOTAS NO APP OFICIAL";
+        btnSalvar.innerText = "⚠️ CLIQUE AQUI PARA ENVIAR PARA O COMPUTADOR";
     }
 
-    // SINCRONIZAÇÃO EM BLOCO PARA FORÇAR O APP OFICIAL A LER
+    // A MÁGICA: SINCRONIZAR COM A ESTRUTURA EXATA DO V2106
     function sincronizarNotasNuvem() {
         const uid = auth.currentUser.uid;
         const btn = document.getElementById('btn-salvar-notas');
@@ -468,34 +469,33 @@
         db.collection('coachData').doc(uid).get().then(doc => {
             let data = doc.data();
             
-            // 1. Atualiza o Histórico (É DE ONDE O V2106 PUXA A NOTA!)
-            let hist = JSON.parse(data.pc_history_v2 || "{}");
-            if(!hist[todayISO]) hist[todayISO] = { drills: [], header: {} };
-            if(!hist[todayISO].ratings) hist[todayISO].ratings = {};
+            // 1. Cria o objeto "ratings" usando a contagem de jogadores aptos (A MESMA LÓGICA DO V2106)
+            let indexNaoMachucado = 0;
+            let novasNotasV2106 = {};
             
-            // Junta as notas que já estavam com as novas
-            hist[todayISO].ratings = { ...hist[todayISO].ratings, ...localRatings };
-
-            // 2. Atualiza o Plantel (pc_players)
-            let playersCloud = JSON.parse(data.pc_players || "[]");
-            playersCloud.forEach(p => {
-                if(localRatings[p.name]) {
-                    p.rating = localRatings[p.name];
+            allPlayers.forEach((p) => {
+                if (!p.injured) {
+                    if (localRatings[p.name]) {
+                        novasNotasV2106[indexNaoMachucado] = localRatings[p.name];
+                    }
+                    indexNaoMachucado++;
                 }
             });
 
+            // 2. Guarda no histórico diário
+            let hist = JSON.parse(data.pc_history_v2 || "{}");
+            if(!hist[todayISO]) hist[todayISO] = { drills: [], header: {} };
+            
+            // Substitui as notas do dia por estas novas calculadas
+            hist[todayISO].ratings = novasNotasV2106; 
+
             // Manda para a nuvem
             db.collection('coachData').doc(uid).update({
-                pc_history_v2: JSON.stringify(hist),
-                pc_players: JSON.stringify(playersCloud),
-                pc_last_update: firebase.firestore.FieldValue.serverTimestamp() // Força atualização de gráficos no V2106
+                pc_history_v2: JSON.stringify(hist)
             }).then(() => {
                 btn.classList.replace('bg-yellow-500', 'bg-green-600');
-                btn.innerText = "✓ NOTAS SALVAS COM SUCESSO";
-                mostrarToast("⭐ NOTAS ENVIADAS PARA O COMPUTADOR");
-                
-                // Limpa as pendências
-                localRatings = {};
+                btn.innerText = "✓ NOTAS SALVAS (DÊ F5 NO COMPUTADOR)";
+                mostrarToast("⭐ SUCESSO! DÊ F5 NO APP OFICIAL.");
             }).catch(err => {
                 alert("Falha na conexão.");
                 btn.innerText = "TENTAR NOVAMENTE";
@@ -503,15 +503,8 @@
         });
     }
 
-    // FINALIZAR TREINO (APENAS AVISO)
     function finalizarTreino() {
-        if(!confirm("Deseja avisar ao Professor que a avaliação acabou?")) return;
-        
-        // Se houver notas pendentes, salva antes
-        if(Object.keys(localRatings).length > 0) {
-            sincronizarNotasNuvem();
-        }
-
+        if(!confirm("Avisar ao Professor que o treino acabou?")) return;
         const uid = auth.currentUser.uid;
         const staff = (localStorage.getItem('pc_staff_role')||"Comissão") + " " + (localStorage.getItem('pc_staff_name')||"");
         db.collection('coachData').doc(uid).get().then(doc => {
