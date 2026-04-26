@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ProCoach Auxiliar - MAX SYNC</title>
+    <title>ProCoach Auxiliar - V2106 MAX</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
@@ -32,7 +32,6 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .modal-overlay { background: rgba(2,6,23,0.95); backdrop-filter: blur(10px); }
 
-        /* TOAST DE FEEDBACK DE SINCRONIZAÇÃO */
         #toast { visibility: hidden; min-width: 280px; background-color: #22c55e; color: #fff; text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 999999; left: 50%; transform: translateX(-50%); top: -50px; font-size: 13px; font-weight: black; text-transform: uppercase; box-shadow: 0px 10px 30px rgba(34, 197, 94, 0.5); opacity: 0; transition: all 0.4s ease-in-out; border: 2px solid white; }
         #toast.show { visibility: visible; opacity: 1; top: 30px; }
     </style>
@@ -81,9 +80,8 @@
 
 <div class="bg-gradient-to-b from-[#1e293b] to-[#020617] border-b border-white/10 p-6 flex justify-between items-center sticky top-0 z-50">
     <div class="flex items-center gap-5">
-        <div id="team-logo-display" class="w-16 h-16 rounded-full bg-black/40 border-2 border-white/20 flex items-center justify-center overflow-hidden shadow-2xl cursor-pointer hover:scale-105 transition-all" onclick="forcarLogoEquipe()" title="Toque para colar o link do escudo da sua equipa">
-            <span class="text-[8px] opacity-30 font-bold uppercase tracking-widest text-center">ADD<br>LOGO</span>
-        </div>
+        <div id="team-logo-display" class="w-16 h-16 rounded-full bg-black/40 border-2 border-white/20 flex items-center justify-center overflow-hidden shadow-2xl cursor-pointer hover:scale-105 transition-all" onclick="forcarLogoEquipe()" title="Toque para adicionar o escudo da sua equipa">
+            </div>
         <div>
             <p id="greeting-msg" class="text-[11px] font-black text-gold uppercase tracking-widest mb-1">BOM DIA</p>
             <h2 id="team-name-display" class="text-white font-black italic text-2xl md:text-3xl leading-none uppercase tracking-tighter drop-shadow-xl">EQUIPE</h2>
@@ -110,10 +108,9 @@
         <div class="dash-card p-8 border-b-8 border-gold/40">
             <h3 class="text-gold text-sm font-black uppercase mb-6 tracking-[0.3em] text-center drop-shadow-md">🏆 Próximo Confronto</h3>
             <div class="flex flex-col items-center justify-center relative">
-                <div class="cursor-pointer transition-transform hover:scale-105 mb-4" onclick="adicionarLogoAdv()" title="Toque para adicionar o link do escudo">
+                <div class="cursor-pointer transition-transform hover:scale-105 mb-4" onclick="adicionarLogoAdv()" title="Toque para adicionar o escudo">
                     <div id="adv-logo-container" class="w-32 h-32 bg-black/50 rounded-[2rem] border-4 border-white/10 flex items-center justify-center overflow-hidden shadow-2xl">
-                        <span class="text-sm opacity-20 italic font-black">ADV</span>
-                    </div>
+                        </div>
                 </div>
                 <span id="adv-nome" class="text-4xl md:text-5xl font-black italic text-white drop-shadow-xl mb-4 uppercase text-center tracking-tighter">A DEFINIR</span>
                 <div class="flex gap-3">
@@ -174,8 +171,9 @@
 
             <div id="players-performance" class="space-y-4 mb-6"></div>
             
-            <div id="status-treino-container">
-                </div>
+            <button onclick="finalizarTreino()" class="w-full py-6 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(220,38,38,0.4)] active:scale-95 transition-all uppercase tracking-[0.2em] text-base mt-4">
+                🛑 Encerrar Avaliações Diárias
+            </button>
         </div>
     </div>
 
@@ -187,6 +185,7 @@
         <div class="dash-card p-8 border-t-4 border-blue-500">
             <h3 class="text-blue-400 text-lg font-black uppercase mb-6 tracking-widest text-center">📅 Puxar Treino Histórico</h3>
             <input type="date" id="busca-data" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-5 text-xl text-white font-bold outline-none focus:border-blue-500 transition-colors shadow-inner text-center" onchange="buscarTreinoHistorico()">
+            <p class="text-center text-xs opacity-50 mt-4 uppercase font-bold tracking-widest">Selecione a data exata do treino anterior</p>
         </div>
         <div id="historico-lista" class="space-y-6">
             <div class="dash-card p-12 text-center border-dashed border-2 border-white/10 bg-transparent shadow-none"><p class="opacity-30 text-sm font-black uppercase tracking-widest">Aguardando Data...</p></div>
@@ -215,6 +214,7 @@
     let currentFilter = 'Todos';
     const todayISO = new Date().toISOString().split('T')[0];
 
+    // TOAST FEEDBACK
     function mostrarToast(msg) {
         const t = document.getElementById("toast");
         t.innerText = msg;
@@ -222,6 +222,7 @@
         setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000);
     }
 
+    // FOCO TOTAL
     function openFullScreen(imgSrc) {
         if(!imgSrc) return;
         const fs = document.getElementById('fullscreen-view');
@@ -242,6 +243,7 @@
         const role = localStorage.getItem('pc_staff_role') || "COMISSÃO";
         const name = localStorage.getItem('pc_staff_name') || "";
         document.getElementById('greeting-msg').innerText = `${s}, ${role} ${name}`.toUpperCase();
+        
         document.getElementById('staff-name').value = name;
         document.getElementById('staff-role').value = role !== "COMISSÃO" ? role : "";
     }
@@ -265,22 +267,20 @@
         }, 1000);
     }
 
-    // FORÇAR LOGO DA EQUIPA (SOLUÇÃO DEFINITIVA)
+    // ESCUDOS LIMPOS (SEM LETREIRO)
     function forcarLogoEquipe() {
-        const url = prompt("Cole o link do Escudo da sua EQUIPE:");
+        const url = prompt("Cole o link do Escudo da SUA EQUIPE:");
         if(url && url.trim() !== "") {
             const uid = auth.currentUser.uid;
             db.collection('coachData').doc(uid).update({ 
                 pc_team_logo_url: url,
-                pc_logo: url,
-                team_logo: url
-            }).then(() => alert("Escudo salvo! Recarregue o aplicativo."))
-            .catch(e => alert("Erro ao salvar escudo."));
+                pc_logo: url
+            }).then(() => mostrarToast("Escudo Atualizado!"));
         }
     }
 
     function adicionarLogoAdv() {
-        const url = prompt("Cole o link (URL) da imagem do escudo do ADVERSÁRIO:");
+        const url = prompt("Cole o link (URL) da imagem do ESCUDO DO ADVERSÁRIO:");
         if(url && url.trim() !== "") {
             const uid = auth.currentUser.uid;
             db.collection('coachData').doc(uid).get().then(doc => {
@@ -305,12 +305,12 @@
             const todayName = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'][new Date().getDay()];
 
             // LOGO EQUIPE
-            const teamLogo = d.pc_team_logo_url || d.pc_logo || d.team_logo || "";
+            const teamLogo = d.pc_team_logo_url || d.pc_logo || "";
             if(d.pc_team_name) document.getElementById('team-name-display').innerText = d.pc_team_name;
             if(teamLogo && teamLogo.trim() !== "") {
                 document.getElementById('team-logo-display').innerHTML = `<img src="${teamLogo}" class="w-full h-full object-contain p-1">`;
             } else {
-                document.getElementById('team-logo-display').innerHTML = `<span class="text-[8px] opacity-30 font-bold uppercase text-center">ADD<br>LOGO</span>`;
+                document.getElementById('team-logo-display').innerHTML = `<span class="text-[8px] opacity-30 font-black uppercase text-center">ESCUDO</span>`;
             }
 
             // LOGO ADV
@@ -321,6 +321,7 @@
                     document.getElementById('jogo-data').innerText = s.date ? s.date.split('-').reverse().join('/') : "A DEFINIR";
                     document.getElementById('jogo-sistema').innerText = "SIS: " + (s.system || "-");
                     if(s.logo) document.getElementById('adv-logo-container').innerHTML = `<img src="${s.logo}" class="w-full h-full object-contain p-2">`;
+                    else document.getElementById('adv-logo-container').innerHTML = `<span class="text-sm opacity-20 italic font-black text-center">ESCUDO</span>`;
                 }
             }
 
@@ -363,21 +364,6 @@
                     ${ex.desc ? `<div class="p-5 text-sm text-white/70 italic border-t border-white/5 bg-[#1e293b] leading-relaxed">${ex.desc}</div>` : ''}
                 </div>
             `).join('') || '<div class="dash-card p-12 text-center"><p class="opacity-40 text-base font-black uppercase tracking-widest">Sem Exercícios Hoje</p></div>';
-
-            // FINALIZADO (LÓGICA BLINDADA)
-            if(d.pc_training_finished === todayISO) {
-                document.getElementById('status-treino-container').innerHTML = `
-                    <button onclick="reabrirTreino()" class="w-full py-6 bg-green-600/20 border-2 border-green-500 text-green-400 font-black rounded-2xl shadow-inner uppercase tracking-[0.2em] text-sm mt-10 text-center flex justify-center items-center gap-3 active:scale-95 transition-all">
-                        <span class="text-2xl">✅</span> SESSÃO FINALIZADA (TOCAR P/ REABRIR)
-                    </button>
-                `;
-            } else {
-                document.getElementById('status-treino-container').innerHTML = `
-                    <button onclick="finalizarTreino()" class="w-full py-6 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(220,38,38,0.4)] active:scale-95 transition-all uppercase tracking-[0.2em] text-base mt-10">
-                        🛑 Encerrar Avaliações
-                    </button>
-                `;
-            }
         });
     }
 
@@ -429,7 +415,7 @@
         `).join('') || `<p class="text-center text-sm opacity-40 py-8 uppercase font-bold tracking-widest">Vazio no momento.</p>`;
     }
 
-    // AÇÃO DE VOTAR DE FORÇA BRUTA - ATUALIZA 4 VARIÁVEIS NA NUVEM
+    // VOTAÇÃO DE FORÇA BRUTA (ATUALIZA NO V2106 OFICIAL)
     function votar(idx, nota) {
         nota = parseInt(nota);
         document.querySelectorAll(`#stars-${idx} button`).forEach((btn, i) => {
@@ -444,61 +430,36 @@
             
             if(p[idx]) {
                 p[idx].rating = nota; 
-                p[idx].avg = nota;  
-                p[idx].nota = nota; 
-                p[idx].stars = nota;
+                p[idx].avg = nota.toFixed(1); // Formato numérico seguro
                 
-                let objAtualizacao = { 
+                db.collection('coachData').doc(uid).update({ 
                     pc_players: JSON.stringify(p),
-                    pc_elenco: JSON.stringify(p), // Fallback
-                    pc_last_update: Date.now()
-                };
-
-                try {
-                    let hist = JSON.parse(data.pc_history_v2 || "{}");
-                    if(!hist[todayISO]) hist[todayISO] = { drills: [] };
-                    if(!hist[todayISO].ratings) hist[todayISO].ratings = {};
-                    hist[todayISO].ratings[p[idx].name] = nota;
-                    objAtualizacao.pc_history_v2 = JSON.stringify(hist);
-                } catch(e) {}
-
-                db.collection('coachData').doc(uid).update(objAtualizacao).then(() => {
-                    mostrarToast(`⭐ SINCRONIZADO: ${p[idx].name}`);
+                    pc_last_update: Date.now() // Força atualização de gráficos
+                }).then(() => {
+                    mostrarToast(`⭐ SALVO: ${p[idx].name}`);
                 });
             }
         });
     }
 
-    // FINALIZAR TREINO DE FORÇA BRUTA
+    // BOTÃO ENCERRAR (LIVRE - NÃO BLOQUEIA MAIS A TELA)
     function finalizarTreino() {
-        if(!confirm("Atenção: Encerrar as avaliações do dia?")) return;
+        if(!confirm("Atenção: Enviar aviso de encerramento para o Mural?")) return;
         const uid = auth.currentUser.uid;
         const staff = (localStorage.getItem('pc_staff_role')||"Comissão") + " " + (localStorage.getItem('pc_staff_name')||"");
         db.collection('coachData').doc(uid).get().then(doc => {
             const data = doc.data();
-            let list1 = JSON.parse(data.pc_notices_list || "[]");
-            let list2 = JSON.parse(data.pc_notices || "[]");
+            let list = JSON.parse(data.pc_notices_list || "[]");
             let msg = `🏁 [INFO]: Sessão finalizada por ${staff.trim()}.`;
             
-            list1.unshift({ id: Date.now(), date: todayISO, text: msg });
-            list2.unshift({ id: Date.now(), date: todayISO, text: msg });
+            list.unshift({ id: Date.now(), date: todayISO, text: msg });
 
             db.collection('coachData').doc(uid).update({ 
-                pc_notices_list: JSON.stringify(list1),
-                pc_notices: JSON.stringify(list2),
-                pc_avisos: JSON.stringify(list1), // Fallback
-                pc_training_finished: todayISO,
+                pc_notices_list: JSON.stringify(list),
                 pc_last_update: Date.now()
+            }).then(() => {
+                mostrarToast("✅ AVISO ENVIADO AO MISTER");
             });
-        });
-    }
-
-    function reabrirTreino() {
-        if(!confirm("Deseja reabrir a sessão para alterar notas?")) return;
-        const uid = auth.currentUser.uid;
-        db.collection('coachData').doc(uid).update({ 
-            pc_training_finished: "",
-            pc_last_update: Date.now()
         });
     }
 
@@ -523,20 +484,16 @@
         const role = localStorage.getItem('pc_staff_role') || "Comissão";
         db.collection('coachData').doc(uid).get().then(doc => {
             const data = doc.data();
-            let list1 = JSON.parse(data.pc_notices_list || "[]");
-            let list2 = JSON.parse(data.pc_notices || "[]");
+            let list = JSON.parse(data.pc_notices_list || "[]");
             let msg = `[${role.toUpperCase()}]: ${txt}`;
             
-            list1.unshift({ id: Date.now(), date: todayISO, text: msg });
-            list2.unshift({ id: Date.now(), date: todayISO, text: msg });
+            list.unshift({ id: Date.now(), date: todayISO, text: msg });
 
             db.collection('coachData').doc(uid).update({ 
-                pc_notices_list: JSON.stringify(list1),
-                pc_notices: JSON.stringify(list2),
-                pc_avisos: JSON.stringify(list1),
+                pc_notices_list: JSON.stringify(list),
                 pc_last_update: Date.now()
             }).then(() => {
-                alert("Enviado para a Nuvem Oficial!"); 
+                mostrarToast("🎙️ OCORRÊNCIA ENVIADA!"); 
                 document.getElementById('voice-txt').value = '';
             });
         });
