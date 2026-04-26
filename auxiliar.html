@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ProCoach Auxiliar - V2106 MAX</title>
+    <title>ProCoach Auxiliar - OFICIAL SYNC</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
@@ -11,10 +11,10 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
     <style>
-        :root { --navy: #020617; --gold: #d4af37; }
-        body { background-color: var(--navy); color: #f8fafc; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        :root { --navy: #0f172a; --gold: #d4af37; --bg-main: #f1f5f9; }
+        body { background-color: var(--navy); color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
         
-        .nav-container { @apply flex gap-3 p-4 bg-[#020617] sticky top-[85px] z-40 border-b-2 border-white/10 overflow-x-auto no-scrollbar; }
+        .nav-container { @apply flex gap-3 p-4 bg-[#0f172a] sticky top-[85px] z-40 border-b-2 border-white/10 overflow-x-auto no-scrollbar; }
         .nav-btn { @apply flex-none px-5 py-4 text-xs font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-1 min-w-[110px]; }
         .nav-active { @apply border-gold text-navy bg-gradient-to-br from-gold to-yellow-500 shadow-[0_10px_25px_rgba(212,175,55,0.4)] scale-105; }
         .nav-icon { @apply text-3xl block drop-shadow-md; } 
@@ -28,9 +28,9 @@
         .star-rating button { font-size: 32px; color: #334155; transition: 0.2s; drop-shadow: 0 4px 6px rgba(0,0,0,0.6); outline: none; -webkit-tap-highlight-color: transparent; }
         .star-rating button.active { color: #facc15; text-shadow: 0 0 15px rgba(250,204,21,0.7); }
 
-        #loading { position: fixed; inset: 0; background: #020617; color: white; display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; gap: 15px; }
+        #loading { position: fixed; inset: 0; background: #0f172a; color: white; display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; gap: 15px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .modal-overlay { background: rgba(2,6,23,0.95); backdrop-filter: blur(10px); }
+        .modal-overlay { background: rgba(15,23,42,0.95); backdrop-filter: blur(10px); }
 
         #toast { visibility: hidden; min-width: 280px; background-color: #22c55e; color: #fff; text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 999999; left: 50%; transform: translateX(-50%); top: -50px; font-size: 13px; font-weight: black; text-transform: uppercase; box-shadow: 0px 10px 30px rgba(34, 197, 94, 0.5); opacity: 0; transition: all 0.4s ease-in-out; border: 2px solid white; }
         #toast.show { visibility: visible; opacity: 1; top: 30px; }
@@ -50,12 +50,12 @@
     <div class="text-sm font-bold opacity-50 uppercase tracking-[0.5em] mt-2">Módulo Campo</div>
 </div>
 
-<div id="auth-screen" class="fixed inset-0 z-[100] bg-slate-950 flex items-center justify-center p-4 hidden">
+<div id="auth-screen" class="fixed inset-0 z-[100] bg-[#0f172a] flex items-center justify-center p-4 hidden">
     <div class="bg-white p-10 rounded-[2rem] shadow-2xl w-full max-w-sm text-slate-900 text-center">
         <h1 class="text-4xl font-black italic mb-2 uppercase">PROCOACH</h1>
         <p class="text-xs font-bold text-blue-600 uppercase mb-8 tracking-widest">Acesso da Comissão</p>
-        <input type="email" id="email" placeholder="E-mail da Nuvem" class="w-full border-b-2 py-4 mb-4 outline-none text-center font-bold text-base focus:border-gold transition-colors">
-        <input type="password" id="pass" placeholder="Senha" class="w-full border-b-2 py-4 mb-8 outline-none text-center font-bold text-base focus:border-gold transition-colors">
+        <input type="email" id="email" placeholder="E-mail da Nuvem" class="w-full border-b-2 py-4 mb-4 outline-none text-center font-bold text-base focus:border-blue-500 transition-colors">
+        <input type="password" id="pass" placeholder="Senha" class="w-full border-b-2 py-4 mb-8 outline-none text-center font-bold text-base focus:border-blue-500 transition-colors">
         <button onclick="login()" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl shadow-2xl uppercase tracking-widest text-sm active:scale-95 transition-transform">Sincronizar App</button>
     </div>
 </div>
@@ -72,16 +72,17 @@
                 <label class="text-sm font-black text-slate-400 uppercase tracking-widest">Sua Função</label>
                 <input type="text" id="staff-role" placeholder="Ex: Prep. Físico" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-4 text-lg font-bold text-gold uppercase outline-none mt-2 focus:border-gold/50">
             </div>
-            <button id="btn-salvar-perfil" onclick="salvarPerfil()" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl mt-4 uppercase tracking-widest text-base active:scale-95 transition-all">Salvar e Manter</button>
+            <button id="btn-salvar-perfil" onclick="salvarPerfil()" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl mt-4 uppercase tracking-widest text-base active:scale-95 transition-all">Salvar Perfil</button>
             <button onclick="fecharConfig()" class="w-full bg-transparent text-slate-400 hover:text-white font-bold py-3 rounded-2xl text-sm uppercase transition-colors">Fechar</button>
         </div>
     </div>
 </div>
 
-<div class="bg-gradient-to-b from-[#1e293b] to-[#020617] border-b border-white/10 p-6 flex justify-between items-center sticky top-0 z-50">
+<div class="bg-gradient-to-b from-[#1e293b] to-[#0f172a] border-b border-white/10 p-6 flex justify-between items-center sticky top-0 z-50">
     <div class="flex items-center gap-5">
-        <div id="team-logo-display" class="w-16 h-16 rounded-full bg-black/40 border-2 border-white/20 flex items-center justify-center overflow-hidden shadow-2xl cursor-pointer hover:scale-105 transition-all" onclick="forcarLogoEquipe()" title="Toque para adicionar o escudo da sua equipa">
-            </div>
+        <div id="team-logo-display" class="w-16 h-16 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center overflow-hidden shadow-2xl cursor-pointer hover:scale-105 transition-all bg-white" onclick="adicionarLogoEquipe()" title="Toque para colar o link do escudo da sua equipa">
+            <span class="text-[8px] opacity-30 font-bold uppercase tracking-widest text-center text-slate-800">ADD<br>LOGO</span>
+        </div>
         <div>
             <p id="greeting-msg" class="text-[11px] font-black text-gold uppercase tracking-widest mb-1">BOM DIA</p>
             <h2 id="team-name-display" class="text-white font-black italic text-2xl md:text-3xl leading-none uppercase tracking-tighter drop-shadow-xl">EQUIPE</h2>
@@ -108,9 +109,10 @@
         <div class="dash-card p-8 border-b-8 border-gold/40">
             <h3 class="text-gold text-sm font-black uppercase mb-6 tracking-[0.3em] text-center drop-shadow-md">🏆 Próximo Confronto</h3>
             <div class="flex flex-col items-center justify-center relative">
-                <div class="cursor-pointer transition-transform hover:scale-105 mb-4" onclick="adicionarLogoAdv()" title="Toque para adicionar o escudo">
-                    <div id="adv-logo-container" class="w-32 h-32 bg-black/50 rounded-[2rem] border-4 border-white/10 flex items-center justify-center overflow-hidden shadow-2xl">
-                        </div>
+                <div class="cursor-pointer transition-transform hover:scale-105 mb-4" onclick="adicionarLogoAdv()" title="Toque para adicionar o link do escudo">
+                    <div id="adv-logo-container" class="w-32 h-32 bg-white/90 rounded-[2rem] border-4 border-white/10 flex items-center justify-center overflow-hidden shadow-2xl">
+                        <span class="text-sm opacity-50 italic font-black text-slate-800">ADV</span>
+                    </div>
                 </div>
                 <span id="adv-nome" class="text-4xl md:text-5xl font-black italic text-white drop-shadow-xl mb-4 uppercase text-center tracking-tighter">A DEFINIR</span>
                 <div class="flex gap-3">
@@ -154,7 +156,7 @@
     <div id="tab-sessao" class="tab-view hidden space-y-6">
         <div id="drills-lista" class="space-y-6"></div>
         
-        <div class="dash-card p-6 bg-gradient-to-t from-[#0f172a] to-[#1e293b] border-t-2 border-gold/50 mt-10">
+        <div class="dash-card p-6 bg-gradient-to-t from-[#0f172a] to-[#1e293b] border-t-2 border-gold/50 mt-10 relative">
             <h3 class="text-gold text-lg font-black uppercase mb-5 text-center tracking-[0.3em] drop-shadow-md">⭐ Avaliar Plantel</h3>
             
             <div class="flex gap-2 overflow-x-auto no-scrollbar py-2 mb-6" id="pos-filters">
@@ -171,9 +173,15 @@
 
             <div id="players-performance" class="space-y-4 mb-6"></div>
             
-            <button onclick="finalizarTreino()" class="w-full py-6 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(220,38,38,0.4)] active:scale-95 transition-all uppercase tracking-[0.2em] text-base mt-4">
-                🛑 Encerrar Avaliações Diárias
+            <button id="btn-salvar-notas" onclick="sincronizarNotasNuvem()" class="w-full py-5 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(34,197,94,0.4)] active:scale-95 transition-all uppercase tracking-[0.1em] text-base mb-4">
+                ✓ SALVAR NOTAS NO APP OFICIAL
             </button>
+
+            <div id="status-treino-container" class="border-t border-white/10 pt-4">
+                <button onclick="finalizarTreino()" class="w-full py-5 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(220,38,38,0.4)] active:scale-95 transition-all uppercase tracking-[0.2em] text-sm">
+                    🛑 Enviar Aviso de Fim de Sessão
+                </button>
+            </div>
         </div>
     </div>
 
@@ -185,7 +193,6 @@
         <div class="dash-card p-8 border-t-4 border-blue-500">
             <h3 class="text-blue-400 text-lg font-black uppercase mb-6 tracking-widest text-center">📅 Puxar Treino Histórico</h3>
             <input type="date" id="busca-data" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-5 text-xl text-white font-bold outline-none focus:border-blue-500 transition-colors shadow-inner text-center" onchange="buscarTreinoHistorico()">
-            <p class="text-center text-xs opacity-50 mt-4 uppercase font-bold tracking-widest">Selecione a data exata do treino anterior</p>
         </div>
         <div id="historico-lista" class="space-y-6">
             <div class="dash-card p-12 text-center border-dashed border-2 border-white/10 bg-transparent shadow-none"><p class="opacity-30 text-sm font-black uppercase tracking-widest">Aguardando Data...</p></div>
@@ -212,6 +219,7 @@
 
     let allPlayers = []; 
     let currentFilter = 'Todos';
+    let localRatings = {}; // Armazena as notas temporárias antes de salvar na nuvem
     const todayISO = new Date().toISOString().split('T')[0];
 
     // TOAST FEEDBACK
@@ -219,7 +227,7 @@
         const t = document.getElementById("toast");
         t.innerText = msg;
         t.className = "show";
-        setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000);
+        setTimeout(() => { t.className = t.className.replace("show", ""); }, 3500);
     }
 
     // FOCO TOTAL
@@ -262,25 +270,24 @@
         
         setTimeout(() => {
             btn.classList.replace('bg-green-500', 'bg-blue-600');
-            btn.innerText = "Salvar e Manter";
+            btn.innerText = "Salvar Perfil";
             fecharConfig();
         }, 1000);
     }
 
-    // ESCUDOS LIMPOS (SEM LETREIRO)
-    function forcarLogoEquipe() {
-        const url = prompt("Cole o link do Escudo da SUA EQUIPE:");
+    // SALVAR LOGOS DIRETAMENTE NAS VARIÁVEIS OFICIAIS DO V2106
+    function adicionarLogoEquipe() {
+        const url = prompt("Cole o link (URL) da imagem do ESCUDO DA SUA EQUIPA:");
         if(url && url.trim() !== "") {
             const uid = auth.currentUser.uid;
             db.collection('coachData').doc(uid).update({ 
-                pc_team_logo_url: url,
-                pc_logo: url
+                pc_team_logo_url: url 
             }).then(() => mostrarToast("Escudo Atualizado!"));
         }
     }
 
     function adicionarLogoAdv() {
-        const url = prompt("Cole o link (URL) da imagem do ESCUDO DO ADVERSÁRIO:");
+        const url = prompt("Cole o link (URL) da imagem do escudo do ADVERSÁRIO:");
         if(url && url.trim() !== "") {
             const uid = auth.currentUser.uid;
             db.collection('coachData').doc(uid).get().then(doc => {
@@ -304,35 +311,49 @@
             const d = doc.data();
             const todayName = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'][new Date().getDay()];
 
-            // LOGO EQUIPE
-            const teamLogo = d.pc_team_logo_url || d.pc_logo || "";
+            // LOGO DA EQUIPE BASEADO NO CÓDIGO DO APP OFICIAL
+            const teamLogo = d.pc_team_logo_url;
             if(d.pc_team_name) document.getElementById('team-name-display').innerText = d.pc_team_name;
             if(teamLogo && teamLogo.trim() !== "") {
                 document.getElementById('team-logo-display').innerHTML = `<img src="${teamLogo}" class="w-full h-full object-contain p-1">`;
-            } else {
-                document.getElementById('team-logo-display').innerHTML = `<span class="text-[8px] opacity-30 font-black uppercase text-center">ESCUDO</span>`;
+                document.getElementById('team-logo-display').classList.remove('bg-white/10');
+                document.getElementById('team-logo-display').classList.add('bg-white');
             }
 
-            // LOGO ADV
             if(d.pc_scouting) {
                 const s = JSON.parse(d.pc_scouting);
                 if(s.opponent) {
                     document.getElementById('adv-nome').innerText = s.opponent;
                     document.getElementById('jogo-data').innerText = s.date ? s.date.split('-').reverse().join('/') : "A DEFINIR";
                     document.getElementById('jogo-sistema').innerText = "SIS: " + (s.system || "-");
-                    if(s.logo) document.getElementById('adv-logo-container').innerHTML = `<img src="${s.logo}" class="w-full h-full object-contain p-2">`;
-                    else document.getElementById('adv-logo-container').innerHTML = `<span class="text-sm opacity-20 italic font-black text-center">ESCUDO</span>`;
+                    if(s.logo) {
+                        document.getElementById('adv-logo-container').innerHTML = `<img src="${s.logo}" class="w-full h-full object-contain p-2">`;
+                        document.getElementById('adv-logo-container').classList.add('bg-white');
+                        document.getElementById('adv-logo-container').classList.remove('bg-black/50');
+                    }
                 }
             }
 
             const micro = JSON.parse(d.pc_micro_v7 || "{}");
             document.getElementById('agenda-hoje').innerHTML = (micro[todayName]?.blocks || []).map(b => `<div class="flex items-center gap-4"><span class="text-xs font-black opacity-40 w-12">${b.period}</span><span class="tag ${b.color} text-sm py-2">${b.label}</span></div>`).join('') || '<p class="opacity-30 text-sm italic font-bold">Livre.</p>';
             
-            const avisos = JSON.parse(d.pc_notices_list || d.pc_notices || "[]");
+            const avisos = JSON.parse(d.pc_notices_list || "[]");
             document.getElementById('avisos-lista').innerHTML = avisos.slice(0,3).map(n => `<p class="border-b border-white/5 pb-3 last:border-0 truncate text-lg">➤ ${n.text}</p>`).join('');
 
-            allPlayers = JSON.parse(d.pc_players || d.pc_elenco || "[]").map((p, i) => ({...p, originalIndex: i}));
-            renderPlayers();
+            // CARREGAMENTO DOS JOGADORES (APENAS 1 VEZ AO ABRIR OU SE NÃO HOUVER NOTAS PENDENTES)
+            if(Object.keys(localRatings).length === 0) {
+                allPlayers = JSON.parse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
+                
+                // Tenta puxar as notas do histórico diário (onde o V2106 Oficial guarda)
+                try {
+                    const hist = JSON.parse(d.pc_history_v2 || "{}");
+                    if(hist[todayISO] && hist[todayISO].ratings) {
+                        localRatings = hist[todayISO].ratings; // Ex: {"ADRIANO": 5}
+                    }
+                } catch(e) {}
+                
+                renderPlayers();
+            }
 
             document.getElementById('gols-lista').innerHTML = allPlayers.sort((a,b)=>(b.stats?.g||0)-(a.stats?.g||0)).slice(0,3).map(p=>`<div class="flex justify-between border-b border-white/5 pb-1"><span class="uppercase">${p.name}</span><span class="text-gold font-black">${p.stats?.g||0}</span></div>`).join('');
             document.getElementById('dm-lista').innerHTML = allPlayers.filter(p=>p.injured).map(p=>`<div class="border-b border-red-500/20 pb-1 uppercase">• ${p.name}</div>`).join('') || '<span class="opacity-30 uppercase">Vazio</span>';
@@ -399,52 +420,98 @@
 
     function renderPlayers() {
         const f = allPlayers.filter(p => !p.injured && (currentFilter === 'Todos' || p.pos === currentFilter));
-        document.getElementById('players-performance').innerHTML = f.map(p => `
-            <div class="flex flex-col md:flex-row items-center justify-between p-5 bg-black/30 rounded-2xl border border-white/5 gap-4">
-                <div class="flex items-center gap-5 w-full md:w-auto">
-                    <img src="${p.image || ''}" class="w-16 h-16 rounded-full border-2 border-white/10 shadow-lg object-cover">
-                    <div class="flex flex-col">
-                        <span class="text-base font-black uppercase tracking-wider text-white">${p.name}</span>
-                        <span class="text-xs font-bold text-gold uppercase opacity-80 mt-1 tracking-widest">${p.pos || 'POSIÇÃO'}</span>
+        document.getElementById('players-performance').innerHTML = f.map(p => {
+            // Busca nota se já existir (do Firebase Histórico ou do toque local)
+            let currNota = localRatings[p.name] || p.rating || 0;
+            return `
+                <div class="flex flex-col md:flex-row items-center justify-between p-5 bg-black/30 rounded-2xl border border-white/5 gap-4">
+                    <div class="flex items-center gap-5 w-full md:w-auto">
+                        <img src="${p.image || ''}" class="w-16 h-16 rounded-full border-2 border-white/10 shadow-lg object-cover bg-slate-200">
+                        <div class="flex flex-col">
+                            <span class="text-base font-black uppercase tracking-wider text-white">${p.name}</span>
+                            <span class="text-xs font-bold text-gold uppercase opacity-80 mt-1 tracking-widest">${p.pos || 'POSIÇÃO'}</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 star-rating" id="stars-${p.originalIndex}">
+                        ${[1,2,3,4,5].map(n => `<button onclick="votar(${p.originalIndex}, '${p.name}', ${n})" class="${currNota >= n ? 'active' : ''}">★</button>`).join('')}
                     </div>
                 </div>
-                <div class="flex gap-2 star-rating" id="stars-${p.originalIndex}">
-                    ${[1,2,3,4,5].map(n => `<button onclick="votar(${p.originalIndex}, ${n})" class="${(p.rating||0) >= n ? 'active' : ''}">★</button>`).join('')}
-                </div>
-            </div>
-        `).join('') || `<p class="text-center text-sm opacity-40 py-8 uppercase font-bold tracking-widest">Vazio no momento.</p>`;
+            `;
+        }).join('') || `<p class="text-center text-sm opacity-40 py-8 uppercase font-bold tracking-widest">Vazio no momento.</p>`;
     }
 
-    // VOTAÇÃO DE FORÇA BRUTA (ATUALIZA NO V2106 OFICIAL)
-    function votar(idx, nota) {
+    // AÇÃO DE VOTAR (SALVA LOCALMENTE E ALTERA O BOTÃO)
+    function votar(idx, playerName, nota) {
         nota = parseInt(nota);
+        
+        // Atualiza a interface
         document.querySelectorAll(`#stars-${idx} button`).forEach((btn, i) => {
             if (i < nota) btn.classList.add('active');
             else btn.classList.remove('active');
         });
         
+        // Guarda na memória (O índice agora é o NOME DO JOGADOR, igual ao App Oficial)
+        localRatings[playerName] = nota;
+        
+        // Avisa que precisa salvar
+        const btnSalvar = document.getElementById('btn-salvar-notas');
+        btnSalvar.classList.replace('bg-green-600', 'bg-yellow-500');
+        btnSalvar.innerText = "⚠️ SALVAR NOTAS NO APP OFICIAL";
+    }
+
+    // SINCRONIZAÇÃO EM BLOCO PARA FORÇAR O APP OFICIAL A LER
+    function sincronizarNotasNuvem() {
         const uid = auth.currentUser.uid;
+        const btn = document.getElementById('btn-salvar-notas');
+        btn.innerText = "Sincronizando...";
+
         db.collection('coachData').doc(uid).get().then(doc => {
-            const data = doc.data();
-            let p = JSON.parse(data.pc_players || data.pc_elenco || "[]");
+            let data = doc.data();
             
-            if(p[idx]) {
-                p[idx].rating = nota; 
-                p[idx].avg = nota.toFixed(1); // Formato numérico seguro
+            // 1. Atualiza o Histórico (É DE ONDE O V2106 PUXA A NOTA!)
+            let hist = JSON.parse(data.pc_history_v2 || "{}");
+            if(!hist[todayISO]) hist[todayISO] = { drills: [], header: {} };
+            if(!hist[todayISO].ratings) hist[todayISO].ratings = {};
+            
+            // Junta as notas que já estavam com as novas
+            hist[todayISO].ratings = { ...hist[todayISO].ratings, ...localRatings };
+
+            // 2. Atualiza o Plantel (pc_players)
+            let playersCloud = JSON.parse(data.pc_players || "[]");
+            playersCloud.forEach(p => {
+                if(localRatings[p.name]) {
+                    p.rating = localRatings[p.name];
+                }
+            });
+
+            // Manda para a nuvem
+            db.collection('coachData').doc(uid).update({
+                pc_history_v2: JSON.stringify(hist),
+                pc_players: JSON.stringify(playersCloud),
+                pc_last_update: firebase.firestore.FieldValue.serverTimestamp() // Força atualização de gráficos no V2106
+            }).then(() => {
+                btn.classList.replace('bg-yellow-500', 'bg-green-600');
+                btn.innerText = "✓ NOTAS SALVAS COM SUCESSO";
+                mostrarToast("⭐ NOTAS ENVIADAS PARA O COMPUTADOR");
                 
-                db.collection('coachData').doc(uid).update({ 
-                    pc_players: JSON.stringify(p),
-                    pc_last_update: Date.now() // Força atualização de gráficos
-                }).then(() => {
-                    mostrarToast(`⭐ SALVO: ${p[idx].name}`);
-                });
-            }
+                // Limpa as pendências
+                localRatings = {};
+            }).catch(err => {
+                alert("Falha na conexão.");
+                btn.innerText = "TENTAR NOVAMENTE";
+            });
         });
     }
 
-    // BOTÃO ENCERRAR (LIVRE - NÃO BLOQUEIA MAIS A TELA)
+    // FINALIZAR TREINO (APENAS AVISO)
     function finalizarTreino() {
-        if(!confirm("Atenção: Enviar aviso de encerramento para o Mural?")) return;
+        if(!confirm("Deseja avisar ao Professor que a avaliação acabou?")) return;
+        
+        // Se houver notas pendentes, salva antes
+        if(Object.keys(localRatings).length > 0) {
+            sincronizarNotasNuvem();
+        }
+
         const uid = auth.currentUser.uid;
         const staff = (localStorage.getItem('pc_staff_role')||"Comissão") + " " + (localStorage.getItem('pc_staff_name')||"");
         db.collection('coachData').doc(uid).get().then(doc => {
@@ -455,10 +522,9 @@
             list.unshift({ id: Date.now(), date: todayISO, text: msg });
 
             db.collection('coachData').doc(uid).update({ 
-                pc_notices_list: JSON.stringify(list),
-                pc_last_update: Date.now()
+                pc_notices_list: JSON.stringify(list)
             }).then(() => {
-                mostrarToast("✅ AVISO ENVIADO AO MISTER");
+                mostrarToast("✅ AVISO ENVIADO AO MURAL");
             });
         });
     }
@@ -490,10 +556,9 @@
             list.unshift({ id: Date.now(), date: todayISO, text: msg });
 
             db.collection('coachData').doc(uid).update({ 
-                pc_notices_list: JSON.stringify(list),
-                pc_last_update: Date.now()
+                pc_notices_list: JSON.stringify(list)
             }).then(() => {
-                mostrarToast("🎙️ OCORRÊNCIA ENVIADA!"); 
+                mostrarToast("🎙️ RELATO ENVIADO AO MURAL");
                 document.getElementById('voice-txt').value = '';
             });
         });
