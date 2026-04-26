@@ -90,7 +90,7 @@
     </div>
     <div class="flex flex-col items-end gap-3">
         <button onclick="abrirConfig()" class="bg-black/30 p-3 rounded-full border border-white/20 shadow-lg active:scale-95">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
     </div>
 </div>
@@ -174,7 +174,7 @@
             <div id="players-performance" class="space-y-4 mb-6"></div>
             
             <button id="btn-salvar-notas" onclick="sincronizarNotasNuvem()" class="w-full py-5 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(34,197,94,0.4)] active:scale-95 transition-all uppercase tracking-[0.1em] text-base mb-4">
-                ✓ ENVIAR NOTAS PARA O COMPUTADOR
+                ✓ SALVAR NOTAS E AVISAR O MISTER
             </button>
 
             <div id="status-treino-container" class="border-t border-white/10 pt-4">
@@ -222,11 +222,24 @@
     let localRatings = {}; // Variável que segura as notas no celular antes de salvar
     const todayISO = new Date().toISOString().split('T')[0];
 
+    // FUNÇÃO QUE LIMPA AS ASPAS QUE O APP OFICIAL CRIA ("JSON.stringify bug")
+    function safeParse(val) {
+        if (!val) return "";
+        if (typeof val !== 'string') return val;
+        try { 
+            const parsed = JSON.parse(val); 
+            // Se o resultado do parse ainda for uma string "AC SOCCER", devolve o texto limpo
+            return typeof parsed === 'string' ? parsed : parsed;
+        } catch(e) { 
+            return val; 
+        }
+    }
+
     function mostrarToast(msg) {
         const t = document.getElementById("toast");
         t.innerText = msg;
         t.className = "show";
-        setTimeout(() => { t.className = t.className.replace("show", ""); }, 3500);
+        setTimeout(() => { t.className = t.className.replace("show", ""); }, 4000);
     }
 
     function openFullScreen(imgSrc) {
@@ -246,8 +259,8 @@
         if (hora >= 12 && hora < 18) s = "BOA TARDE";
         else if (hora >= 18) s = "BOA NOITE";
         
-        const role = localStorage.getItem('pc_staff_role') || "COMISSÃO";
-        const name = localStorage.getItem('pc_staff_name') || "";
+        const role = safeParse(localStorage.getItem('pc_staff_role')) || "COMISSÃO";
+        const name = safeParse(localStorage.getItem('pc_staff_name')) || "";
         document.getElementById('greeting-msg').innerText = `${s}, ${role} ${name}`.toUpperCase();
         
         document.getElementById('staff-name').value = name;
@@ -259,8 +272,8 @@
     
     function salvarPerfil() {
         const btn = document.getElementById('btn-salvar-perfil');
-        localStorage.setItem('pc_staff_name', document.getElementById('staff-name').value);
-        localStorage.setItem('pc_staff_role', document.getElementById('staff-role').value || "Comissão");
+        localStorage.setItem('pc_staff_name', JSON.stringify(document.getElementById('staff-name').value));
+        localStorage.setItem('pc_staff_role', JSON.stringify(document.getElementById('staff-role').value || "Comissão"));
         
         btn.classList.replace('bg-blue-600', 'bg-green-500');
         btn.innerText = "✓ SALVO COM SUCESSO!";
@@ -273,13 +286,12 @@
         }, 1000);
     }
 
-    // SALVAR LOGO DA EQUIPE COM VARIÁVEL EXATA DO V2106 (pc_team_logo_url)
     function adicionarLogoEquipe() {
-        const url = prompt("Cole o link (URL) da imagem do ESCUDO DA SUA EQUIPA:");
+        const url = prompt("Cole o link (URL) da imagem do ESCUDO DA SUA EQUIPE:");
         if(url && url.trim() !== "") {
             const uid = auth.currentUser.uid;
             db.collection('coachData').doc(uid).update({ 
-                pc_team_logo_url: url 
+                pc_team_logo_url: JSON.stringify(url) 
             }).then(() => mostrarToast("Escudo Atualizado!"));
         }
     }
@@ -289,7 +301,7 @@
         if(url && url.trim() !== "") {
             const uid = auth.currentUser.uid;
             db.collection('coachData').doc(uid).get().then(doc => {
-                let s = JSON.parse(doc.data().pc_scouting || "{}");
+                let s = safeParse(doc.data().pc_scouting || "{}");
                 s.logo = url;
                 db.collection('coachData').doc(uid).update({ pc_scouting: JSON.stringify(s) });
             });
@@ -309,9 +321,11 @@
             const d = doc.data();
             const todayName = ['DOMINGO','SEGUNDA','TERÇA','QUARTA','QUINTA','SEXTA','SÁBADO'][new Date().getDay()];
 
-            // LOGO DA EQUIPE EXATO
-            const teamLogo = d.pc_team_logo_url;
-            if(d.pc_team_name) document.getElementById('team-name-display').innerText = d.pc_team_name;
+            // LOGO DA EQUIPE COM CÓDIGO LIMPO (Sem aspas)
+            const teamLogo = safeParse(d.pc_team_logo_url);
+            const teamName = safeParse(d.pc_team_name);
+            
+            if(teamName) document.getElementById('team-name-display').innerText = teamName;
             if(teamLogo && teamLogo.trim() !== "") {
                 document.getElementById('team-logo-display').innerHTML = `<img src="${teamLogo}" class="w-full h-full object-contain p-1">`;
                 document.getElementById('team-logo-display').classList.remove('bg-white/10');
@@ -319,7 +333,7 @@
             }
 
             if(d.pc_scouting) {
-                const s = JSON.parse(d.pc_scouting);
+                const s = safeParse(d.pc_scouting);
                 if(s.opponent) {
                     document.getElementById('adv-nome').innerText = s.opponent;
                     document.getElementById('jogo-data').innerText = s.date ? s.date.split('-').reverse().join('/') : "A DEFINIR";
@@ -332,28 +346,29 @@
                 }
             }
 
-            const micro = JSON.parse(d.pc_micro_v7 || "{}");
+            const micro = safeParse(d.pc_micro_v7 || "{}");
             document.getElementById('agenda-hoje').innerHTML = (micro[todayName]?.blocks || []).map(b => `<div class="flex items-center gap-4"><span class="text-xs font-black opacity-40 w-12">${b.period}</span><span class="tag ${b.color} text-sm py-2">${b.label}</span></div>`).join('') || '<p class="opacity-30 text-sm italic font-bold">Livre.</p>';
             
-            const avisos = JSON.parse(d.pc_notices_list || "[]");
+            const avisos = safeParse(d.pc_notices_list || "[]");
             document.getElementById('avisos-lista').innerHTML = avisos.slice(0,3).map(n => `<p class="border-b border-white/5 pb-3 last:border-0 truncate text-lg">➤ ${n.text}</p>`).join('');
 
-            // CARREGA OS ATLETAS UMA VEZ
+            // CARREGAMENTO DOS JOGADORES 
             if(Object.keys(localRatings).length === 0) {
-                allPlayers = JSON.parse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
+                allPlayers = safeParse(d.pc_players || "[]");
                 
                 try {
-                    const hist = JSON.parse(d.pc_history_v2 || "{}");
+                    const hist = safeParse(d.pc_history_v2 || "{}");
                     if(hist[todayISO] && hist[todayISO].ratings) {
-                        // Mapeia do índice numérico oficial (ex: "0": 5) para a memória do app auxiliar
+                        // O V2106 usa a posição (0, 1, 2) da lista de APTOS como ID. 
+                        // Mapeamos isso de volta para o Auxiliar.
                         let offRatings = hist[todayISO].ratings;
-                        let indexNaoMachucado = 0;
+                        let aptoIndex = 0;
                         allPlayers.forEach(p => {
                             if(!p.injured) {
-                                if(offRatings[indexNaoMachucado]) {
-                                    localRatings[p.name] = offRatings[indexNaoMachucado];
+                                if(offRatings[aptoIndex]) {
+                                    localRatings[aptoIndex] = offRatings[aptoIndex];
                                 }
-                                indexNaoMachucado++;
+                                aptoIndex++;
                             }
                         });
                     }
@@ -377,7 +392,7 @@
                 </div>
             `).join('');
 
-            const history = JSON.parse(d.pc_history_v2 || "{}");
+            const history = safeParse(d.pc_history_v2 || "{}");
             const sessao = history[todayISO]?.drills || [];
             document.getElementById('drills-lista').innerHTML = sessao.map((ex,i) => `
                 <div class="dash-card overflow-hidden relative group">
@@ -400,7 +415,7 @@
         if(!dateVal) return;
         const uid = auth.currentUser.uid;
         db.collection('coachData').doc(uid).get().then(doc => {
-            const history = JSON.parse(doc.data().pc_history_v2 || "{}");
+            const history = safeParse(doc.data().pc_history_v2 || "{}");
             const sessao = history[dateVal]?.drills || [];
             document.getElementById('historico-lista').innerHTML = sessao.map((ex,i) => `
                 <div class="dash-card overflow-hidden relative">
@@ -426,41 +441,50 @@
     }
 
     function renderPlayers() {
-        const f = allPlayers.filter(p => !p.injured && (currentFilter === 'Todos' || p.pos === currentFilter));
-        document.getElementById('players-performance').innerHTML = f.map(p => {
-            let currNota = localRatings[p.name] || 0;
-            return `
-                <div class="flex flex-col md:flex-row items-center justify-between p-5 bg-black/30 rounded-2xl border border-white/5 gap-4">
-                    <div class="flex items-center gap-5 w-full md:w-auto">
-                        <img src="${p.image || ''}" class="w-16 h-16 rounded-full border-2 border-white/10 shadow-lg object-cover bg-slate-200">
-                        <div class="flex flex-col">
-                            <span class="text-base font-black uppercase tracking-wider text-white">${p.name}</span>
-                            <span class="text-xs font-bold text-gold uppercase opacity-80 mt-1 tracking-widest">${p.pos || 'POSIÇÃO'}</span>
+        const uninjuredPlayers = allPlayers.filter(p => !p.injured);
+        
+        let html = '';
+        uninjuredPlayers.forEach((p, offIndex) => {
+            if (currentFilter === 'Todos' || p.pos === currentFilter) {
+                let currNota = localRatings[offIndex] || 0;
+                html += `
+                    <div class="flex flex-col md:flex-row items-center justify-between p-5 bg-black/30 rounded-2xl border border-white/5 gap-4">
+                        <div class="flex items-center gap-5 w-full md:w-auto">
+                            <img src="${p.image || ''}" class="w-16 h-16 rounded-full border-2 border-white/10 shadow-lg object-cover bg-slate-200">
+                            <div class="flex flex-col">
+                                <span class="text-base font-black uppercase tracking-wider text-white">${p.name}</span>
+                                <span class="text-xs font-bold text-gold uppercase opacity-80 mt-1 tracking-widest">${p.pos || 'POSIÇÃO'}</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 star-rating" id="stars-${offIndex}">
+                            ${[1,2,3,4,5].map(n => `<button onclick="votar(${offIndex}, ${n})" class="${currNota >= n ? 'active' : ''}">★</button>`).join('')}
                         </div>
                     </div>
-                    <div class="flex gap-2 star-rating" id="stars-${p.originalIndex}">
-                        ${[1,2,3,4,5].map(n => `<button onclick="votar(${p.originalIndex}, '${p.name}', ${n})" class="${currNota >= n ? 'active' : ''}">★</button>`).join('')}
-                    </div>
-                </div>
-            `;
-        }).join('') || `<p class="text-center text-sm opacity-40 py-8 uppercase font-bold tracking-widest">Vazio no momento.</p>`;
+                `;
+            }
+        });
+        
+        document.getElementById('players-performance').innerHTML = html || `<p class="text-center text-sm opacity-40 py-8 uppercase font-bold tracking-widest">Vazio no momento.</p>`;
     }
 
-    function votar(idx, playerName, nota) {
+    function votar(offIndex, nota) {
         nota = parseInt(nota);
-        document.querySelectorAll(`#stars-${idx} button`).forEach((btn, i) => {
+        
+        // Atualiza a interface
+        document.querySelectorAll(`#stars-${offIndex} button`).forEach((btn, i) => {
             if (i < nota) btn.classList.add('active');
             else btn.classList.remove('active');
         });
         
-        localRatings[playerName] = nota;
+        // Guarda na memória a nota ligada ao ÍNDICE OFICIAL (ex: "0": 5, "1": 4)
+        localRatings[offIndex] = nota;
         
         const btnSalvar = document.getElementById('btn-salvar-notas');
         btnSalvar.classList.replace('bg-green-600', 'bg-yellow-500');
         btnSalvar.innerText = "⚠️ CLIQUE AQUI PARA ENVIAR PARA O COMPUTADOR";
     }
 
-    // A MÁGICA: SINCRONIZAR COM A ESTRUTURA EXATA DO V2106
+    // A MÁGICA FINAL: ENVIANDO DADOS EXATAMENTE COMO O SEU APP LÊ
     function sincronizarNotasNuvem() {
         const uid = auth.currentUser.uid;
         const btn = document.getElementById('btn-salvar-notas');
@@ -469,33 +493,22 @@
         db.collection('coachData').doc(uid).get().then(doc => {
             let data = doc.data();
             
-            // 1. Cria o objeto "ratings" usando a contagem de jogadores aptos (A MESMA LÓGICA DO V2106)
-            let indexNaoMachucado = 0;
-            let novasNotasV2106 = {};
-            
-            allPlayers.forEach((p) => {
-                if (!p.injured) {
-                    if (localRatings[p.name]) {
-                        novasNotasV2106[indexNaoMachucado] = localRatings[p.name];
-                    }
-                    indexNaoMachucado++;
-                }
-            });
-
-            // 2. Guarda no histórico diário
-            let hist = JSON.parse(data.pc_history_v2 || "{}");
+            // Lê o Histórico do App Oficial e limpa as aspas de proteção
+            let hist = safeParse(data.pc_history_v2 || "{}");
             if(!hist[todayISO]) hist[todayISO] = { drills: [], header: {} };
+            if(!hist[todayISO].ratings) hist[todayISO].ratings = {};
             
-            // Substitui as notas do dia por estas novas calculadas
-            hist[todayISO].ratings = novasNotasV2106; 
+            // Adiciona as notas usando o INDEX NUMÉRICO exigido pelo V2106 Oficial
+            hist[todayISO].ratings = { ...hist[todayISO].ratings, ...localRatings };
 
-            // Manda para a nuvem
+            // Envia de volta protegido para o App Oficial ler
             db.collection('coachData').doc(uid).update({
-                pc_history_v2: JSON.stringify(hist)
+                pc_history_v2: JSON.stringify(hist),
+                pc_last_update: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 btn.classList.replace('bg-yellow-500', 'bg-green-600');
                 btn.innerText = "✓ NOTAS SALVAS (DÊ F5 NO COMPUTADOR)";
-                mostrarToast("⭐ SUCESSO! DÊ F5 NO APP OFICIAL.");
+                mostrarToast("⭐ SUCESSO! AGORA APERTE F5 NO SEU COMPUTADOR.");
             }).catch(err => {
                 alert("Falha na conexão.");
                 btn.innerText = "TENTAR NOVAMENTE";
@@ -506,10 +519,11 @@
     function finalizarTreino() {
         if(!confirm("Avisar ao Professor que o treino acabou?")) return;
         const uid = auth.currentUser.uid;
-        const staff = (localStorage.getItem('pc_staff_role')||"Comissão") + " " + (localStorage.getItem('pc_staff_name')||"");
+        const staff = safeParse(localStorage.getItem('pc_staff_role')||"Comissão") + " " + safeParse(localStorage.getItem('pc_staff_name')||"");
+        
         db.collection('coachData').doc(uid).get().then(doc => {
             const data = doc.data();
-            let list = JSON.parse(data.pc_notices_list || "[]");
+            let list = safeParse(data.pc_notices_list || "[]");
             let msg = `🏁 [INFO]: Sessão finalizada por ${staff.trim()}.`;
             
             list.unshift({ id: Date.now(), date: todayISO, text: msg });
@@ -540,10 +554,11 @@
         const txt = document.getElementById('voice-txt').value;
         if(!txt) return alert("Grave algo primeiro.");
         const uid = auth.currentUser.uid;
-        const role = localStorage.getItem('pc_staff_role') || "Comissão";
+        const role = safeParse(localStorage.getItem('pc_staff_role')) || "Comissão";
+        
         db.collection('coachData').doc(uid).get().then(doc => {
             const data = doc.data();
-            let list = JSON.parse(data.pc_notices_list || "[]");
+            let list = safeParse(data.pc_notices_list || "[]");
             let msg = `[${role.toUpperCase()}]: ${txt}`;
             
             list.unshift({ id: Date.now(), date: todayISO, text: msg });
