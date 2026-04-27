@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ProCoach Auxiliar - ELITE SYNC</title>
+    <title>ProCoach Auxiliar - OFICIAL SYNC</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
@@ -15,17 +15,18 @@
         body { background-color: var(--navy); color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
         
         .nav-container { @apply flex gap-3 p-4 bg-[#0f172a] sticky top-[85px] z-40 border-b-2 border-white/10 overflow-x-auto no-scrollbar; }
-        .nav-btn { @apply flex-none px-4 py-4 text-[11px] font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-1 min-w-[90px]; }
+        .nav-btn { @apply flex-none px-5 py-4 text-xs font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-1 min-w-[110px]; }
         .nav-active { @apply border-gold text-navy bg-gradient-to-br from-gold to-yellow-500 shadow-[0_10px_25px_rgba(212,175,55,0.4)] scale-105; }
-        .nav-icon { @apply text-2xl block drop-shadow-md; } 
+        .nav-icon { @apply text-3xl block drop-shadow-md; } 
         
         .dash-card { @apply bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-3xl border border-white/10 shadow-2xl overflow-hidden; }
         .tag { @apply px-3 py-1.5 rounded-lg text-xs font-black text-white uppercase shadow-md; }
         
-        .filter-btn { @apply px-5 py-3 rounded-xl border border-white/10 text-sm font-black uppercase whitespace-nowrap bg-black/40 text-slate-400 transition-colors shadow-sm; }
+        /* Ajuste do botão para não espremer o texto no celular */
+        .filter-btn { @apply px-5 py-3 rounded-xl border border-white/10 text-sm font-black uppercase whitespace-nowrap bg-black/40 text-slate-400 transition-colors shadow-sm shrink-0; }
         .filter-active { @apply bg-blue-600 text-white border-blue-400 shadow-[0_0_15px_rgba(37,99,235,0.5)]; }
 
-        .aviso-tag { @apply border-2 py-3 rounded-xl text-[11px] font-black uppercase transition-all shadow-md active:scale-95 opacity-40; }
+        .aviso-tag { @apply border-2 py-3 rounded-xl text-[11px] font-black uppercase transition-all shadow-md active:scale-95 opacity-40 shrink-0; }
         .aviso-tag.active { @apply opacity-100 scale-105 shadow-xl border-white/50; }
 
         .star-rating button { font-size: 32px; color: #334155; transition: 0.2s; drop-shadow: 0 4px 6px rgba(0,0,0,0.6); outline: none; -webkit-tap-highlight-color: transparent; }
@@ -178,7 +179,7 @@
 
             <div id="players-performance" class="space-y-4 mb-6"></div>
             
-            <button id="btn-salvar-notas" onclick="sincronizarNotasNuvem()" class="w-full py-5 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(34,197,94,0.4)] active:scale-95 transition-all uppercase tracking-[0.1em] text-base">
+            <button id="btn-salvar-notas" onclick="sincronizarNotasNuvem()" class="w-full py-5 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(34,197,94,0.4)] active:scale-95 transition-all uppercase tracking-[0.1em] text-base mb-4">
                 ✓ SALVAR NOTAS NA NUVEM
             </button>
         </div>
@@ -198,6 +199,7 @@
         <div class="dash-card p-8 border-t-4 border-blue-500">
             <h3 class="text-blue-400 text-lg font-black uppercase mb-6 tracking-widest text-center">📅 Puxar Treino Histórico</h3>
             <input type="date" id="busca-data" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-5 text-xl text-white font-bold outline-none focus:border-blue-500 transition-colors shadow-inner text-center" onchange="buscarTreinoHistorico()">
+            <p class="text-center text-xs opacity-50 mt-4 uppercase font-bold tracking-widest">Selecione a data exata do treino anterior</p>
         </div>
         <div id="historico-lista" class="space-y-6">
             <div class="dash-card p-12 text-center border-dashed border-2 border-white/10 bg-transparent shadow-none"><p class="opacity-30 text-sm font-black uppercase tracking-widest">Aguardando Data...</p></div>
@@ -210,14 +212,14 @@
                 <span class="text-2xl">📢</span> Enviar Aviso ao Mister
             </h3>
             
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-                <button id="tag-lesao" onclick="selecionarEtiqueta('lesao', '🚑 LESÃO')" class="aviso-tag bg-red-500/20 text-red-400 border-red-500/50 hover:bg-red-500/30">🚑 Lesão</button>
-                <button id="tag-atraso" onclick="selecionarEtiqueta('atraso', '⏰ ATRASO')" class="aviso-tag bg-yellow-500/20 text-yellow-400 border-yellow-500/50 hover:bg-yellow-500/30">⏰ Atraso</button>
-                <button id="tag-tatica" onclick="selecionarEtiqueta('tatica', '💡 TÁTICA')" class="aviso-tag bg-blue-500/20 text-blue-400 border-blue-500/50 hover:bg-blue-500/30">💡 Tática</button>
-                <button id="tag-geral" onclick="selecionarEtiqueta('geral', '⚠️ GERAL')" class="aviso-tag bg-slate-500/20 text-slate-300 border-slate-500/50 hover:bg-slate-500/30 active">⚠️ Geral</button>
+            <div class="flex gap-3 overflow-x-auto no-scrollbar py-2 mb-6" id="aviso-tags-container">
+                <button id="tag-lesao" onclick="selecionarEtiqueta('lesao', '🚑 LESÃO')" class="aviso-tag bg-red-500/20 text-red-400 border-red-500/50 hover:bg-red-500/30 w-32">🚑 Lesão</button>
+                <button id="tag-atraso" onclick="selecionarEtiqueta('atraso', '⏰ ATRASO')" class="aviso-tag bg-yellow-500/20 text-yellow-400 border-yellow-500/50 hover:bg-yellow-500/30 w-32">⏰ Atraso</button>
+                <button id="tag-tatica" onclick="selecionarEtiqueta('tatica', '💡 TÁTICA')" class="aviso-tag bg-blue-500/20 text-blue-400 border-blue-500/50 hover:bg-blue-500/30 w-32">💡 Tática</button>
+                <button id="tag-geral" onclick="selecionarEtiqueta('geral', '⚠️ GERAL')" class="aviso-tag bg-slate-500/20 text-slate-300 border-slate-500/50 hover:bg-slate-500/30 active w-32">⚠️ Geral</button>
             </div>
 
-            <textarea id="voice-txt" class="w-full bg-black/50 text-lg font-medium h-48 outline-none border-2 border-white/10 rounded-[2rem] p-6 text-white placeholder-white/30 focus:border-gold transition-colors shadow-inner resize-none" placeholder="Escreva ou dite o aviso..."></textarea>
+            <textarea id="voice-txt" class="w-full bg-black/50 text-lg font-medium h-48 outline-none border-2 border-white/10 rounded-[2rem] p-6 text-white placeholder-white/30 focus:border-gold transition-colors shadow-inner resize-none" placeholder="Escreva ou dite o detalhe do aviso aqui..."></textarea>
         </div>
 
         <button onclick="iniciarVoz()" class="w-full bg-gradient-to-r from-gold to-yellow-500 text-navy font-black py-8 rounded-[2rem] shadow-2xl active:scale-95 transition-all text-lg uppercase tracking-widest flex justify-center items-center gap-3">
@@ -226,6 +228,10 @@
 
         <button onclick="enviarAviso()" class="w-full bg-blue-600 text-white font-black py-6 rounded-[2rem] text-base uppercase mt-2 tracking-widest shadow-lg active:scale-95 transition-transform">
             ✓ Publicar no Quadro do PC
+        </button>
+        
+        <button onclick="finalizarTreino()" class="w-full py-5 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(220,38,38,0.4)] active:scale-95 transition-all uppercase tracking-[0.2em] text-sm mt-4">
+            🛑 Enviar Aviso de Fim de Sessão
         </button>
     </div>
 </div>
@@ -242,6 +248,7 @@
     let tagAtual = '⚠️ GERAL'; 
     const todayISO = new Date().toISOString().split('T')[0];
 
+    // FUNÇÃO QUE LIMPA ASPAS DUPLAS DO BANCO DE DADOS
     function safeParse(val) {
         if (!val) return "";
         if (typeof val !== 'string') return val;
@@ -371,12 +378,12 @@
             
             let htmlAgenda = `
                 <div class="bg-black/20 p-3 rounded-xl border border-white/5">
-                    <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-white/10 pb-1 mb-2">☀️ MANHÃ</div>
-                    ${manha.length > 0 ? manha.map(b => `<div class="tag ${b.color} text-sm py-2 mb-1 w-full text-center shadow-md">${b.label}</div>`).join('') : '<p class="text-xs opacity-30 italic font-bold">Livre</p>'}
+                    <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-white/10 pb-1 mb-2 text-center">☀️ MANHÃ</div>
+                    ${manha.length > 0 ? manha.map(b => `<div class="tag ${b.color} text-sm py-2 mb-1 w-full text-center shadow-md">${b.label}</div>`).join('') : '<p class="text-xs opacity-30 italic font-bold text-center">Livre</p>'}
                 </div>
                 <div class="bg-black/20 p-3 rounded-xl border border-white/5">
-                    <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-white/10 pb-1 mb-2">🌙 TARDE</div>
-                    ${tarde.length > 0 ? tarde.map(b => `<div class="tag ${b.color} text-sm py-2 mb-1 w-full text-center shadow-md">${b.label}</div>`).join('') : '<p class="text-xs opacity-30 italic font-bold">Livre</p>'}
+                    <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-white/10 pb-1 mb-2 text-center">🌙 TARDE</div>
+                    ${tarde.length > 0 ? tarde.map(b => `<div class="tag ${b.color} text-sm py-2 mb-1 w-full text-center shadow-md">${b.label}</div>`).join('') : '<p class="text-xs opacity-30 italic font-bold text-center">Livre</p>'}
                 </div>
             `;
             document.getElementById('agenda-hoje').innerHTML = htmlAgenda;
@@ -384,7 +391,7 @@
             const avisos = safeParse(d.pc_notices_list || "[]");
             document.getElementById('avisos-lista').innerHTML = avisos.slice(0,3).map(n => `<p class="border-b border-white/5 pb-3 last:border-0 truncate text-base">➤ ${n.text}</p>`).join('');
 
-            // CARREGAMENTO DOS JOGADORES
+            // CARREGAMENTO DOS JOGADORES (CORREÇÃO DA MATEMÁTICA DO DM)
             if(Object.keys(localRatings).length === 0) {
                 allPlayers = safeParse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
                 
@@ -396,7 +403,7 @@
                         allPlayers.forEach(p => {
                             if(!p.injured) {
                                 if(offRatings[aptoIndex]) {
-                                    localRatings[aptoIndex] = offRatings[aptoIndex];
+                                    localRatings[p.originalIndex] = offRatings[aptoIndex];
                                 }
                                 aptoIndex++;
                             }
@@ -405,9 +412,8 @@
                 } catch(e) {}
                 
                 renderPlayers();
-                renderLiveGame(); // Atualiza a aba do Jogo Ao Vivo
+                renderLiveGame();
             } else {
-                // Mesmo se as notas não recarregarem, atualizamos a lista para o Jogo Ao Vivo
                 allPlayers = safeParse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
                 renderLiveGame();
             }
@@ -415,6 +421,17 @@
             document.getElementById('gols-lista').innerHTML = allPlayers.sort((a,b)=>(b.stats?.g||0)-(a.stats?.g||0)).slice(0,3).map(p=>`<div class="flex justify-between border-b border-white/5 pb-1"><span class="uppercase">${p.name}</span><span class="text-gold font-black">${p.stats?.g||0}</span></div>`).join('');
             document.getElementById('dm-lista').innerHTML = allPlayers.filter(p=>p.injured).map(p=>`<div class="border-b border-red-500/20 pb-1 uppercase">• ${p.name}</div>`).join('') || '<span class="opacity-30 uppercase">Vazio</span>';
             document.getElementById('susp-lista').innerHTML = allPlayers.filter(p=>p.suspended).map(p=>`<div class="border-b border-yellow-500/20 pb-1 uppercase">• ${p.name}</div>`).join('') || '<span class="opacity-30 uppercase">Vazio</span>';
+
+            const dias = ["SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO", "DOMINGO"];
+            document.getElementById('micro-flex').innerHTML = dias.map(dia => `
+                <div class="min-w-[200px] bg-[#1e293b] rounded-3xl border border-white/10 flex flex-col shadow-2xl h-auto pb-4">
+                    <div class="bg-blue-900/60 text-white font-black text-sm p-5 text-center border-b border-gold/20 uppercase tracking-[0.2em] rounded-t-3xl">${dia}</div>
+                    <div class="px-5 py-4 space-y-5">
+                        <div><p class="text-[10px] font-black text-slate-500 uppercase mb-3">Manhã</p>${(micro[dia]?.blocks || []).filter(x=>x.period==='M').map(x=>`<div class="tag ${x.color} w-full block text-center py-3 mb-2 shadow-md text-xs">${x.label}</div>`).join('') || '<span class="text-sm opacity-20">-</span>'}</div>
+                        <div><p class="text-[10px] font-black text-slate-500 uppercase mb-3">Tarde</p>${(micro[dia]?.blocks || []).filter(x=>x.period==='T').map(x=>`<div class="tag ${x.color} w-full block text-center py-3 mb-2 shadow-md text-xs">${x.label}</div>`).join('') || '<span class="text-sm opacity-20">-</span>'}</div>
+                    </div>
+                </div>
+            `).join('');
 
             const history = safeParse(d.pc_history_v2 || "{}");
             const sessao = history[todayISO]?.drills || [];
@@ -468,9 +485,9 @@
         const uninjuredPlayers = allPlayers.filter(p => !p.injured);
         
         let html = '';
-        uninjuredPlayers.forEach((p, offIndex) => {
+        uninjuredPlayers.forEach((p) => {
             if (currentFilter === 'Todos' || p.pos === currentFilter) {
-                let currNota = localRatings[offIndex] || 0;
+                let currNota = localRatings[p.originalIndex] || 0;
                 html += `
                     <div class="flex flex-col md:flex-row items-center justify-between p-5 bg-black/30 rounded-2xl border border-white/5 gap-4">
                         <div class="flex items-center gap-5 w-full md:w-auto">
@@ -480,8 +497,8 @@
                                 <span class="text-xs font-bold text-gold uppercase opacity-80 mt-1 tracking-widest">${p.pos || 'POSIÇÃO'}</span>
                             </div>
                         </div>
-                        <div class="flex gap-2 star-rating" id="stars-${offIndex}">
-                            ${[1,2,3,4,5].map(n => `<button onclick="votar(${offIndex}, ${n})" class="${currNota >= n ? 'active' : ''}">★</button>`).join('')}
+                        <div class="flex gap-2 star-rating" id="stars-${p.originalIndex}">
+                            ${[1,2,3,4,5].map(n => `<button onclick="votar(${p.originalIndex}, ${n})" class="${currNota >= n ? 'active' : ''}">★</button>`).join('')}
                         </div>
                     </div>
                 `;
@@ -491,20 +508,21 @@
         document.getElementById('players-performance').innerHTML = html || `<p class="text-center text-sm opacity-40 py-8 uppercase font-bold tracking-widest">Vazio no momento.</p>`;
     }
 
-    function votar(offIndex, nota) {
+    function votar(originalIndex, nota) {
         nota = parseInt(nota);
-        document.querySelectorAll(`#stars-${offIndex} button`).forEach((btn, i) => {
+        document.querySelectorAll(`#stars-${originalIndex} button`).forEach((btn, i) => {
             if (i < nota) btn.classList.add('active');
             else btn.classList.remove('active');
         });
         
-        localRatings[offIndex] = nota;
+        localRatings[originalIndex] = nota;
         
         const btnSalvar = document.getElementById('btn-salvar-notas');
         btnSalvar.classList.replace('bg-green-600', 'bg-yellow-500');
         btnSalvar.innerText = "⚠️ CLIQUE AQUI PARA ENVIAR PARA O COMPUTADOR";
     }
 
+    // A MÁGICA: SINCRONIZAÇÃO MATEMATICAMENTE IDÊNTICA AO APP OFICIAL
     function sincronizarNotasNuvem() {
         const uid = auth.currentUser.uid;
         const btn = document.getElementById('btn-salvar-notas');
@@ -516,7 +534,20 @@
             if(!hist[todayISO]) hist[todayISO] = { drills: [], header: {} };
             if(!hist[todayISO].ratings) hist[todayISO].ratings = {};
             
-            hist[todayISO].ratings = { ...hist[todayISO].ratings, ...localRatings };
+            // Recalcula o index para o formato do App Oficial (que pula os lesionados)
+            let aptoIndex = 0;
+            let notasParaOOficial = {};
+            
+            allPlayers.forEach(p => {
+                if(!p.injured) {
+                    if(localRatings[p.originalIndex]) {
+                        notasParaOOficial[aptoIndex] = localRatings[p.originalIndex];
+                    }
+                    aptoIndex++;
+                }
+            });
+
+            hist[todayISO].ratings = { ...hist[todayISO].ratings, ...notasParaOOficial };
 
             db.collection('coachData').doc(uid).update({
                 pc_history_v2: JSON.stringify(hist),
@@ -533,7 +564,7 @@
     }
 
     /* -------------------------------------
-       JOGO AO VIVO (SCOUT EM TEMPO REAL)
+       JOGO AO VIVO (SCOUT NO BANCO DE RESERVAS)
     --------------------------------------*/
     function renderLiveGame() {
         const aptos = allPlayers.filter(p => !p.injured);
@@ -564,20 +595,20 @@
         `).join('');
     }
 
-    function addEstatistica(idx, type) {
-        if(!confirm("Adicionar estatística para este jogador?")) return;
+    function addEstatistica(originalIndex, type) {
+        if(!confirm("Adicionar esta estatística para o jogador?")) return;
         const uid = auth.currentUser.uid;
         db.collection('coachData').doc(uid).get().then(doc => {
-            let p = safeParse(doc.data().pc_players || "[]");
-            if(p[idx]) {
-                if(!p[idx].stats) p[idx].stats = {g:0, a:0, yc:0, rc:0};
-                p[idx].stats[type] = (parseInt(p[idx].stats[type]) || 0) + 1;
+            let pArray = safeParse(doc.data().pc_players || "[]");
+            if(pArray[originalIndex]) {
+                if(!pArray[originalIndex].stats) pArray[originalIndex].stats = {g:0, a:0, yc:0, rc:0};
+                pArray[originalIndex].stats[type] = (parseInt(pArray[originalIndex].stats[type]) || 0) + 1;
                 
                 db.collection('coachData').doc(uid).update({ 
-                    pc_players: JSON.stringify(p),
+                    pc_players: JSON.stringify(pArray),
                     pc_last_update: firebase.firestore.FieldValue.serverTimestamp()
                 }).then(() => {
-                    mostrarToast(`Estatística Salva! (Dê F5 no PC)`);
+                    mostrarToast(`Estatística Computada! (Dê F5 no PC)`);
                 });
             }
         });
@@ -616,10 +647,31 @@
             list.unshift({ id: Date.now(), date: todayISO, text: msg });
 
             db.collection('coachData').doc(uid).update({ 
-                pc_notices_list: JSON.stringify(list)
+                pc_notices_list: JSON.stringify(list),
+                pc_last_update: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 mostrarToast("✅ AVISO SALVO NO MURAL (DÊ F5 NO PC)");
                 document.getElementById('voice-txt').value = '';
+            });
+        });
+    }
+
+    function finalizarTreino() {
+        if(!confirm("Avisar ao Professor que o treino acabou?")) return;
+        const uid = auth.currentUser.uid;
+        const staff = safeParse(localStorage.getItem('pc_staff_role')||"Comissão") + " " + safeParse(localStorage.getItem('pc_staff_name')||"");
+        
+        db.collection('coachData').doc(uid).get().then(doc => {
+            const data = doc.data();
+            let list = safeParse(data.pc_notices_list || "[]");
+            let msg = `🏁 [INFO]: Sessão finalizada por ${staff.trim()}.`;
+            
+            list.unshift({ id: Date.now(), date: todayISO, text: msg });
+
+            db.collection('coachData').doc(uid).update({ 
+                pc_notices_list: JSON.stringify(list)
+            }).then(() => {
+                mostrarToast("✅ AVISO ENVIADO AO MURAL");
             });
         });
     }
