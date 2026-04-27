@@ -104,7 +104,7 @@
     </div>
     <div class="flex flex-col items-end gap-3">
         <button onclick="abrirConfig()" class="bg-black/30 p-3 rounded-full border border-white/20 shadow-lg active:scale-95">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
     </div>
 </div>
@@ -113,7 +113,7 @@
     <button onclick="showTab('dash')" id="btn-dash" class="nav-btn nav-active"><span class="nav-icon">📊</span> Início</button>
     <button onclick="showTab('sessao')" id="btn-sessao" class="nav-btn"><span class="nav-icon">⚽</span> Notas</button>
     <button onclick="showTab('jogo')" id="btn-jogo" class="nav-btn"><span class="nav-icon">🎮</span> Jogo</button>
-    <button onclick="showTab('calendario')" id="btn-calendario" class="nav-btn"><span class="nav-icon">📅</span> Calend.</button>
+    <button onclick="showTab('scout')" id="btn-scout" class="nav-btn"><span class="nav-icon">👁️</span> Scout</button>
     <button onclick="showTab('avisos')" id="btn-avisos" class="nav-btn"><span class="nav-icon">📢</span> Avisos</button>
 </div>
 
@@ -128,7 +128,7 @@
             </button>
 
             <div class="flex flex-col items-center justify-center relative">
-                <div class="cursor-pointer transition-transform hover:scale-105 mb-4" onclick="adicionarLogoAdv()" title="Toque para adicionar o link do escudo">
+                <div class="cursor-pointer transition-transform hover:scale-105 mb-4" onclick="showTab('scout')" title="Abrir Scout">
                     <div id="adv-logo-container" class="w-32 h-32 bg-white/90 rounded-[2rem] border-4 border-white/10 flex items-center justify-center overflow-hidden shadow-2xl">
                         <span class="text-sm opacity-50 italic font-black text-slate-800">ADV</span>
                     </div>
@@ -155,24 +155,16 @@
                 <div id="avisos-lista" class="space-y-4 text-base text-white/90 font-bold"></div>
             </div>
         </div>
-
-        <div class="grid grid-cols-3 gap-4">
-            <div class="dash-card p-6 border-b-4 border-gold">
-                <h4 class="text-xs font-black text-slate-400 uppercase mb-4 tracking-widest flex items-center gap-2"><span class="text-2xl">⚽</span> GOLS</h4>
-                <div id="gols-lista" class="text-sm font-black text-white space-y-2 w-full text-left"></div>
-            </div>
-            <div class="dash-card p-6 border-b-4 border-red-500">
-                <h4 class="text-xs font-black text-red-500 uppercase mb-4 tracking-widest flex items-center gap-2"><span class="text-2xl">🏥</span> DM</h4>
-                <div id="dm-lista" class="text-sm font-black text-red-400 space-y-2 w-full text-left"></div>
-            </div>
-            <div class="dash-card p-6 border-b-4 border-yellow-500">
-                <h4 class="text-xs font-black text-yellow-500 uppercase mb-4 tracking-widest flex items-center gap-2"><span class="text-2xl">⚠️</span> SUSP</h4>
-                <div id="susp-lista" class="text-sm font-black text-yellow-400 space-y-2 w-full text-left"></div>
-            </div>
-        </div>
     </div>
 
     <div id="tab-sessao" class="tab-view hidden space-y-6">
+        <div class="dash-card p-4 bg-blue-900/30 border-blue-500/50 flex justify-between items-center shadow-lg">
+            <span class="text-[10px] md:text-xs font-black text-blue-400 uppercase tracking-widest flex items-center gap-2">
+                <span class="text-xl">📅</span> Data do Treino:
+            </span>
+            <input type="date" id="data-sessao-input" class="bg-transparent text-white font-black outline-none text-right cursor-pointer" onchange="atualizarDataSessao(this.value)">
+        </div>
+
         <div id="drills-lista" class="space-y-6"></div>
         
         <div class="dash-card p-6 bg-gradient-to-t from-[#0f172a] to-[#1e293b] border-t-2 border-gold/50 mt-10 relative">
@@ -192,7 +184,7 @@
 
             <div id="players-performance" class="space-y-4 mb-6"></div>
             
-            <button id="btn-salvar-notas" onclick="sincronizarNotasNuvem()" class="w-full py-5 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(34,197,94,0.4)] active:scale-95 transition-all uppercase tracking-[0.1em] text-base mb-4">
+            <button id="btn-salvar-notas" onclick="sincronizarNotasNuvem()" class="w-full py-5 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(34,197,94,0.4)] active:scale-95 transition-all uppercase tracking-[0.1em] text-base">
                 ✓ SALVAR NOTAS NA NUVEM
             </button>
         </div>
@@ -208,11 +200,75 @@
         </div>
     </div>
 
+    <div id="tab-scout" class="tab-view hidden space-y-6">
+        <div class="dash-card p-6 border-t-4 border-purple-500 bg-gradient-to-t from-[#1e293b] to-[#0f172a]">
+            <h3 class="text-purple-400 text-lg font-black uppercase mb-2 text-center tracking-widest flex items-center justify-center gap-2 drop-shadow-md">
+                <span class="text-2xl">🕵️‍♂️</span> Scout Colaborativo
+            </h3>
+            <p class="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-6">Sincronizado com o Computador Oficial</p>
+            
+            <div class="space-y-5">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Adversário</label>
+                        <input type="text" id="scout-adv" class="w-full border-b-2 border-white/20 bg-transparent text-white font-black text-lg outline-none focus:border-purple-500 py-1 transition-all" placeholder="Nome...">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Data do Jogo</label>
+                        <input type="date" id="scout-data" class="w-full border-b-2 border-white/20 bg-transparent text-white font-bold outline-none focus:border-purple-500 py-1 text-sm transition-all">
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase">Sistema Tático Base</label>
+                        <select id="scout-sis" class="w-full border-b-2 border-white/20 bg-transparent text-white font-bold outline-none focus:border-purple-500 py-2 appearance-none">
+                            <option value="" class="text-black">Selecione...</option>
+                            <option value="4-3-3" class="text-black">4-3-3</option>
+                            <option value="4-4-2" class="text-black">4-4-2</option>
+                            <option value="4-2-3-1" class="text-black">4-2-3-1</option>
+                            <option value="3-5-2" class="text-black">3-5-2</option>
+                            <option value="3-4-3" class="text-black">3-4-3</option>
+                            <option value="5-3-2" class="text-black">5-3-2</option>
+                            <option value="4-1-4-1" class="text-black">4-1-4-1</option>
+                            <option value="4-5-1" class="text-black">4-5-1</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block text-center">Escudo (Tocar)</label>
+                        <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 cursor-pointer overflow-hidden mx-auto" onclick="promptEditLogoScout()">
+                            <img id="scout-logo-preview" src="" class="w-full h-full object-contain hidden">
+                            <span id="scout-logo-icon" class="text-xl">🛡️</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="text-xs font-black text-slate-400 uppercase flex items-center gap-2 mb-2"><span class="text-green-500">🟢</span> Organização Ofensiva</label>
+                    <textarea id="scout-of" class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-sm text-white outline-none focus:border-green-500 h-28 resize-none shadow-inner" placeholder="Padrões de ataque, jogadores alvo, transição..."></textarea>
+                </div>
+                
+                <div>
+                    <label class="text-xs font-black text-slate-400 uppercase flex items-center gap-2 mb-2"><span class="text-red-500">🔴</span> Organização Defensiva</label>
+                    <textarea id="scout-df" class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-sm text-white outline-none focus:border-red-500 h-28 resize-none shadow-inner" placeholder="Linha defensiva, pressão, fragilidades..."></textarea>
+                </div>
+                
+                <div>
+                    <label class="text-xs font-black text-slate-400 uppercase flex items-center gap-2 mb-2"><span class="text-yellow-500">🟡</span> Bolas Paradas</label>
+                    <textarea id="scout-bp" class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-sm text-white outline-none focus:border-yellow-500 h-28 resize-none shadow-inner" placeholder="Quem bate cantos, tipo de marcação, faltas perigosas..."></textarea>
+                </div>
+
+                <button onclick="salvarScoutColaborativo()" class="w-full py-5 bg-purple-600 hover:bg-purple-700 text-white font-black rounded-2xl shadow-[0_10px_25px_rgba(147,51,234,0.4)] active:scale-95 transition-all uppercase tracking-widest text-base mt-2">
+                    ✓ SINCRONIZAR SCOUT
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="tab-calendario" class="tab-view hidden space-y-6">
         <div class="dash-card p-8 border-t-4 border-blue-500">
             <h3 class="text-blue-400 text-lg font-black uppercase mb-6 tracking-widest text-center">📅 Puxar Treino Histórico</h3>
             <input type="date" id="busca-data" class="w-full bg-black/50 border-2 border-white/10 rounded-2xl p-5 text-xl text-white font-bold outline-none focus:border-blue-500 transition-colors shadow-inner text-center" onchange="buscarTreinoHistorico()">
-            <p class="text-center text-xs opacity-50 mt-4 uppercase font-bold tracking-widest">Selecione a data exata do treino anterior</p>
         </div>
         <div id="historico-lista" class="space-y-6">
             <div class="dash-card p-12 text-center border-dashed border-2 border-white/10 bg-transparent shadow-none"><p class="opacity-30 text-sm font-black uppercase tracking-widest">Aguardando Data...</p></div>
@@ -260,10 +316,15 @@
     let localRatings = {}; 
     let currentMatchData = {}; 
     let tagAtual = '⚠️ GERAL'; 
+    let currentHistoryData = {};
+    let currentScoutData = {}; // Segura o Scout para espelhamento
     
     // CORREÇÃO DO FUSO HORÁRIO PARA BRASIL 
     const tzOffset = (new Date()).getTimezoneOffset() * 60000;
     const todayISO = (new Date(Date.now() - tzOffset)).toISOString().split('T')[0];
+    let dataSessaoAtual = todayISO; 
+
+    document.getElementById('data-sessao-input').value = dataSessaoAtual;
 
     function safeParse(val) {
         if (!val) return "";
@@ -380,8 +441,12 @@
                 document.getElementById('team-logo-display').classList.add('bg-white');
             }
 
+            // ATUALIZAÇÃO DO SCOUT (DASHBOARD E ABA COLABORATIVA)
             if(d.pc_scouting) {
                 const s = safeParse(d.pc_scouting);
+                currentScoutData = s; // Guarda globalmente para edição
+                
+                // Dashboard Info
                 if(s.opponent && s.opponent.trim() !== "") {
                     document.getElementById('adv-nome').innerText = s.opponent;
                     document.getElementById('jogo-data').innerText = s.date ? s.date.split('-').reverse().join('/') : "A DEFINIR";
@@ -401,9 +466,25 @@
                     document.getElementById('jogo-sistema').innerText = "SIS: -";
                     document.getElementById('adv-logo-container').innerHTML = `<span class="text-sm opacity-50 italic font-black text-slate-800">ADV</span>`;
                 }
+
+                // Aba Scout Colaborativo Update
+                document.getElementById('scout-adv').value = s.opponent || '';
+                document.getElementById('scout-data').value = s.date || '';
+                document.getElementById('scout-sis').value = s.system || '';
+                document.getElementById('scout-of').value = s.of || '';
+                document.getElementById('scout-df').value = s.df || '';
+                document.getElementById('scout-bp').value = s.bp || '';
+                
+                if(s.logo) {
+                    document.getElementById('scout-logo-preview').src = s.logo;
+                    document.getElementById('scout-logo-preview').classList.remove('hidden');
+                    document.getElementById('scout-logo-icon').classList.add('hidden');
+                } else {
+                    document.getElementById('scout-logo-preview').classList.add('hidden');
+                    document.getElementById('scout-logo-icon').classList.remove('hidden');
+                }
             }
 
-            // AGENDA DIVIDIDA MANHÃ E TARDE
             const micro = safeParse(d.pc_micro_v7 || "{}");
             const agendaHj = micro[todayName]?.blocks || [];
             const manha = agendaHj.filter(b => b.period === 'M');
@@ -424,65 +505,108 @@
             const avisos = safeParse(d.pc_notices_list || "[]");
             document.getElementById('avisos-lista').innerHTML = avisos.slice(0,3).map(n => `<p class="border-b border-white/5 pb-3 last:border-0 truncate text-base">➤ ${n.text}</p>`).join('');
 
-            // CARREGAMENTO DOS JOGADORES 
             if(Object.keys(localRatings).length === 0) {
                 allPlayers = safeParse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
-                
-                try {
-                    const hist = safeParse(d.pc_history_v2 || "{}");
-                    if(hist[todayISO] && hist[todayISO].ratings) {
-                        let offRatings = hist[todayISO].ratings;
-                        let aptoIndex = 0;
-                        allPlayers.forEach(p => {
-                            if(!p.injured) {
-                                if(offRatings[aptoIndex]) {
-                                    localRatings[p.originalIndex] = offRatings[aptoIndex];
-                                }
-                                aptoIndex++;
-                            }
-                        });
-                    }
-                } catch(e) {}
-                
-                renderPlayers();
+                currentHistoryData = safeParse(d.pc_history_v2 || "{}");
+                renderSessaoAtiva();
+                currentMatchData = safeParse(d.pc_match_report || "{}");
+                renderLiveGame();
             } else {
                 allPlayers = safeParse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
+                currentMatchData = safeParse(d.pc_match_report || "{}");
+                renderLiveGame();
             }
-
-            currentMatchData = safeParse(d.pc_match_report || "{}");
-            renderLiveGame();
 
             document.getElementById('gols-lista').innerHTML = allPlayers.sort((a,b)=>(b.stats?.g||0)-(a.stats?.g||0)).slice(0,3).map(p=>`<div class="flex justify-between border-b border-white/5 pb-1"><span class="uppercase">${p.name}</span><span class="text-gold font-black">${p.stats?.g||0}</span></div>`).join('');
             document.getElementById('dm-lista').innerHTML = allPlayers.filter(p=>p.injured).map(p=>`<div class="border-b border-red-500/20 pb-1 uppercase">• ${p.name}</div>`).join('') || '<span class="opacity-30 uppercase">Vazio</span>';
             document.getElementById('susp-lista').innerHTML = allPlayers.filter(p=>p.suspended).map(p=>`<div class="border-b border-yellow-500/20 pb-1 uppercase">• ${p.name}</div>`).join('') || '<span class="opacity-30 uppercase">Vazio</span>';
-
-            const dias = ["SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO", "DOMINGO"];
-            document.getElementById('micro-flex').innerHTML = dias.map(dia => `
-                <div class="min-w-[200px] bg-[#1e293b] rounded-3xl border border-white/10 flex flex-col shadow-2xl h-auto pb-4">
-                    <div class="bg-blue-900/60 text-white font-black text-sm p-5 text-center border-b border-gold/20 uppercase tracking-[0.2em] rounded-t-3xl">${dia}</div>
-                    <div class="px-5 py-4 space-y-5">
-                        <div><p class="text-[10px] font-black text-slate-500 uppercase mb-3">Manhã</p>${(micro[dia]?.blocks || []).filter(x=>x.period==='M').map(x=>`<div class="tag ${x.color} w-full block text-center py-3 mb-2 shadow-md text-xs">${x.label}</div>`).join('') || '<span class="text-sm opacity-20">-</span>'}</div>
-                        <div><p class="text-[10px] font-black text-slate-500 uppercase mb-3">Tarde</p>${(micro[dia]?.blocks || []).filter(x=>x.period==='T').map(x=>`<div class="tag ${x.color} w-full block text-center py-3 mb-2 shadow-md text-xs">${x.label}</div>`).join('') || '<span class="text-sm opacity-20">-</span>'}</div>
-                    </div>
-                </div>
-            `).join('');
-
-            const history = safeParse(d.pc_history_v2 || "{}");
-            const sessao = history[todayISO]?.drills || [];
-            document.getElementById('drills-lista').innerHTML = sessao.map((ex,i) => `
-                <div class="dash-card overflow-hidden relative group">
-                    <div class="bg-black/50 p-5 flex justify-between items-center border-b border-white/5">
-                        <span class="text-base font-black text-gold uppercase tracking-widest">${i+1}. ${ex.name}</span>
-                        <span class="text-xs font-black bg-white/10 px-4 py-2 rounded-lg uppercase shadow-inner">${ex.time} min</span>
-                    </div>
-                    <div class="relative">
-                        <img src="${ex.image || ''}" class="w-full h-72 object-contain bg-black/60 p-2">
-                        ${ex.image ? `<button onclick="openFullScreen('${ex.image}')" class="absolute bottom-4 right-4 bg-blue-600/90 text-white px-5 py-3 rounded-xl font-black text-xs shadow-xl backdrop-blur-md border border-white/30 uppercase tracking-widest active:scale-95 transition-all">🔍 Foco Total</button>` : ''}
-                    </div>
-                    ${ex.desc ? `<div class="p-5 text-sm text-white/70 italic border-t border-white/5 bg-[#1e293b] leading-relaxed">${ex.desc}</div>` : ''}
-                </div>
-            `).join('') || '<div class="dash-card p-12 text-center"><p class="opacity-40 text-base font-black uppercase tracking-widest">Sem Exercícios Hoje</p></div>';
         });
+    }
+
+    /* -------------------------------------
+       FUNÇÕES DO SCOUT COLABORATIVO (NOVO)
+    --------------------------------------*/
+    function promptEditLogoScout() {
+        const url = prompt("Link do Escudo do Adversário:");
+        if (url !== null) {
+            currentScoutData.logo = url;
+            if(url) {
+                document.getElementById('scout-logo-preview').src = url;
+                document.getElementById('scout-logo-preview').classList.remove('hidden');
+                document.getElementById('scout-logo-icon').classList.add('hidden');
+            } else {
+                document.getElementById('scout-logo-preview').classList.add('hidden');
+                document.getElementById('scout-logo-icon').classList.remove('hidden');
+            }
+        }
+    }
+
+    function salvarScoutColaborativo() {
+        const uid = auth.currentUser.uid;
+        
+        // Pega todos os inputs preenchidos pelo Auxiliar no telemóvel
+        currentScoutData.opponent = document.getElementById('scout-adv').value;
+        currentScoutData.date = document.getElementById('scout-data').value;
+        currentScoutData.system = document.getElementById('scout-sis').value;
+        currentScoutData.of = document.getElementById('scout-of').value;
+        currentScoutData.df = document.getElementById('scout-df').value;
+        currentScoutData.bp = document.getElementById('scout-bp').value;
+
+        // Envia empacotado para o PC ler
+        db.collection('coachData').doc(uid).update({ 
+            pc_scouting: JSON.stringify(currentScoutData),
+            pc_last_update: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            mostrarToast("🕵️‍♂️ SCOUT SINCRONIZADO! (DÊ F5 NO PC)");
+        }).catch(e => alert("Erro ao sincronizar scout."));
+    }
+
+
+    /* -------------------------------------
+       SESSÃO DE TREINO
+    --------------------------------------*/
+    function renderSessaoAtiva() {
+        const sessao = currentHistoryData[dataSessaoAtual]?.drills || [];
+        document.getElementById('drills-lista').innerHTML = sessao.map((ex,i) => `
+            <div class="dash-card overflow-hidden relative group">
+                <div class="bg-black/50 p-5 flex justify-between items-center border-b border-white/5">
+                    <span class="text-base font-black text-gold uppercase tracking-widest">${i+1}. ${ex.name}</span>
+                    <span class="text-xs font-black bg-white/10 px-4 py-2 rounded-lg uppercase shadow-inner">${ex.time} min</span>
+                </div>
+                <div class="relative">
+                    <img src="${ex.image || ''}" class="w-full h-72 object-contain bg-black/60 p-2">
+                    ${ex.image ? `<button onclick="openFullScreen('${ex.image}')" class="absolute bottom-4 right-4 bg-blue-600/90 text-white px-5 py-3 rounded-xl font-black text-xs shadow-xl backdrop-blur-md border border-white/30 uppercase tracking-widest active:scale-95 transition-all">🔍 Foco Total</button>` : ''}
+                </div>
+                ${ex.desc ? `<div class="p-5 text-sm text-white/70 italic border-t border-white/5 bg-[#1e293b] leading-relaxed">${ex.desc}</div>` : ''}
+            </div>
+        `).join('') || '<div class="dash-card p-12 text-center border-dashed border-2 border-white/10"><p class="opacity-40 text-xs font-black uppercase tracking-widest">Nenhum treino salvo nesta data.</p></div>';
+
+        localRatings = {};
+        if (currentHistoryData[dataSessaoAtual] && currentHistoryData[dataSessaoAtual].ratings) {
+            let offRatings = currentHistoryData[dataSessaoAtual].ratings;
+            let aptoIndex = 0;
+            allPlayers.forEach(p => {
+                if (!p.injured) {
+                    if (offRatings[aptoIndex] !== undefined) {
+                        localRatings[p.originalIndex] = offRatings[aptoIndex];
+                    } else {
+                        localRatings[p.originalIndex] = 0;
+                    }
+                    aptoIndex++;
+                }
+            });
+        } else {
+            allPlayers.forEach(p => { localRatings[p.originalIndex] = 0; });
+        }
+        
+        renderPlayers();
+    }
+
+    function atualizarDataSessao(novaData) {
+        if(novaData) {
+            dataSessaoAtual = novaData;
+            renderSessaoAtiva();
+        }
     }
 
     function buscarTreinoHistorico() {
@@ -561,8 +685,8 @@
         db.collection('coachData').doc(uid).get().then(doc => {
             let data = doc.data();
             let hist = safeParse(data.pc_history_v2 || "{}");
-            if(!hist[todayISO]) hist[todayISO] = { drills: [], header: {} };
-            if(!hist[todayISO].ratings) hist[todayISO].ratings = {};
+            if(!hist[dataSessaoAtual]) hist[dataSessaoAtual] = { drills: [], header: {} };
+            if(!hist[dataSessaoAtual].ratings) hist[dataSessaoAtual].ratings = {};
             
             let aptoIndex = 0;
             let notasParaOOficial = {};
@@ -576,7 +700,7 @@
                 }
             });
 
-            hist[todayISO].ratings = { ...hist[todayISO].ratings, ...notasParaOOficial };
+            hist[dataSessaoAtual].ratings = { ...hist[dataSessaoAtual].ratings, ...notasParaOOficial };
 
             db.collection('coachData').doc(uid).update({
                 pc_history_v2: JSON.stringify(hist),
@@ -667,9 +791,8 @@
         }).join('');
         html += `</div>`;
 
-        // LINHA DO TEMPO (TIMELINE) COM BOTÃO DE LIXEIRA (DESFAZER)
         let events = currentMatchData.events || [];
-        let sortedEvents = [...events].sort((a,b) => b.id - a.id).slice(0, 5); // Mostra só os últimos 5 para não lotar a tela
+        let sortedEvents = [...events].sort((a,b) => b.id - a.id).slice(0, 5); 
         
         html += `<div class="mt-8 border-t border-white/10 pt-6">
                     <h4 class="text-gold text-xs font-black uppercase mb-3 text-center">Últimos Lances (Toque 🗑️ para desfazer)</h4>`;
@@ -696,13 +819,11 @@
         container.innerHTML = html;
     }
 
-    // ABRIR MODAL DE SUBSTITUIÇÃO CASADA
     function openSubModal(outIndex, outName) {
         currentSubOutIndex = outIndex;
         currentSubOutName = outName;
         document.getElementById('sub-out-name').innerText = "SAINDO: " + outName;
         
-        // Pega quem está apto e que não seja o cara que está saindo
         const aptos = allPlayers.filter(p => !p.injured && p.originalIndex !== outIndex);
         
         document.getElementById('sub-in-list').innerHTML = aptos.map(p => `
@@ -719,7 +840,6 @@
         document.getElementById('sub-modal').classList.add('hidden');
     }
 
-    // CONFIRMAR A SUBSTITUIÇÃO
     function confirmSub(inIndex, inName) {
         const min = prompt("Em que MINUTO foi a substituição? (Ex: 65')");
         if(!min) return;
@@ -729,7 +849,6 @@
             let md = safeParse(doc.data().pc_match_report || "{}");
             if(!md.events) md.events = [];
 
-            // Monta o texto que vai pro App Oficial
             let combinedText = `Sai: ${currentSubOutName} 🔄 Entra: ${inName}`;
 
             md.events.push({
@@ -800,7 +919,6 @@
         });
     }
 
-    // A MÁGICA DA LIXEIRA: DESFAZER O LANCE
     function deleteMatchEvent(eventId) {
         if(!confirm("Tem certeza que deseja DESFAZER este lance? Ele será removido das estatísticas.")) return;
         
@@ -817,9 +935,8 @@
             
             const ev = md.events[evIndex];
 
-            // Desfaz a estatística baseada no tipo do evento
             if(ev.type === 'GOL') {
-                md.gUs = Math.max(0, (parseInt(md.gUs) || 0) - 1); // Tira do placar
+                md.gUs = Math.max(0, (parseInt(md.gUs) || 0) - 1);
                 let pIdx = players.findIndex(p => p.name === ev.player);
                 if(pIdx !== -1 && players[pIdx].stats && players[pIdx].stats.g > 0) players[pIdx].stats.g--;
             }
@@ -833,11 +950,9 @@
             }
             if(ev.type === 'LES') {
                 let pIdx = players.findIndex(p => p.name === ev.player);
-                if(pIdx !== -1) players[pIdx].injured = false; // Tira do DM, volta ao campo
+                if(pIdx !== -1) players[pIdx].injured = false; 
             }
-            // OBS: "SUB" não afeta stats duradouras do jogador no sistema atual, só removemos da timeline
             
-            // Apaga da Timeline
             md.events.splice(evIndex, 1);
 
             db.collection('coachData').doc(uid).update({
