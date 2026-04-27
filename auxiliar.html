@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ProCoach Auxiliar - OFICIAL SYNC</title>
+    <title>ProCoach Auxiliar - ELITE SYNC</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
@@ -15,15 +15,14 @@
         body { background-color: var(--navy); color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
         
         .nav-container { @apply flex gap-3 p-4 bg-[#0f172a] sticky top-[85px] z-40 border-b-2 border-white/10 overflow-x-auto no-scrollbar; }
-        .nav-btn { @apply flex-none px-5 py-4 text-xs font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-1 min-w-[110px]; }
+        .nav-btn { @apply flex-none px-4 py-4 text-[11px] font-black text-center rounded-2xl uppercase tracking-widest transition-all bg-[#1e293b] text-slate-400 border-2 border-slate-700 shadow-lg flex flex-col items-center gap-1 min-w-[90px]; }
         .nav-active { @apply border-gold text-navy bg-gradient-to-br from-gold to-yellow-500 shadow-[0_10px_25px_rgba(212,175,55,0.4)] scale-105; }
-        .nav-icon { @apply text-3xl block drop-shadow-md; } 
+        .nav-icon { @apply text-2xl block drop-shadow-md; } 
         
         .dash-card { @apply bg-gradient-to-br from-[#1e293b] to-[#0f172a] rounded-3xl border border-white/10 shadow-2xl overflow-hidden; }
         .tag { @apply px-3 py-1.5 rounded-lg text-xs font-black text-white uppercase shadow-md; }
         
-        /* Ajuste do botão para não espremer o texto no celular */
-        .filter-btn { @apply px-5 py-3 rounded-xl border border-white/10 text-sm font-black uppercase whitespace-nowrap bg-black/40 text-slate-400 transition-colors shadow-sm shrink-0; }
+        .filter-btn { @apply px-5 py-3 rounded-xl border border-white/10 text-sm font-black uppercase whitespace-nowrap bg-black/40 text-slate-400 transition-colors shadow-sm; }
         .filter-active { @apply bg-blue-600 text-white border-blue-400 shadow-[0_0_15px_rgba(37,99,235,0.5)]; }
 
         .aviso-tag { @apply border-2 py-3 rounded-xl text-[11px] font-black uppercase transition-all shadow-md active:scale-95 opacity-40 shrink-0; }
@@ -131,10 +130,8 @@
                 <h3 class="text-slate-400 text-sm font-black uppercase mb-5 tracking-widest border-b border-white/5 pb-3 flex items-center gap-3">
                     <span class="text-3xl">📅</span> AGENDA DO DIA
                 </h3>
-                <div id="agenda-hoje" class="flex flex-col gap-4">
-                    </div>
+                <div id="agenda-hoje" class="flex flex-col gap-4"></div>
             </div>
-
             <div class="dash-card p-6 border-l-8 border-yellow-500 bg-yellow-500/5">
                 <h3 class="text-yellow-500 text-sm font-black uppercase mb-5 tracking-widest border-b border-yellow-500/20 pb-3 flex items-center gap-3">
                     <span class="text-3xl">📋</span> QUADRO DE AVISOS
@@ -187,10 +184,10 @@
 
     <div id="tab-jogo" class="tab-view hidden space-y-6">
         <div class="dash-card p-6 bg-gradient-to-t from-[#1e293b] to-[#0f172a] border-t-4 border-blue-500">
-            <h3 class="text-blue-400 text-lg font-black uppercase mb-2 text-center tracking-[0.3em] drop-shadow-md">🎮 Scout Ao Vivo</h3>
+            <h3 class="text-blue-400 text-lg font-black uppercase mb-2 text-center tracking-[0.3em] drop-shadow-md">🎮 Jogo Ao Vivo</h3>
             <p class="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-6">Lance Estatísticas Direto do Banco</p>
             
-            <div id="live-game-players" class="space-y-3">
+            <div id="live-game-container">
                 </div>
         </div>
     </div>
@@ -245,10 +242,11 @@
     let allPlayers = []; 
     let currentFilter = 'Todos';
     let localRatings = {}; 
+    let currentMatchData = {}; // Armazena o jogo atual que está aberto no PC
     let tagAtual = '⚠️ GERAL'; 
     const todayISO = new Date().toISOString().split('T')[0];
 
-    // FUNÇÃO QUE LIMPA ASPAS DUPLAS DO BANCO DE DADOS
+    // LIMPADOR DE ASPAS
     function safeParse(val) {
         if (!val) return "";
         if (typeof val !== 'string') return val;
@@ -370,7 +368,7 @@
                 }
             }
 
-            // AGENDA DIVIDIDA MANHÃ E TARDE
+            // AGENDA MANHÃ E TARDE
             const micro = safeParse(d.pc_micro_v7 || "{}");
             const agendaHj = micro[todayName]?.blocks || [];
             const manha = agendaHj.filter(b => b.period === 'M');
@@ -391,7 +389,7 @@
             const avisos = safeParse(d.pc_notices_list || "[]");
             document.getElementById('avisos-lista').innerHTML = avisos.slice(0,3).map(n => `<p class="border-b border-white/5 pb-3 last:border-0 truncate text-base">➤ ${n.text}</p>`).join('');
 
-            // CARREGAMENTO DOS JOGADORES (CORREÇÃO DA MATEMÁTICA DO DM)
+            // CARREGAMENTO DOS JOGADORES 
             if(Object.keys(localRatings).length === 0) {
                 allPlayers = safeParse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
                 
@@ -412,11 +410,11 @@
                 } catch(e) {}
                 
                 renderPlayers();
-                renderLiveGame();
-            } else {
-                allPlayers = safeParse(d.pc_players || "[]").map((p, i) => ({...p, originalIndex: i}));
-                renderLiveGame();
             }
+
+            // ATUALIZAR JOGO AO VIVO
+            currentMatchData = safeParse(d.pc_match_report || "{}");
+            renderLiveGame();
 
             document.getElementById('gols-lista').innerHTML = allPlayers.sort((a,b)=>(b.stats?.g||0)-(a.stats?.g||0)).slice(0,3).map(p=>`<div class="flex justify-between border-b border-white/5 pb-1"><span class="uppercase">${p.name}</span><span class="text-gold font-black">${p.stats?.g||0}</span></div>`).join('');
             document.getElementById('dm-lista').innerHTML = allPlayers.filter(p=>p.injured).map(p=>`<div class="border-b border-red-500/20 pb-1 uppercase">• ${p.name}</div>`).join('') || '<span class="opacity-30 uppercase">Vazio</span>';
@@ -474,6 +472,9 @@
         });
     }
 
+    /* -------------------------------------
+       VOTAÇÃO 
+    --------------------------------------*/
     function filtrarPosicao(pos) {
         currentFilter = pos;
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('filter-active'));
@@ -483,7 +484,6 @@
 
     function renderPlayers() {
         const uninjuredPlayers = allPlayers.filter(p => !p.injured);
-        
         let html = '';
         uninjuredPlayers.forEach((p) => {
             if (currentFilter === 'Todos' || p.pos === currentFilter) {
@@ -504,7 +504,6 @@
                 `;
             }
         });
-        
         document.getElementById('players-performance').innerHTML = html || `<p class="text-center text-sm opacity-40 py-8 uppercase font-bold tracking-widest">Vazio no momento.</p>`;
     }
 
@@ -514,15 +513,12 @@
             if (i < nota) btn.classList.add('active');
             else btn.classList.remove('active');
         });
-        
         localRatings[originalIndex] = nota;
-        
         const btnSalvar = document.getElementById('btn-salvar-notas');
         btnSalvar.classList.replace('bg-green-600', 'bg-yellow-500');
         btnSalvar.innerText = "⚠️ CLIQUE AQUI PARA ENVIAR PARA O COMPUTADOR";
     }
 
-    // A MÁGICA: SINCRONIZAÇÃO MATEMATICAMENTE IDÊNTICA AO APP OFICIAL
     function sincronizarNotasNuvem() {
         const uid = auth.currentUser.uid;
         const btn = document.getElementById('btn-salvar-notas');
@@ -534,7 +530,6 @@
             if(!hist[todayISO]) hist[todayISO] = { drills: [], header: {} };
             if(!hist[todayISO].ratings) hist[todayISO].ratings = {};
             
-            // Recalcula o index para o formato do App Oficial (que pula os lesionados)
             let aptoIndex = 0;
             let notasParaOOficial = {};
             
@@ -556,61 +551,127 @@
                 btn.classList.replace('bg-yellow-500', 'bg-green-600');
                 btn.innerText = "✓ NOTAS SALVAS (DÊ F5 NO COMPUTADOR)";
                 mostrarToast("⭐ SUCESSO! AGORA APERTE F5 NO SEU COMPUTADOR.");
-            }).catch(err => {
-                alert("Falha na conexão.");
-                btn.innerText = "TENTAR NOVAMENTE";
             });
         });
     }
 
     /* -------------------------------------
-       JOGO AO VIVO (SCOUT NO BANCO DE RESERVAS)
+       JOGO AO VIVO (TIMELINE DO SCOUT)
     --------------------------------------*/
     function renderLiveGame() {
+        const container = document.getElementById('live-game-container');
+        if(!currentMatchData || !currentMatchData.opponent) {
+            container.innerHTML = `
+                <div class="text-center p-8 border-2 border-dashed border-white/10 rounded-2xl">
+                    <span class="text-4xl block mb-4">🛑</span>
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-400">Nenhum Jogo Ativo</p>
+                    <p class="text-[10px] mt-2 opacity-50 text-slate-500">Inicie um "NOVO" jogo na aba "Jogo" do App Oficial no computador para habilitar o scout.</p>
+                </div>`;
+            return;
+        }
+
         const aptos = allPlayers.filter(p => !p.injured);
-        document.getElementById('live-game-players').innerHTML = aptos.map(p => `
-            <div class="flex flex-col md:flex-row items-center justify-between p-4 bg-black/30 rounded-2xl border border-white/5 mb-3 gap-3">
+        const starters = currentMatchData.starters || [];
+
+        let html = `
+            <div class="flex justify-between items-center bg-black/40 p-5 rounded-2xl border border-white/10 mb-6 shadow-inner">
+                <div class="text-center w-1/3">
+                    <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">NÓS</div>
+                    <div class="text-4xl font-black text-white">${currentMatchData.gUs || 0}</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-black text-slate-500 mb-2">X</div>
+                    <button onclick="addGolAdv()" class="bg-red-600 hover:bg-red-700 text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase shadow active:scale-95 transition-all">Sofe Gol</button>
+                </div>
+                <div class="text-center w-1/3">
+                    <div class="text-[10px] text-slate-400 font-bold uppercase mb-1 truncate">${currentMatchData.opponent}</div>
+                    <div class="text-4xl font-black text-gold">${currentMatchData.gTh || 0}</div>
+                </div>
+            </div>
+            <div class="space-y-3">
+        `;
+
+        html += aptos.map(p => {
+            const isStarter = starters.includes(p.originalIndex);
+            return `
+            <div class="flex flex-col md:flex-row items-center justify-between p-4 ${isStarter ? 'bg-blue-900/30 border-blue-500/50 shadow-lg' : 'bg-black/30 border-white/5 shadow'} rounded-2xl border mb-3 gap-4">
                 <div class="flex items-center gap-3 w-full md:w-auto">
-                    <img src="${p.image || ''}" class="w-12 h-12 rounded-full border-2 border-white/10 object-cover bg-slate-200">
+                    <img src="${p.image || ''}" class="w-12 h-12 rounded-full border-2 ${isStarter ? 'border-blue-500' : 'border-white/10'} object-cover bg-slate-200">
                     <div>
-                        <div class="text-sm font-black uppercase text-white truncate w-32">${p.name}</div>
-                        <div class="text-[10px] font-bold text-gold uppercase">${p.pos || 'POS'}</div>
+                        <div class="text-sm font-black uppercase text-white truncate w-32 flex flex-col items-start gap-1">
+                            ${p.name}
+                            ${isStarter ? '<span class="text-[8px] bg-blue-600 px-1.5 py-0.5 rounded text-white tracking-widest shadow">TITULAR</span>' : ''}
+                        </div>
+                        <div class="text-[10px] font-bold text-gold uppercase mt-1">${p.pos || 'POS'}</div>
                     </div>
                 </div>
                 <div class="flex gap-2 w-full md:w-auto justify-between md:justify-end">
-                    <button onclick="addEstatistica(${p.originalIndex}, 'g')" class="bg-slate-800 border border-slate-600 px-4 py-3 rounded-xl flex flex-col items-center gap-1 active:scale-95 shadow-md flex-1 md:flex-none">
-                        <span class="text-xl">⚽</span> <span class="text-[10px] font-black text-white">${p.stats?.g||0}</span>
+                    <button onclick="addMatchEvent(${p.originalIndex}, 'GOL')" class="bg-slate-800 hover:bg-green-900/80 border border-slate-600 px-4 py-3 rounded-xl flex items-center justify-center active:scale-95 shadow-md flex-1 md:flex-none transition-colors">
+                        <span class="text-xl">⚽</span>
                     </button>
-                    <button onclick="addEstatistica(${p.originalIndex}, 'a')" class="bg-slate-800 border border-slate-600 px-4 py-3 rounded-xl flex flex-col items-center gap-1 active:scale-95 shadow-md flex-1 md:flex-none">
-                        <span class="text-xl">👟</span> <span class="text-[10px] font-black text-white">${p.stats?.a||0}</span>
+                    <button onclick="addMatchEvent(${p.originalIndex}, 'AMA')" class="bg-slate-800 hover:bg-yellow-900/80 border border-slate-600 px-4 py-3 rounded-xl flex items-center justify-center active:scale-95 shadow-md flex-1 md:flex-none transition-colors">
+                        <span class="text-xl">🟨</span>
                     </button>
-                    <button onclick="addEstatistica(${p.originalIndex}, 'yc')" class="bg-yellow-500/10 border border-yellow-500/50 px-4 py-3 rounded-xl flex flex-col items-center gap-1 active:scale-95 shadow-md flex-1 md:flex-none">
-                        <span class="text-xl">🟨</span> <span class="text-[10px] font-black text-yellow-400">${p.stats?.yc||0}</span>
+                    <button onclick="addMatchEvent(${p.originalIndex}, 'VER')" class="bg-slate-800 hover:bg-red-900/80 border border-slate-600 px-4 py-3 rounded-xl flex items-center justify-center active:scale-95 shadow-md flex-1 md:flex-none transition-colors">
+                        <span class="text-xl">🟥</span>
                     </button>
-                    <button onclick="addEstatistica(${p.originalIndex}, 'rc')" class="bg-red-500/10 border border-red-500/50 px-4 py-3 rounded-xl flex flex-col items-center gap-1 active:scale-95 shadow-md flex-1 md:flex-none">
-                        <span class="text-xl">🟥</span> <span class="text-[10px] font-black text-red-400">${p.stats?.rc||0}</span>
+                    <button onclick="addMatchEvent(${p.originalIndex}, 'SUB')" class="bg-slate-800 hover:bg-blue-900/80 border border-slate-600 px-4 py-3 rounded-xl flex items-center justify-center active:scale-95 shadow-md flex-1 md:flex-none transition-colors">
+                        <span class="text-xl">🔄</span>
                     </button>
                 </div>
             </div>
-        `).join('');
+            `;
+        }).join('');
+
+        html += `</div>`;
+        container.innerHTML = html;
     }
 
-    function addEstatistica(originalIndex, type) {
-        if(!confirm("Adicionar esta estatística para o jogador?")) return;
+    function addMatchEvent(originalIndex, type) {
+        const min = prompt("Em que MINUTO aconteceu o lance? (Ex: 34')");
+        if(!min) return; // Cancelado
+
         const uid = auth.currentUser.uid;
         db.collection('coachData').doc(uid).get().then(doc => {
-            let pArray = safeParse(doc.data().pc_players || "[]");
-            if(pArray[originalIndex]) {
-                if(!pArray[originalIndex].stats) pArray[originalIndex].stats = {g:0, a:0, yc:0, rc:0};
-                pArray[originalIndex].stats[type] = (parseInt(pArray[originalIndex].stats[type]) || 0) + 1;
-                
-                db.collection('coachData').doc(uid).update({ 
-                    pc_players: JSON.stringify(pArray),
-                    pc_last_update: firebase.firestore.FieldValue.serverTimestamp()
-                }).then(() => {
-                    mostrarToast(`Estatística Computada! (Dê F5 no PC)`);
-                });
+            let md = safeParse(doc.data().pc_match_report || "{}");
+            if(!md.events) md.events = [];
+
+            // Pega o nome correto do jogador pelo índice original
+            let pName = allPlayers.find(p => p.originalIndex === originalIndex)?.name || "Atleta";
+
+            // Se for gol nosso, já soma no placar automático
+            if(type === 'GOL') {
+                md.gUs = (parseInt(md.gUs) || 0) + 1;
             }
+
+            // Adiciona o evento à Timeline Oficial do V2106
+            md.events.push({
+                id: Date.now(),
+                type: type,
+                player: pName,
+                pIdx: originalIndex,
+                time: min
+            });
+
+            db.collection('coachData').doc(uid).update({
+                pc_match_report: JSON.stringify(md),
+                pc_last_update: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                mostrarToast("LANCE REGISTRADO! (DÊ F5 NO PC)");
+            });
+        });
+    }
+
+    function addGolAdv() {
+        if(!confirm("Computar um gol marcado pelo adversário?")) return;
+        const uid = auth.currentUser.uid;
+        db.collection('coachData').doc(uid).get().then(doc => {
+            let md = safeParse(doc.data().pc_match_report || "{}");
+            md.gTh = (parseInt(md.gTh) || 0) + 1;
+            db.collection('coachData').doc(uid).update({
+                pc_match_report: JSON.stringify(md),
+                pc_last_update: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => mostrarToast("GOL DO ADVERSÁRIO COMPUTADO"));
         });
     }
 
@@ -647,8 +708,7 @@
             list.unshift({ id: Date.now(), date: todayISO, text: msg });
 
             db.collection('coachData').doc(uid).update({ 
-                pc_notices_list: JSON.stringify(list),
-                pc_last_update: firebase.firestore.FieldValue.serverTimestamp()
+                pc_notices_list: JSON.stringify(list)
             }).then(() => {
                 mostrarToast("✅ AVISO SALVO NO MURAL (DÊ F5 NO PC)");
                 document.getElementById('voice-txt').value = '';
