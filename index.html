@@ -26,6 +26,22 @@
         .micro-tag { @apply px-2 py-1.5 rounded text-[10px] font-bold text-white mb-1 cursor-pointer hover:opacity-90 transition-opacity text-center shadow-sm w-full block border border-white/20; }
         #loading { position: fixed; inset: 0; background: #0f172a; color: white; display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; gap: 10px; }
         ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: #f1f1f1; } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; } ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .app-shell { background: #f8fafc; }
+        .app-sidebar { width: 248px; background: #0f172a; color: white; }
+        .sidebar-brand { background: linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02)); }
+        .main-nav-button { min-height: 48px; border-radius: 12px; transition: all .2s ease; }
+        .main-nav-button:hover { background: rgba(255,255,255,.08); transform: translateX(2px); }
+        .main-nav-button.active { background: rgba(255,255,255,.14); box-shadow: inset 3px 0 0 currentColor; }
+        .sub-nav-button { min-height: 36px; border-radius: 9px; transition: all .2s ease; }
+        .sub-nav-button:hover { background: rgba(255,255,255,.07); }
+        .mobile-main-nav { padding-bottom: max(.5rem, env(safe-area-inset-bottom)); }
+        .mobile-main-button { min-width: 62px; min-height: 54px; }
+        .content-toolbar { min-height: 56px; }
+        @media (max-width: 767px) {
+            body { touch-action: manipulation; }
+            .app-content { padding-bottom: 68px; }
+            .content-toolbar { min-height: 50px; }
+        }
         
         /* MODO DARK */
         html.dark body { background-color: #0f172a !important; color: #f8fafc !important; }
@@ -405,40 +421,67 @@ const App = ({ user }) => {
 
     useEffect(() => { if (darkMode) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark'); }, [darkMode]);
 
+    const navigationGroups = [
+        { id: 'home', label: 'Início', icon: 'home', items: [{ tab: 'dashboard', label: 'Visão geral', icon: 'home' }] },
+        { id: 'team', label: 'Equipe', icon: 'users', items: [
+            { tab: 'squad', label: 'Plantel', icon: 'users' },
+            { tab: 'lineup', label: 'Escalação', icon: 'shirt' },
+            { tab: 'performance', label: 'Desempenho', icon: 'chart' }
+        ]},
+        { id: 'training', label: 'Treinos', icon: 'list', items: [
+            { tab: 'session', label: 'Sessão atual', icon: 'list' },
+            { tab: 'micro', label: 'Microciclo', icon: 'grid' },
+            { tab: 'library', label: 'Exercícios', icon: 'book' }
+        ]},
+        { id: 'games', label: 'Jogos', icon: 'whistle', items: [
+            { tab: 'scouting', label: 'Pré-jogo', icon: 'eye' },
+            { tab: 'postmatch', label: 'Pós-jogo', icon: 'whistle' }
+        ]},
+        { id: 'planning', label: 'Planejamento', icon: 'calendar', items: [
+            { tab: 'calendar', label: 'Calendário', icon: 'calendar' },
+            { tab: 'board', label: 'Quadro semanal', icon: 'image' }
+        ]}
+    ];
+    const activeGroup = navigationGroups.find(group => group.items.some(item => item.tab === tab)) || navigationGroups[0];
+    const activeItem = activeGroup.items.find(item => item.tab === tab) || activeGroup.items[0];
+    const openGroup = (group) => { if (!group.items.some(item => item.tab === tab)) setTab(group.items[0].tab); };
+
     return (
-        <div className="flex flex-col h-full bg-slate-100 transition-colors">
+        <div className="app-shell flex flex-col h-full bg-slate-100 transition-colors">
             <SettingsModal show={showSettings} onClose={()=>setShowSettings(false)} themeColor={themeColor} setThemeColor={setThemeColor} teamLogo={teamLogo} setTeamLogo={setTeamLogo} teamName={teamName} setTeamName={setTeamName} />
             <SeasonStatsModal show={showStatsModal} onClose={()=>setShowStatsModal(false)} stats={seasonStats} setStats={setSeasonStats} themeColor={themeColor} />
-            <div className="bg-white border-b p-2 px-4 flex justify-between items-center shadow-sm z-30 shrink-0 transition-colors">
-                <div className="flex items-center gap-4">
-                    {teamLogo && <img src={teamLogo} className="w-10 h-10 object-contain" />}
-                    <div className="font-black text-xl italic text-slate-800"><span style={{color: themeColor}}>{teamName}</span> <span className="text-[9px] not-italic bg-purple-600 text-white px-1.5 py-0.5 rounded ml-1 font-bold">V2106</span></div>
-                </div>
-                <div className="flex gap-2 items-center"> 
-                    <NetworkStatus />
-                    <div className="w-px h-6 bg-slate-200 mx-1"></div>
-                    <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded hover:bg-slate-100 text-slate-400 no-print transition-colors" title={darkMode ? "Modo Claro" : "Modo Escuro"}><Icon name={darkMode ? "sun" : "moon"}/></button>
-                    <button onClick={()=>window.print()} className="p-2 rounded hover:bg-slate-100 text-slate-400 no-print transition-colors" title="Imprimir Rápido"><Icon name="printer"/></button> 
-                    <button onClick={()=>setShowSettings(true)} className="p-2 rounded hover:bg-slate-100 text-slate-400 no-print transition-colors" title="Configurações"><Icon name="settings"/></button> 
-                    {auth && <button onClick={()=>auth.signOut()} className="p-2 rounded hover:bg-red-50 text-red-400 no-print transition-colors" title="Sair"><Icon name="logout"/></button>}
-                </div>
-            </div>
+            <div className="flex flex-1 min-h-0">
+                <aside className="app-sidebar hidden md:flex flex-col shrink-0 no-print shadow-xl z-30">
+                    <div className="sidebar-brand p-5 border-b border-white/10">
+                        <div className="flex items-center gap-3">
+                            <div className="w-11 h-11 bg-white/10 rounded-xl border border-white/10 flex items-center justify-center overflow-hidden shrink-0">{teamLogo ? <img src={teamLogo} className="w-full h-full object-contain" /> : <Icon name="users" className="opacity-60"/>}</div>
+                            <div className="min-w-0"><div className="font-black text-sm uppercase truncate">{teamName}</div><div className="text-[10px] text-slate-400 mt-0.5">PROCOACH <span className="opacity-60">V2106</span></div></div>
+                        </div>
+                    </div>
+                    <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+                        {navigationGroups.map(group => <div key={group.id}>
+                            <button onClick={()=>openGroup(group)} className={`main-nav-button w-full px-3 flex items-center gap-3 text-left ${activeGroup.id===group.id?'active text-white':'text-slate-400'}`}>
+                                <span style={{color:activeGroup.id===group.id?themeColor:''}}><Icon name={group.icon}/></span><span className="font-bold text-sm">{group.label}</span>
+                            </button>
+                            {activeGroup.id===group.id && group.items.length>1 && <div className="ml-5 pl-4 border-l border-white/10 py-1 space-y-0.5">{group.items.map(item => <button key={item.tab} onClick={()=>setTab(item.tab)} className={`sub-nav-button w-full px-3 flex items-center gap-2 text-left text-xs ${tab===item.tab?'bg-white/10 text-white font-bold':'text-slate-400'}`}><Icon name={item.icon} size={14}/>{item.label}</button>)}</div>}
+                        </div>)}
+                    </nav>
+                    <div className="p-3 border-t border-white/10 text-[10px] text-slate-500">Gestão esportiva profissional</div>
+                </aside>
+                <main className="flex-1 min-w-0 flex flex-col">
+                    <header className="content-toolbar bg-white border-b px-4 md:px-6 flex justify-between items-center shadow-sm z-20 shrink-0 transition-colors">
+                        <div className="min-w-0"><div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{activeGroup.label}</div><h1 className="font-black text-base md:text-lg text-slate-800 truncate">{activeItem.label}</h1></div>
+                        <div className="flex gap-1 items-center">
+                            <div className="hidden sm:block md:hidden"><NetworkStatus /></div>
+                            <button onClick={() => setDarkMode(!darkMode)} className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 no-print transition-colors" title={darkMode ? "Modo claro" : "Modo escuro"}><Icon name={darkMode ? "sun" : "moon"}/></button>
+                            <button onClick={()=>window.print()} className="hidden sm:block p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 no-print transition-colors" title="Imprimir"><Icon name="printer"/></button>
+                            <button onClick={()=>setShowSettings(true)} className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 no-print transition-colors" title="Configurações"><Icon name="settings"/></button>
+                            {auth && <button onClick={()=>auth.signOut()} className="p-2.5 rounded-xl hover:bg-red-50 text-red-400 no-print transition-colors" title="Sair"><Icon name="logout"/></button>}
+                        </div>
+                    </header>
+                    {activeGroup.items.length>1 && <div className="md:hidden flex bg-white border-b px-3 py-2 gap-2 overflow-x-auto no-print shrink-0">{activeGroup.items.map(item => <button key={item.tab} onClick={()=>setTab(item.tab)} className={`shrink-0 px-3 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 ${tab===item.tab?'text-white shadow':'bg-slate-100 text-slate-500'}`} style={{backgroundColor:tab===item.tab?themeColor:''}}><Icon name={item.icon} size={14}/>{item.label}</button>)}</div>}
 
-            <div className="flex bg-slate-100 p-1 rounded-lg gap-1 overflow-x-auto shadow-inner no-print shrink-0 transition-colors">
-                <button onClick={()=>setTab('dashboard')} className={`flex-1 px-3 py-2 rounded text-xs font-bold shrink-0 ${tab==='dashboard'?'bg-white shadow':'text-slate-400'}`} style={{color: tab==='dashboard'?themeColor:''}}><Icon name="home"/> INÍCIO</button>
-                <button onClick={()=>setTab('squad')} className={`flex-1 px-3 py-2 rounded text-xs font-bold shrink-0 ${tab==='squad'?'bg-white shadow':'text-slate-400'}`} style={{color: tab==='squad'?themeColor:''}}><Icon name="users"/> PLANTEL</button>
-                <button onClick={()=>setTab('lineup')} className={`flex-1 px-3 py-2 rounded text-xs font-bold shrink-0 ${tab==='lineup'?'bg-white shadow':'text-slate-400'}`} style={{color: tab==='lineup'?themeColor:''}}><Icon name="shirt"/> ESCALAÇÃO</button>
-                <button onClick={()=>setTab('performance')} className={`flex-1 px-3 py-2 rounded text-xs font-bold shrink-0 ${tab==='performance'?'bg-white shadow':'text-slate-400'}`} style={{color: tab==='performance'?themeColor:''}}><Icon name="chart"/> PERFORMA</button>
-                <button onClick={()=>setTab('scouting')} className={`flex-1 px-3 py-2 rounded text-xs font-bold shrink-0 ${tab==='scouting'?'bg-white shadow':'text-slate-400'}`} style={{color: tab==='scouting'?themeColor:''}}><Icon name="eye"/> SCOUT</button>
-                <button onClick={()=>setTab('session')} className={`flex-1 px-3 py-2 rounded text-xs font-bold shrink-0 ${tab==='session'?'bg-white shadow':'text-slate-400'}`} style={{color: tab==='session'?themeColor:''}}><Icon name="list"/> SESSÃO</button>
-                <button onClick={()=>setTab('postmatch')} className={`flex-1 px-3 py-2 rounded text-xs font-bold shrink-0 ${tab==='postmatch'?'bg-white shadow':'text-slate-400'}`} style={{color: tab==='postmatch'?themeColor:''}}><Icon name="whistle"/> JOGO</button>
-                <button onClick={()=>setTab('micro')} className={`flex-1 px-3 py-2 rounded text-xs font-bold shrink-0 ${tab==='micro'?'bg-white shadow':'text-slate-400'}`} style={{color: tab==='micro'?themeColor:''}}><Icon name="grid"/> MICRO</button>
-                <button onClick={()=>setTab('board')} className={`flex-1 px-3 py-2 rounded text-xs font-bold shrink-0 ${tab==='board'?'bg-white shadow':'text-slate-400'}`} style={{color: tab==='board'?themeColor:''}}><Icon name="image"/> BOARD</button> 
-                <button onClick={()=>setTab('calendar')} className={`flex-1 px-3 py-2 rounded text-xs font-bold shrink-0 ${tab==='calendar'?'bg-white shadow':'text-slate-400'}`} style={{color: tab==='calendar'?themeColor:''}}><Icon name="calendar"/> CALEND</button>
-                <button onClick={()=>setTab('library')} className={`flex-1 px-3 py-2 rounded text-xs font-bold shrink-0 ${tab==='library'?'bg-white shadow':'text-slate-400'}`} style={{color: tab==='library'?themeColor:''}}><Icon name="book"/> BIBLE</button>
-            </div>
-
-            <div className="flex-1 overflow-hidden relative">
+                    <div className="app-content flex-1 overflow-hidden relative">
                 {tab === 'dashboard' && <DashboardView themeColor={themeColor} players={playersRaw} matchHistory={matchHistoryRaw} setTab={setTab} teamLogo={teamLogo} scoutingData={scoutingData} microData={microData} calendarData={calendarData} header={header} seasonStats={seasonStats} openStats={()=>setShowStatsModal(true)} notices={noticesRaw} setNotices={setNotices} />}
                 {tab === 'squad' && <SquadView players={playersRaw} setPlayers={setPlayers} themeColor={themeColor} history={sessionHistory} />}
                 {tab === 'lineup' && <SmartLineupView players={playersRaw} history={sessionHistory} themeColor={themeColor} />}
@@ -450,7 +493,12 @@ const App = ({ user }) => {
                 {tab === 'board' && <VisualBoardView currentWeekStart={getMonday(boardWeekDate)} changeWeek={(d)=>{const n=new Date(boardWeekDate); n.setDate(n.getDate()+d); setBoardWeekDate(n);}} boardData={boardHistory[getWeekKey(boardWeekDate)]||{}} updateBoardData={(d,i)=>{const k=getWeekKey(boardWeekDate); setBoardHistory({...boardHistory, [k]:{...(boardHistory[k]||{}), [d]:i}});}} themeColor={themeColor} />}
                 {tab === 'calendar' && <CalendarView calendar={calendarData} setCalendar={setCalendarData} themeColor={themeColor} notices={noticesRaw} />}
                 {tab === 'library' && <LibraryView lib={libraryDrillsRaw} setLib={setLibraryDrills} onAddS={(i)=>setSessionDrills(p=>[...ensureArray(p),{...i,id:Date.now()}])} onAddB={(d,i)=>{const k=getWeekKey(boardWeekDate); setBoardHistory({...boardHistory, [k]:{...(boardHistory[k]||{}), [d]:[...ensureArray((boardHistory[k]||{})[d]), i]}});}} tC={themeColor} />}
+                    </div>
+                </main>
             </div>
+            <nav className="mobile-main-nav md:hidden fixed bottom-0 inset-x-0 bg-white border-t shadow-[0_-4px_18px_rgba(15,23,42,0.10)] z-40 flex justify-around px-1 pt-1 no-print">
+                {navigationGroups.map(group => <button key={group.id} onClick={()=>openGroup(group)} className={`mobile-main-button flex-1 rounded-xl flex flex-col items-center justify-center gap-1 text-[9px] font-bold ${activeGroup.id===group.id?'bg-slate-100':'text-slate-400'}`} style={{color:activeGroup.id===group.id?themeColor:''}}><Icon name={group.icon} size={19}/><span>{group.label}</span></button>)}
+            </nav>
         </div>
     );
 };
