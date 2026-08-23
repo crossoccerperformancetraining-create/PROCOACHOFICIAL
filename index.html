@@ -22,7 +22,7 @@
         .player-select-card.selected { @apply bg-green-50 border-green-500 ring-1 ring-green-500; }
         .color-picker-swatch { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 0 0 2px #e2e8f0; }
         .color-picker-swatch.active { box-shadow: 0 0 0 2px #0f172a; }
-        .grass-pattern { background-color: #15803d; background-image: repeating-linear-gradient(0deg, transparent, transparent 10%, rgba(255,255,255,0.1) 10%, rgba(255,255,255,0.1) 11%); }
+        .grass-pattern { background-color: #087443; background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0, rgba(255,255,255,.045) 10%, transparent 10%, transparent 20%), linear-gradient(180deg,#0b7d49,#075f39); border-radius: 14px; }
         .micro-tag { @apply px-2 py-1.5 rounded text-[10px] font-bold text-white mb-1 cursor-pointer hover:opacity-90 transition-opacity text-center shadow-sm w-full block border border-white/20; }
         #loading { position: fixed; inset: 0; background: #0f172a; color: white; display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; gap: 10px; }
         ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: #f1f1f1; } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; } ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
@@ -37,10 +37,19 @@
         .mobile-main-nav { padding-bottom: max(.5rem, env(safe-area-inset-bottom)); }
         .mobile-main-button { min-width: 62px; min-height: 54px; }
         .content-toolbar { min-height: 56px; }
+        .pdf-only { display: none; }
+        .field-pro { background-color: #087443; background-image: linear-gradient(90deg, rgba(255,255,255,.045) 50%, transparent 50%), linear-gradient(180deg, #0b7d49, #075f39); background-size: 20% 100%, 100% 100%; }
+        .field-pro::after { content: ''; position: absolute; inset: 3%; border: 2px solid rgba(255,255,255,.72); border-radius: 10px; pointer-events: none; }
+        .field-pro .field-marking { border-color: rgba(255,255,255,.68); }
+        .lineup-player { transition: transform .18s ease, filter .18s ease; }
+        .lineup-player:hover { transform: translate(-50%,-50%) scale(1.08); filter: drop-shadow(0 8px 12px rgba(0,0,0,.28)); }
+        .session-summary { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
+        .report-section-title { letter-spacing: .08em; text-transform: uppercase; font-size: 10px; font-weight: 800; color: #64748b; }
         @media (max-width: 767px) {
             body { touch-action: manipulation; }
             .app-content { padding-bottom: 68px; }
             .content-toolbar { min-height: 50px; }
+            .session-summary { grid-template-columns: 1fr 1fr; }
         }
         
         /* MODO DARK */
@@ -62,12 +71,20 @@
         html.dark .text-yellow-700, html.dark .text-yellow-600 { color: #facc15 !important; }
         html.dark .text-blue-700, html.dark .text-blue-600 { color: #60a5fa !important; }
         
+        @page { size: A4 portrait; margin: 10mm; }
         @media print { 
             .no-print { display: none !important; } 
-            body { background: white !important; color: black !important; } 
-            .print-card { box-shadow: none !important; border: 1px solid #ddd !important; page-break-inside: avoid; margin-bottom: 20px; background-color: white !important; } 
-            .page-break { page-break-inside: avoid; } 
-            #root { height: auto; overflow: visible; } 
+            .pdf-only { display: flex !important; }
+            .pdf-only.signature-grid { display: grid !important; }
+            button { display: none !important; }
+            body { background: white !important; color: #111827 !important; overflow: visible !important; }
+            .app-shell, .app-content, main { height: auto !important; min-height: 0 !important; overflow: visible !important; display: block !important; }
+            .print-card { box-shadow: none !important; border: 1px solid #d8dee8 !important; page-break-inside: avoid; break-inside: avoid; margin-bottom: 7mm; background-color: white !important; border-radius: 8px !important; } 
+            .page-break { page-break-inside: avoid; break-inside: avoid; } 
+            #root, #print-area { height: auto !important; overflow: visible !important; padding: 0 !important; }
+            #print-area > .space-y-6 { padding-bottom: 0 !important; }
+            input, textarea, select { border-color: transparent !important; resize: none !important; }
+            .pdf-footer { display: flex !important; position: fixed; bottom: 0; left: 10mm; right: 10mm; justify-content: space-between; border-top: 1px solid #e5e7eb; padding-top: 2mm; color: #64748b; font-size: 8px; }
             ::-webkit-scrollbar { display: none; } 
             html.dark *, html.dark body, html.dark .bg-white, html.dark .bg-slate-50, html.dark .bg-slate-100 { background-color: white !important; color: black !important; border-color: #ddd !important;} 
         }
@@ -366,6 +383,7 @@ const SessionView = ({ drills, setDrills, header, setHeader, logo, themeColor, p
     const upV = (i) => { const u=prompt("Link Vídeo:"); if(u!==null) upD(i,'video',u); };
     const sav = () => { try { const nH={...history, [sessionDate]:{drills:ensureArray(drills),ratings:lR,header}}; setHistory(nH); setT("Salvo!"); setTimeout(()=>setT(null), 3000); } catch(e){} };
     const sDr = ensureArray(drills); const sAv = Object.values(lR).length>0 ? (Object.values(lR).reduce((a,b)=>a+b,0)/Object.values(lR).length).toFixed(1) : 0;
+    const totalMinutes = sDr.reduce((sum, drill) => sum + (parseInt(drill.time) || 0), 0);
     const mov = (i, d) => { const n=[...sDr]; if (d==='up'&&i>0) [n[i],n[i-1]]=[n[i-1],n[i]]; else if(d==='down'&&i<n.length-1) [n[i],n[i+1]]=[n[i+1],n[i]]; setDrills(n); };
     return (
         <div className="flex flex-col md:flex-row h-full bg-slate-50 overflow-hidden text-slate-800 animate-fade-in relative">
@@ -379,6 +397,15 @@ const SessionView = ({ drills, setDrills, header, setHeader, logo, themeColor, p
                 <div className="mb-6 rounded-2xl shadow-xl text-white p-6 relative overflow-hidden print-card" style={{background: `linear-gradient(135deg, ${themeColor}, #0f172a)`}}>
                     <div className="flex items-center gap-6 relative z-10"><div className="w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20 overflow-hidden">{logo?<img src={logo} className="w-full h-full object-contain"/>:<Icon name="image" className="opacity-50"/>}</div><div className="flex-1"><h1 className="text-3xl font-black uppercase mb-1">{teamName || 'EQUIPE'}</h1><div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mt-4"><div className="relative border border-white/30 rounded px-2 py-1 flex flex-col"><label className="text-[10px] opacity-70">DATA</label><span className="font-bold">{formatDateBR(sessionDate)}</span></div><div className="relative border border-white/30 rounded px-2 py-1 flex flex-col"><label className="text-[10px] opacity-70">LOCAL</label><input className="bg-transparent font-bold outline-none placeholder-white/50 w-full" placeholder="Ex: CT" value={header.local||''} onChange={e=>setHeader({...header, local: e.target.value})}/></div><div className="relative border border-white/30 rounded px-2 py-1 flex flex-col"><label className="text-[10px] opacity-70">INÍCIO</label><input type="time" className="bg-transparent font-bold outline-none w-full" value={header.time||''} onChange={e=>setHeader({...header, time: e.target.value})}/></div><div className="relative border border-white/30 rounded px-2 py-1 flex flex-col"><label className="text-[10px] opacity-70">DURAÇÃO</label><input className="bg-transparent font-bold outline-none placeholder-white/50 w-full" placeholder="Ex: 90 min" value={header.dur||''} onChange={e=>setHeader({...header, dur: e.target.value})}/></div></div></div></div>
                 </div>
+                <div className="print-card bg-white border border-slate-200 rounded-xl p-4 mb-6">
+                    <div className="session-summary mb-4">
+                        <div><label className="report-section-title block mb-1">Objetivo principal</label><input className="w-full text-sm font-semibold border-b py-1" placeholder="Ex: organização defensiva" value={header.objective||''} onChange={e=>setHeader({...header, objective:e.target.value})}/></div>
+                        <div><label className="report-section-title block mb-1">Categoria</label><input className="w-full text-sm font-semibold border-b py-1" placeholder="Ex: Sub-20" value={header.category||''} onChange={e=>setHeader({...header, category:e.target.value})}/></div>
+                        <div><label className="report-section-title block mb-1">Intensidade</label><select className="w-full text-sm font-semibold border-b py-1 bg-white" value={header.intensity||'Moderada'} onChange={e=>setHeader({...header, intensity:e.target.value})}><option>Baixa</option><option>Moderada</option><option>Alta</option><option>Máxima</option></select></div>
+                        <div><label className="report-section-title block mb-1">Volume planejado</label><div className="text-lg font-black text-slate-800 py-1">{totalMinutes} min</div></div>
+                    </div>
+                    <div><label className="report-section-title block mb-1">Observações da comissão</label><textarea className="w-full min-h-16 text-sm border rounded-lg p-2 bg-slate-50" placeholder="Pontos de atenção, materiais, restrições e metas da sessão..." value={header.notes||''} onChange={e=>setHeader({...header, notes:e.target.value})}/></div>
+                </div>
                 <div className="space-y-6 pb-20">
                     {sDr.length > 0 ? sDr.map((drill, idx) => (
                         <div key={drill.id || idx} className="print-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden page-break">
@@ -387,7 +414,9 @@ const SessionView = ({ drills, setDrills, header, setHeader, logo, themeColor, p
                         </div>
                     )) : <div className="text-center p-8 text-slate-400 border-2 border-dashed rounded-xl">Vazio. Adicione abaixo.</div>}
                     <button onClick={()=>{setDrills([...sDr, { id: Date.now(), name: 'NOVO', method: 'Tático', dim: '-', time: '10', desc: '', variants: '', image: null, video: null }])}} className="w-full py-4 border-2 border-dashed border-slate-300 rounded-xl text-slate-400 hover:border-blue-500 font-bold flex items-center justify-center gap-2 no-print"><Icon name="plus"/> ADICIONAR EXERCÍCIO</button>
+                    <div className="pdf-only signature-grid mt-12 grid-cols-2 gap-16 text-center text-xs text-slate-500"><div className="border-t border-slate-400 pt-2">Treinador responsável</div><div className="border-t border-slate-400 pt-2">Coordenação técnica</div></div>
                 </div>
+                <div className="pdf-footer pdf-only"><span>{teamName || 'PROCOACH'} - Ficha de Treino</span><span>{formatDateBR(sessionDate)} | {sDr.length} exercícios | {totalMinutes} min</span></div>
             </div>
             <div className="w-full md:w-80 border-t md:border-t-0 md:border-l border-slate-200 bg-white flex flex-col h-64 md:h-full shadow-lg z-20 no-print"><div className="p-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center"><div><div className="text-xs font-bold text-slate-400 uppercase">Nota Média</div><div className="text-2xl font-black flex items-center gap-1" style={{color: themeColor}}>{sAv} <Icon name="star" size={18} className="text-yellow-400"/></div></div><div className="text-xs font-bold text-right text-slate-400">JOGADORES<br/>DISPONÍVEIS</div></div><div className="flex-1 overflow-y-auto p-2 space-y-2 bg-slate-100">{ensureArray(players).filter(p=>!p.injured).map((p,i)=>(<div key={i} className="flex flex-col p-2 rounded border bg-white shadow-sm"><div className="flex items-center gap-2 mb-1"><div className="w-6 h-6 rounded-full bg-slate-200 overflow-hidden relative shrink-0">{p.image?<img src={p.image} className="w-full h-full object-cover"/>:<Icon name="users" size={10}/>}</div><div className="flex-1 min-w-0 font-bold text-xs text-slate-700 uppercase truncate">{p.name}</div><input type="checkbox" className="ml-auto w-4 h-4 cursor-pointer accent-green-600" defaultChecked={true}/></div><div className="flex justify-center"><StarRating value={lR[i]||0} onChange={v=>setLR({...lR, [i]:v})}/></div></div>))}</div></div>
         </div>
