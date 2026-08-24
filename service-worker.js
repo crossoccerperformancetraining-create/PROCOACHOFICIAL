@@ -1,4 +1,4 @@
-const CACHE_NAME = 'procoach-v3';
+const CACHE_NAME = 'procoach-v4';
 const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './procoach-icon.svg'];
 
 self.addEventListener('install', event => {
