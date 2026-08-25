@@ -1,7 +1,7 @@
 {
-  "name": "ProCoach Performance",
-  "short_name": "ProCoach",
-  "description": "Gestão integrada de performance para comissões técnicas de futebol.",
+  "name": "ProCoach V3 Performance Intelligence",
+  "short_name": "ProCoach V3",
+  "description": "Centro operacional da comissão técnica: treino, jogo, atleta, carga, inteligência e relatórios.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
