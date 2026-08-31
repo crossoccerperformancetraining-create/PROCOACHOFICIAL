@@ -1,4 +1,4 @@
-const CACHE_NAME = 'procoach-v2106-library-save-exercise-20260831';
+const CACHE_NAME = 'procoach-v12-athlete-v4-media-wellness';
 const APP_SHELL = ['./', './index.html', './atleta.html', './manifest.webmanifest', './procoach-icon.svg'];
 
 self.addEventListener('install', event => {
