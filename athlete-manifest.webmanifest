@@ -1,5 +1,5 @@
 {
-  "name": "ProCoach Athlete V4.1",
+  "name": "ProCoach Athlete V4.2",
   "short_name": "ProCoach Athlete",
   "start_url": "./atleta.html",
   "scope": "./",
@@ -8,6 +8,11 @@
   "theme_color": "#07101d",
   "lang": "pt-BR",
   "icons": [
-    {"src":"./procoach-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+    {
+      "src": "./procoach-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
   ]
 }

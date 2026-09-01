@@ -1,4 +1,4 @@
-const CACHE_NAME = 'procoach-v10-athlete-v41';
+const CACHE_NAME = 'procoach-v42-week-priority-deadline';
 const APP_SHELL = ['./', './index.html', './atleta.html', './manifest.webmanifest', './procoach-icon.svg'];
 
 self.addEventListener('install', event => {
