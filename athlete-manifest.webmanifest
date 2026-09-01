@@ -1,20 +1,13 @@
 {
-  "name": "ProCoach Athlete V4",
+  "name": "ProCoach Athlete V4.1",
   "short_name": "ProCoach Athlete",
-  "description": "PSQ, dor 0–5, atividade do dia, vídeos, PSE/RPE e documentos.",
   "start_url": "./atleta.html",
   "scope": "./",
   "display": "standalone",
-  "orientation": "any",
   "background_color": "#07101d",
   "theme_color": "#07101d",
   "lang": "pt-BR",
   "icons": [
-    {
-      "src": "./procoach-icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
+    {"src":"./procoach-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
   ]
 }
