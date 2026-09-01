@@ -1,5 +1,28 @@
-const CACHE_NAME = 'procoach-v42-week-priority-deadline';
-const APP_SHELL = ['./', './index.html', './atleta.html', './manifest.webmanifest', './procoach-icon.svg'];
+const CACHE_NAME = 'procoach-v43-athlete-development';
+const APP_SHELL = ['./', './index.html', './atleta.html', './manifest.webmanifest', './athlete-manifest.webmanifest', './procoach-icon.svg', './procoach-fcm-config.js'];
+
+try {
+  importScripts('https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js');
+  importScripts('https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js');
+  firebase.initializeApp({
+    apiKey: 'AIzaSyBURvWmrRe-q-l1h2XKaQepeRQoNcmi7nk',
+    authDomain: 'procoachoficial.firebaseapp.com',
+    projectId: 'procoachoficial',
+    storageBucket: 'procoachoficial.firebasestorage.app',
+    messagingSenderId: '128403842399',
+    appId: '1:128403842399:web:c54259e2b6a5622fb942ea'
+  });
+  const messaging = firebase.messaging();
+  messaging.onBackgroundMessage(payload => {
+    const notification = payload.notification || {};
+    return self.registration.showNotification(notification.title || 'ProCoach Athlete', {
+      body: notification.body || 'Você tem uma nova atualização.',
+      icon: './procoach-icon.svg',
+      badge: './procoach-icon.svg',
+      data: payload.fcmOptions && payload.fcmOptions.link || payload.data && payload.data.url || './atleta.html'
+    });
+  });
+} catch (e) {}
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
@@ -18,14 +41,7 @@ self.addEventListener('fetch', event => {
   }).catch(() => caches.match(event.request).then(hit => hit || caches.match('./index.html'))));
 });
 
-self.addEventListener('push', event => {
-  const data = event.data ? event.data.json() : { title: 'ProCoach', body: 'Você tem uma nova atualização.' };
-  event.waitUntil(self.registration.showNotification(data.title || 'ProCoach', {
-    body: data.body || '', icon: './procoach-icon.svg', badge: './procoach-icon.svg', data: data.url || './'
-  }));
-});
-
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  event.waitUntil(clients.openWindow(event.notification.data || './'));
+  event.waitUntil(clients.openWindow(event.notification.data || './atleta.html'));
 });
