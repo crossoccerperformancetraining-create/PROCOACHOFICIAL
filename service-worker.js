@@ -1,4 +1,4 @@
-const CACHE_NAME = 'procoach-v43-athlete-development';
+const CACHE_NAME = 'procoach-v5-1-premium-ui';
 const APP_SHELL = ['./', './index.html', './atleta.html', './manifest.webmanifest', './athlete-manifest.webmanifest', './procoach-icon.svg', './procoach-fcm-config.js'];
 
 try {
