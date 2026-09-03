@@ -1,5 +1,5 @@
 {
-  "name": "ProCoach Athlete V4.3",
+  "name": "ProCoach Athlete V5.2",
   "short_name": "ProCoach Athlete",
   "description": "Bem-estar, desenvolvimento, academia, vídeos, metas e comunicação individual do atleta.",
   "start_url": "./atleta.html",
@@ -10,6 +10,11 @@
   "theme_color": "#07101d",
   "lang": "pt-BR",
   "icons": [
-    { "src": "./procoach-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    {
+      "src": "./procoach-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
   ]
 }
