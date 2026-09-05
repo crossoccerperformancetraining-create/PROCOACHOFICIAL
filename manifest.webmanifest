@@ -1,7 +1,7 @@
 {
-  "name": "ProCoach V6.2 Complement Training",
-  "short_name": "ProCoach V6.2",
-  "description": "Gestão multi-equipe com treinos complementares por equipe, grupo ou atletas específicos.",
+  "name": "ProCoach V6.3 Minutes Complement",
+  "short_name": "ProCoach V6.3",
+  "description": "Gestão multi-equipe com complemento pós-jogo sugerido pela minutagem e confirmado pela comissão.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
