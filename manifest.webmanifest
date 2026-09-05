@@ -1,7 +1,7 @@
 {
-  "name": "ProCoach V6.1 Premium Modules",
-  "short_name": "ProCoach V6.1",
-  "description": "Centro operacional da comissão técnica: treino, jogo, atleta, carga, inteligência e relatórios.",
+  "name": "ProCoach V6.2 Complement Training",
+  "short_name": "ProCoach V6.2",
+  "description": "Gestão multi-equipe com treinos complementares por equipe, grupo ou atletas específicos.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

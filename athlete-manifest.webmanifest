@@ -1,7 +1,7 @@
 {
-  "name": "ProCoach Athlete V6.1",
+  "name": "ProCoach Athlete V6.2",
   "short_name": "ProCoach Athlete",
-  "description": "Bem-estar, desenvolvimento, academia, vídeos, metas e comunicação individual do atleta.",
+  "description": "Bem-estar, treino complementar, academia, vídeos, metas e comunicação individual do atleta.",
   "start_url": "./atleta.html",
   "scope": "./",
   "display": "standalone",
