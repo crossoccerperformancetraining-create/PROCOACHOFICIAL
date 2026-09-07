@@ -1,7 +1,7 @@
 {
-  "name": "ProCoach V6.4 Minutes Complement",
-  "short_name": "ProCoach V6.4",
-  "description": "Gestão multi-equipe com complemento pós-jogo sugerido pela minutagem e confirmado pela comissão.",
+  "name": "ProCoach V6.5 - Rotinas & Player",
+  "short_name": "ProCoach V6.5",
+  "description": "Gestão multi-equipe com rotinas, sequências reutilizáveis, Player de treino no Athlete e inteligência de performance.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

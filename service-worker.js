@@ -1,4 +1,4 @@
-const CACHE_NAME = 'procoach-v64-smart-performance';
+const CACHE_NAME = 'procoach-v65-routines-player';
 const APP_SHELL = ['./', './index.html', './atleta.html', './manifest.webmanifest', './athlete-manifest.webmanifest', './procoach-icon.svg', './procoach-fcm-config.js'];
 
 try {
@@ -15,7 +15,7 @@ try {
   const messaging = firebase.messaging();
   messaging.onBackgroundMessage(payload => {
     const notification = payload.notification || {};
-    return self.registration.showNotification(notification.title || 'ProCoach Athlete', {
+    return self.registration.showNotification(notification.title || 'ProCoach Athlete V6.5', {
       body: notification.body || 'Você tem uma nova atualização.',
       icon: './procoach-icon.svg',
       badge: './procoach-icon.svg',
