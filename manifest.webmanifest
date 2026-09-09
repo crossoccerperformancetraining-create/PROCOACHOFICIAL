@@ -1,7 +1,7 @@
 {
-  "name": "ProCoach 2.0.5.2 - Rotinas & Player",
-  "short_name": "ProCoach 2.0.5.2",
-  "description": "Gestão multi-equipe com rotinas, sequências reutilizáveis, Player de treino no Athlete e inteligência de performance.",
+  "name": "ProCoach 2.0.6 - Plano de Treino Premium",
+  "short_name": "ProCoach 2.0.6",
+  "description": "Plano de Treino Premium para Campo e Academia, biblioteca, modelos reutilizáveis, PDF profissional e envio guiado ao Athlete.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

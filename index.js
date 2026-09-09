@@ -35,8 +35,9 @@ exports.procoachAthletePush = onDocumentUpdated('athletePortal/{accessToken}', a
     title = callup.matchDay ? '🏆 Você foi convocado' : 'Novo compromisso no ProCoach';
     body = callup.opponent ? `Confira a programação vs ${callup.opponent}.` : (callup.title || 'Confira a programação no ProCoach Athlete.');
   } else if (newRoutines.length) {
-    title = 'Novo treino no ProCoach';
-    body = newRoutines[0].name || 'Sua nova rotina de treino está disponível.';
+    const routine = newRoutines[0] || {};
+    title = routine.premiumPlan ? 'Novo plano de treino no ProCoach' : 'Novo treino no ProCoach';
+    body = routine.premiumPlan ? `${routine.type || 'Treino'} · ${routine.name || 'Plano Premium'} está disponível no Athlete.` : (routine.name || 'Sua nova rotina de treino está disponível.');
   } else if (newActivities.length) {
     title = 'Nova atividade no ProCoach';
     body = newActivities[0].title || 'Você recebeu uma nova atividade.';
