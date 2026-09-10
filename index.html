@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./procoach-icon.svg" type="image/svg+xml">
-    <title>ProCoach 2.0.6.5 - Plano de Treino Premium</title>
+    <title>ProCoach 2.0.6.6 - Plano de Treino Premium</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -121,7 +121,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 
-/* ===== PROCOACH 2.0.6.5 - CAMPO VISUAL MAX ===== */
+/* ===== PROCOACH 2.0.6.6 - CAMPO VISUAL MAX ===== */
 .tp-exercise-card.field-exercise .tp-exercise-body{grid-template-columns:minmax(520px,62%) 1fr!important}
 .tp-exercise-card.field-exercise .tp-media-pair{grid-template-columns:1fr 1fr!important;padding:14px!important;gap:10px!important}
 .tp-exercise-card.field-exercise .tp-media-box{height:280px!important;border-radius:16px!important}
@@ -184,7 +184,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:900px){.tp-meta-grid{grid-template-columns:1fr 1fr}.tp-sequence-bar{grid-template-columns:repeat(3,1fr)}.tp-editor-layout{grid-template-columns:1fr}.tp-checkin{position:static}.tp-exercise-body{grid-template-columns:1fr}.tp-media-pair{border-right:0;border-bottom:1px solid #203a5b}.tp-canvas-head{align-items:flex-start;flex-direction:column}.tp-canvas-head>div:last-child{width:100%;overflow:auto}}@media(max-width:560px){.tp-hero{align-items:flex-start;flex-direction:column;padding:18px}.tp-hero h1{font-size:20px}.tp-mode-switch{width:100%}.tp-mode-switch button{flex:1}.tp-kpis{grid-template-columns:1fr 1fr}.tp-sequence-bar{grid-template-columns:1fr 1fr}.tp-meta-grid{grid-template-columns:1fr}.tp-prescription-grid{grid-template-columns:1fr 1fr}.tp-media-box{height:125px}.tp-exercise-head{align-items:flex-start}.tp-icon-btn{width:26px;height:26px}}
 @media print{body[data-print-mode="trainingpremium"] .technical-only,body[data-print-mode="trainingpremium"] .executive-only,body[data-print-mode="trainingpremium"] .report-cover,body[data-print-mode="trainingpremium"] .microcycle-print-page,body[data-print-mode="trainingpremium"] .pdf-footer{display:none!important}body[data-print-mode="trainingpremium"] .training-premium-print{display:block!important;width:190mm!important;margin:0 auto!important;background:white!important;color:#0f172a!important}body[data-print-mode="technical"] .training-premium-print,body[data-print-mode="executive"] .training-premium-print,body[data-print-mode="microcycle"] .training-premium-print{display:none!important}.training-premium-print .qrcode img,.training-premium-print canvas{max-width:13mm!important;max-height:13mm!important}}
 
-/* ===== PROCOACH 2.0.6.5 - FICHA PREMIUM COM MÍDIA AMPLIADA ===== */
+/* ===== PROCOACH 2.0.6.6 - FICHA PREMIUM COM MÍDIA AMPLIADA ===== */
 .tp-media-box{height:180px!important}.tp-exercise-body{grid-template-columns:minmax(340px,46%) 1fr!important}.tp-title-input{font-size:14px!important}.tp-exercise-sub{font-size:8px!important}
 .tp-exercise-card.field-exercise .tp-exercise-body{grid-template-columns:minmax(430px,54%) 1fr!important}.tp-exercise-card.field-exercise .tp-media-box{height:230px!important}.tp-exercise-card.field-exercise .tp-prescription-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.tp-exercise-card.field-exercise .tp-textarea-label textarea{min-height:72px!important}
 .tpp-sheet{padding:3mm!important;border-width:.9mm!important;border-radius:3mm!important;box-decoration-break:clone;-webkit-box-decoration-break:clone}
@@ -213,7 +213,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:900px){.tp-exercise-body{grid-template-columns:1fr!important}.tp-media-box{height:155px!important}}
 
 
-/* ===== PROCOACH 2.0.6.5 - FICHA PREMIUM FINAL / 1 IMAGEM ===== */
+/* ===== PROCOACH 2.0.6.6 - FICHA PREMIUM FINAL / 1 IMAGEM / PRINT ISOLADO ===== */
 .tp-media-pair.tp-media-single{display:grid!important;grid-template-columns:1fr!important;gap:10px!important;padding:14px!important}
 .tp-media-pair.tp-media-single .tp-media-box{width:100%!important;height:300px!important;border-radius:18px!important;background:#030914!important}
 .tp-media-pair.tp-media-single .tp-media-box img{width:100%!important;height:100%!important;object-fit:contain!important}
@@ -280,6 +280,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   body[data-print-mode="trainingpremium"] .training-premium-print .tpp-exercise,
   body[data-print-mode="trainingpremium"] .training-premium-print .tpp-gym-table tr{break-inside:avoid!important;page-break-inside:avoid!important}
 }
+
+/* 2.0.6.6 - trava definitiva de uma imagem e impressão limpa */
+.tpp-media.tpp-media-single{grid-template-columns:1fr!important}
+.tpp-media.tpp-media-single>div:nth-child(n+2){display:none!important}
+#pc-training-print-frame{display:block!important}
+@media print{#pc-training-print-frame{display:none!important}}
 
 </style>
 </head>
@@ -758,14 +764,25 @@ const SignaturePad = ({ value, onChange, label='Assinatura do treinador' }) => {
 };
 
 const printTrainingPremium = () => {
-    const source=document.querySelector('.training-premium-print');
+    const source=document.querySelector('.training-premium-print .tpp-sheet');
     if(!source){ alert('A ficha premium ainda não está disponível nesta sessão.'); return; }
-    const popup=window.open('','procoach-training-premium','width=1100,height=900');
-    if(!popup){
-        document.body.dataset.printMode='trainingpremium';
-        setTimeout(()=>{window.print();setTimeout(()=>delete document.body.dataset.printMode,350);},100);
-        return;
-    }
+
+    // 2.0.6.6: impressão isolada em iframe. Nunca imprime a tela do app.
+    const old=document.getElementById('pc-training-print-frame');
+    if(old) old.remove();
+    const frame=document.createElement('iframe');
+    frame.id='pc-training-print-frame';
+    frame.setAttribute('aria-hidden','true');
+    frame.style.position='fixed';
+    frame.style.right='0';
+    frame.style.bottom='0';
+    frame.style.width='1px';
+    frame.style.height='1px';
+    frame.style.border='0';
+    frame.style.opacity='0';
+    frame.style.pointerEvents='none';
+    document.body.appendChild(frame);
+
     const clone=source.cloneNode(true);
     const sourceCanvases=[...source.querySelectorAll('canvas')];
     [...clone.querySelectorAll('canvas')].forEach((canvas,index)=>{
@@ -776,16 +793,37 @@ const printTrainingPremium = () => {
             canvas.replaceWith(img);
         }catch(e){ canvas.remove(); }
     });
+
     const styles=[...document.querySelectorAll('style')].map(s=>s.innerHTML).join('\n');
-    popup.document.open();
-    popup.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="${document.baseURI}"><title>ProCoach 2.0.6.5 - Ficha Premium</title><style>${styles}\n@page{size:A4 portrait;margin:0!important}html,body{margin:0!important;padding:0!important;width:210mm!important;background:#fff!important}body{overflow:visible!important}.no-print{display:none!important}.pdf-only{display:block!important}.training-premium-print{display:block!important;width:210mm!important;margin:0!important;padding:5mm!important;box-sizing:border-box!important;background:#fff!important}.training-premium-print .tpp-sheet{width:200mm!important;min-height:0!important;height:auto!important;margin:0!important;box-sizing:border-box!important;break-after:auto!important;page-break-after:auto!important}.training-premium-print .tpp-exercise,.training-premium-print .tpp-gym-table tr{break-inside:avoid!important;page-break-inside:avoid!important}.training-premium-print .tpp-footer{break-after:auto!important;page-break-after:auto!important}</style></head><body data-print-mode="trainingpremium">${clone.outerHTML}</body></html>`);
-    popup.document.close();
-    const ready=()=>{
-        const images=[...popup.document.images];
-        Promise.all(images.map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve;}))).then(()=>setTimeout(()=>{popup.focus();popup.print();},180));
+    const doc=frame.contentDocument||frame.contentWindow.document;
+    doc.open();
+    doc.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="${document.baseURI}"><title>ProCoach 2.0.6.6 - Ficha Premium</title><style>${styles}
+@page{size:A4 portrait;margin:5mm!important}
+html,body{margin:0!important;padding:0!important;background:#fff!important;width:auto!important;height:auto!important;min-height:0!important;overflow:visible!important}
+body{display:block!important;color:#0f172a!important}
+.pc-print-sheet{width:200mm!important;margin:0 auto!important;padding:0!important;box-sizing:border-box!important;display:block!important}
+.pc-print-sheet.tpp-sheet{width:200mm!important;max-width:200mm!important;min-height:0!important;height:auto!important;margin:0 auto!important;padding:3mm!important;box-sizing:border-box!important;overflow:visible!important;break-before:auto!important;page-break-before:auto!important;break-after:auto!important;page-break-after:auto!important}
+.pc-print-sheet .tpp-exercise,.pc-print-sheet .tpp-gym-table tr{break-inside:avoid!important;page-break-inside:avoid!important}
+.pc-print-sheet .tpp-block{break-inside:auto!important;page-break-inside:auto!important}
+.pc-print-sheet .tpp-header,.pc-print-sheet .tpp-meta,.pc-print-sheet .tpp-sequence,.pc-print-sheet .tpp-final,.pc-print-sheet .tpp-footer{break-inside:avoid!important;page-break-inside:avoid!important}
+.pc-print-sheet .tpp-footer{break-after:auto!important;page-break-after:auto!important}
+/* 1 imagem por exercício: nenhuma célula secundária pode reaparecer */
+.pc-print-sheet .tpp-media{grid-template-columns:1fr!important}
+.pc-print-sheet .tpp-media>div:nth-child(n+2){display:none!important}
+</style></head><body>${clone.outerHTML.replace('tpp-sheet','tpp-sheet pc-print-sheet')}</body></html>`);
+    doc.close();
+
+    const doPrint=()=>{
+        const win=frame.contentWindow;
+        const images=[...doc.images];
+        Promise.all(images.map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve;}))).then(()=>{
+            setTimeout(()=>{
+                try{ win.focus(); win.print(); }catch(e){ alert('Não foi possível abrir a impressão. Tente novamente.'); }
+                setTimeout(()=>{try{frame.remove()}catch(e){}},1500);
+            },220);
+        });
     };
-    if(popup.document.fonts?.ready) popup.document.fonts.ready.then(ready).catch(ready); else ready();
-    popup.onafterprint=()=>{try{popup.close()}catch(e){}};
+    if(doc.fonts?.ready) doc.fonts.ready.then(doPrint).catch(doPrint); else doPrint();
 };
 const printDocument = (mode) => { if(mode==='trainingpremium'){printTrainingPremium();return;} document.body.dataset.printMode=mode; setTimeout(()=>{window.print(); setTimeout(()=>delete document.body.dataset.printMode,300);},80); };
 
@@ -906,12 +944,12 @@ const PremiumTrainingPlanView = ({ drills,setDrills,header,setHeader,logo,themeC
     const applyDrills=next=>{setDrills(next);if(syncMicrocycle)syncMicrocycle(next)};
     const updateDrill=(i,f,v)=>{const n=[...ds];n[i]={...n[i],[f]:v};applyDrills(n)};
     const updateHeader=patch=>setHeader(current=>({...current,...patch}));
-    const updateRating=(i,value)=>{const next={...ratings,[i]:value};setRatings(next);setHistory({...history,[sessionDate]:{...record,drills:ds,header,attendance,rpe,ratings:next,actualDuration:actual,review,signature,premiumPlanVersion:'2.0.6.5',updatedAt:new Date().toISOString()}})};
+    const updateRating=(i,value)=>{const next={...ratings,[i]:value};setRatings(next);setHistory({...history,[sessionDate]:{...record,drills:ds,header,attendance,rpe,ratings:next,actualDuration:actual,review,signature,premiumPlanVersion:'2.0.6.6',updatedAt:new Date().toISOString()}})};
     const moveDrill=(index,dir)=>{const next=[...ds],target=index+dir;if(target<0||target>=next.length)return;[next[index],next[target]]=[next[target],next[index]];applyDrills(next)};
     const newExercise=block=>({id:`ex_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,name:'Novo exercício',block:block||blocks[0],method:trainingType==='Academia'?'Força':'Técnico',time:'10',sets:'3',reps:'10',cadence:'Controlada',rest:'45 s',pse:'5',load:'',dim:'',desc:'',tips:'',variants:'',image:'',video:''});
     const addExercise=block=>applyDrills([...ds,newExercise(block)]);
     const duplicateDrill=i=>{const d=ds[i];if(!d)return;const next={...d,id:`ex_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,name:`${d.name||'Exercício'} · cópia`};applyDrills([...ds.slice(0,i+1),next,...ds.slice(i+1)])};
-    const save=()=>{const savedHeader={...header,trainingType,pseTarget:header.pseTarget||'',coach:header.coach||'',category:header.category||''};setHistory({...history,[sessionDate]:{...record,drills:ds,header:savedHeader,attendance,rpe,ratings,actualDuration:actual,review,signature,premiumPlanVersion:'2.0.6.5',updatedAt:new Date().toISOString()}});if(syncMicrocycle)syncMicrocycle(ds);setStatus('Plano de treino salvo ✓');setTimeout(()=>setStatus(''),2200)};
+    const save=()=>{const savedHeader={...header,trainingType,pseTarget:header.pseTarget||'',coach:header.coach||'',category:header.category||''};setHistory({...history,[sessionDate]:{...record,drills:ds,header:savedHeader,attendance,rpe,ratings,actualDuration:actual,review,signature,premiumPlanVersion:'2.0.6.6',updatedAt:new Date().toISOString()}});if(syncMicrocycle)syncMicrocycle(ds);setStatus('Plano de treino salvo ✓');setTimeout(()=>setStatus(''),2200)};
     const saveTemplate=()=>{const name=prompt('Nome do modelo de treino:',`${trainingType} · ${header.objective||'Modelo'}`);if(!name)return;const item={id:`tpl_${Date.now()}`,name,trainingType,header:{objective:header.objective||'',competition:header.competition||'',category:header.category||'',local:header.local||'',time:header.time||'',dur:header.dur||'',pseTarget:header.pseTarget||'',coach:header.coach||'',notes:header.notes||''},drills:ds.map((d,i)=>({...d,id:`tplx_${Date.now()}_${i}`})),createdAt:new Date().toISOString()};setTemplates(current=>[item,...ensureArray(current)]);setStatus(`Modelo “${name}” salvo ✓`);setTimeout(()=>setStatus(''),2500)};
     const loadTemplate=id=>{const item=ensureArray(templates).find(x=>String(x.id)===String(id));if(!item)return;updateHeader({...item.header,trainingType:item.trainingType||'Campo'});applyDrills(ensureArray(item.drills).map((d,i)=>({...d,id:`ex_${Date.now()}_${i}`})));setStatus(`Modelo “${item.name}” aplicado.`);setTimeout(()=>setStatus(''),2200)};
     const deleteTemplate=id=>{const item=ensureArray(templates).find(x=>String(x.id)===String(id));if(!item||!confirm(`Excluir o modelo “${item.name}”?`))return;setTemplates(current=>ensureArray(current).filter(x=>String(x.id)!==String(id)))};
@@ -925,7 +963,7 @@ const PremiumTrainingPlanView = ({ drills,setDrills,header,setHeader,logo,themeC
         category:header.category||trainingType,
         priority:'Importante',
         premiumPlan:true,
-        premiumPlanVersion:'2.0.6.5',
+        premiumPlanVersion:'2.0.6.6',
         objective:header.objective||'',
         location:header.local||'',
         startTime:header.time||'',
@@ -969,7 +1007,7 @@ const PremiumTrainingPlanView = ({ drills,setDrills,header,setHeader,logo,themeC
                 <div className="tpp-sequence">{blocks.map((block,index)=><div key={block} className={blockItems(block).length?'active':''}><span>{index+1}</span><b>{block}</b></div>)}</div>
                 <div className="tpp-body"><aside className="tpp-checkin"><h3>CHECK-IN</h3><div><small>PSQ</small><b>{todayWellness.length}/{safe.length}</b></div><div><small>PRONTIDÃO</small><b>{readinessAvg===null?'—':readinessAvg+'%'}</b></div><div><small>DOR ≥ 3</small><b>{painAlerts}</b></div><div><small>LIMITADOS</small><b>{unavailable}</b></div><div className="tpp-values"><span>◒ SONO</span><span>◎ DISPOSIÇÃO</span><span>△ DOR</span><span>◉ ESTRESSE</span><span>◇ HIDRATAÇÃO</span><span>○ CONDIÇÃO GERAL</span></div></aside><main className="tpp-main">{blocks.map((block,bi)=>{const items=blockItems(block);if(!items.length)return null;return <section key={block} className={`tpp-block ${trainingType==='Campo'?'tpp-block-field':''} ${trainingType==='Academia'&&block==='Musculação'?'tpp-block-gym':''}`}><header><span>{bi+1}</span><h2>{block}</h2><small>{blockMinutes(block)} min</small></header>{trainingType==='Academia'&&block==='Musculação'&&items.length>=3?<table className="tpp-gym-table"><thead><tr><th>Exercício</th><th>Séries</th><th>Reps</th><th>Cadência</th><th>Desc.</th><th>PSE</th><th>Carga</th><th>Dicas de execução</th></tr></thead><tbody>{items.map(({d,i})=>{const imgs=drillImages(d);return <tr key={d.id||i}><td><span className="tpp-gym-thumb">{imgs[0]?<img src={imgs[0]}/>:<Icon name="whistle" size={11}/>}</span><span className="tpp-gym-name">{d.name||`Exercício ${i+1}`}</span></td><td>{d.sets||d.series||'-'}</td><td>{d.reps||'-'}</td><td>{d.cadence||'-'}</td><td>{d.rest||'-'}</td><td className="pse">{d.pse||'-'}</td><td>{d.load||'-'}</td><td className="muted">{d.tips||d.variants||d.desc||'—'}</td></tr>})}</tbody></table>:items.map(({d,i})=>{const imgs=drillImages(d),tips=d.tips||d.variants||d.desc||'';return <article key={d.id||i} className={`tpp-exercise ${trainingType==='Campo'?'tpp-field':'tpp-gym'} ${d.video?'has-video':'no-video'}`}><div className="tpp-ex-title"><b>{d.name||`Exercício ${i+1}`}</b><small>{d.method||trainingType}{trainingType==='Campo'&&d.dim?` · ${d.dim}`:''}</small></div><div className="tpp-media tpp-media-single"><div>{imgs[0]?<img src={imgs[0]}/>:<div className="tpp-media-empty"><Icon name={trainingType==='Academia'?'whistle':'pitch'} size={24}/><span>Imagem do exercício</span></div>}</div></div><div className="tpp-prescription"><div><small>SÉRIES</small><b>{d.sets||d.series||'-'}</b></div><div><small>REPS / TEMPO</small><b>{d.reps||'-'}</b></div><div><small>CADÊNCIA</small><b>{d.cadence||'-'}</b></div><div><small>DESCANSO</small><b>{d.rest||'-'}</b></div><div><small>PSE</small><b>{d.pse||'-'}</b></div><div><small>{trainingType==='Academia'?'CARGA':'ESPAÇO / MIN'}</small><b>{trainingType==='Academia'?(d.load||'-'):(d.dim||d.time?`${d.dim||''}${d.dim&&d.time?' · ':''}${d.time?d.time+' min':''}`:'-')}</b></div></div><div className="tpp-tips"><small>DICAS DE EXECUÇÃO / CORREÇÕES</small><p>{tips||'Sem observações adicionais.'}</p></div><div className="tpp-qr">{d.video?<QRCodeBox value={d.video} size={44}/>:<span>PLAY</span>}</div></article>})}</section>})}</main></div>
                 <footer className="tpp-final"><div><small>PSE FINAL</small><b>{review.pseFinal||'____'}</b></div><div><small>DOR</small><b>{review.pain||'____'}</b></div><div><small>DURAÇÃO REAL</small><b>{actual?`${actual} min`:'____ min'}</b></div><div><small>OBSERVAÇÕES / REGISTRO FINAL</small><b>{review.incidents||header.notes||'____________________________________________'}</b></div></footer>
-                <div className="tpp-footer"><span>{teamName} · ProCoach 2.0.6.5</span><span className="slogan">{trainingType==='Academia'?'Disciplina gera resultado.':'Futebol é processo.'}</span><span>Ficha Premium · {trainingType}</span></div>
+                <div className="tpp-footer"><span>{teamName} · ProCoach 2.0.6.6</span><span className="slogan">{trainingType==='Academia'?'Disciplina gera resultado.':'Futebol é processo.'}</span><span>Ficha Premium · {trainingType}</span></div>
             </div>
         </section>
     </div>;
@@ -1806,7 +1844,7 @@ const App = ({ user }) => {
             <div className="flex flex-1 min-h-0">
                 <aside className="app-sidebar hidden md:flex flex-col shrink-0 no-print shadow-xl z-30">
                     <div className="sidebar-brand p-4 border-b border-white/10">
-                        <div className="flex items-center gap-3 mb-3"><div className="w-11 h-11 bg-white/10 rounded-xl border border-white/10 flex items-center justify-center overflow-hidden shrink-0">{teamLogo ? <img src={teamLogo} className="w-full h-full object-contain" /> : <Icon name="users" className="opacity-60"/>}</div><div className="min-w-0"><div className="font-black text-sm uppercase truncate">{teamName}</div><div className="text-[10px] text-slate-400 mt-0.5">PROCOACH <span className="opacity-60">2.0.6.5 FICHA PREMIUM</span></div></div></div>
+                        <div className="flex items-center gap-3 mb-3"><div className="w-11 h-11 bg-white/10 rounded-xl border border-white/10 flex items-center justify-center overflow-hidden shrink-0">{teamLogo ? <img src={teamLogo} className="w-full h-full object-contain" /> : <Icon name="users" className="opacity-60"/>}</div><div className="min-w-0"><div className="font-black text-sm uppercase truncate">{teamName}</div><div className="text-[10px] text-slate-400 mt-0.5">PROCOACH <span className="opacity-60">2.0.6.6 FICHA PREMIUM</span></div></div></div>
                         <TeamSwitcher registry={teamRegistry} activeTeamId={activeTeamId} onSwitch={switchTeam} onManage={openTeamManager}/>
                     </div>
                     <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
@@ -1909,7 +1947,7 @@ const MainControl = () => {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<ErrorBoundary><MainControl /></ErrorBoundary>);
-if ('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=2066',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{}));
 </script>
 </body>
 

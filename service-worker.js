@@ -1,4 +1,4 @@
-const CACHE_NAME = 'procoach-2065-ficha-premium-final';
+const CACHE_NAME = 'procoach-2066-ficha-premium-final';
 const APP_SHELL = ['./', './index.html', './atleta.html', './manifest.webmanifest', './athlete-manifest.webmanifest', './procoach-icon.svg', './procoach-fcm-config.js'];
 
 try {
@@ -15,7 +15,7 @@ try {
   const messaging = firebase.messaging();
   messaging.onBackgroundMessage(payload => {
     const notification = payload.notification || {};
-    return self.registration.showNotification(notification.title || 'ProCoach Athlete 2.0.6.5', {
+    return self.registration.showNotification(notification.title || 'ProCoach Athlete 2.0.6.6', {
       body: notification.body || 'Você tem uma nova atualização.',
       icon: './procoach-icon.svg',
       badge: './procoach-icon.svg',
@@ -34,7 +34,9 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
-  event.respondWith(fetch(event.request).then(response => {
+  const isNav = event.request.mode === 'navigate';
+  const request = isNav ? new Request(event.request, {cache:'no-store'}) : event.request;
+  event.respondWith(fetch(request).then(response => {
     const copy = response.clone();
     caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
     return response;

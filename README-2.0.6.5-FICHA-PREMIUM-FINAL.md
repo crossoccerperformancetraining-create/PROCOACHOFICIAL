@@ -1,4 +1,4 @@
-# ProCoach 2.0.6.5 - Ficha Premium Final
+# ProCoach 2.0.6.6 - Ficha Premium Final
 
 Versão de fechamento da ficha Campo + Academia.
 
@@ -13,4 +13,4 @@ Versão de fechamento da ficha Campo + Academia.
 - Quando o conteúdo não cabe, continua na página seguinte sem reduzir excessivamente a imagem.
 
 ## Publicação
-Substitua os arquivos da raiz pelos arquivos deste pacote. O service worker usa o cache `procoach-2065-ficha-premium-final`.
+Substitua os arquivos da raiz pelos arquivos deste pacote. O service worker usa o cache `procoach-2066-ficha-premium-final`.
