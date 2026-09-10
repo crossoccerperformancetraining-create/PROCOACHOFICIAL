@@ -1,2 +1,2 @@
-ProCoach 2.0.6.2 - Ficha Premium Refinamento Visual Final
-Build: 2026-09-09
+ProCoach 2.0.6.5 - Ficha Premium Final
+1 imagem por exercício | impressão isolada | sem páginas vazias

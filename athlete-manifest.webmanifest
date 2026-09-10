@@ -1,7 +1,7 @@
 {
-  "name": "ProCoach Athlete 2.0.6.2",
+  "name": "ProCoach Athlete 2.0.6.5",
   "short_name": "ProCoach Athlete",
-  "description": "Treino Premium Campo e Academia com Player guiado, imagens em duas fases, séries, reps, cadência, descanso, PSE, Match Day e bem-estar.",
+  "description": "Rotinas e sequências guiadas, Player de treino, academia, campo/tático, bem-estar, vídeos e comunicação individual.",
   "start_url": "./atleta.html",
   "scope": "./",
   "display": "standalone",

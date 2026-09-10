@@ -1,7 +1,7 @@
 {
-  "name": "ProCoach 2.0.6.2 - Ficha Premium",
-  "short_name": "ProCoach 2.0.6.2",
-  "description": "Plano de Treino Premium para Campo e Academia, biblioteca, modelos reutilizáveis, PDF profissional e envio guiado ao Athlete.",
+  "name": "ProCoach 2.0.6.5 - Ficha Premium Final",
+  "short_name": "ProCoach 2.0.6.5",
+  "description": "Gestão multi-equipe com rotinas, sequências reutilizáveis, Player de treino no Athlete e inteligência de performance.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
