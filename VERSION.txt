@@ -1,2 +1,2 @@
-ProCoach 2.0.6 Plano de Treino Premium · Campo & Academia
-Firebase project: procoachoficial
+ProCoach 2.0.6.1 - Ficha Premium Oficial Campo & Academia
+Build: 2026-09-09
