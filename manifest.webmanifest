@@ -1,8 +1,8 @@
 {
-  "name": "ProCoach 2.0.6.8 - Ficha Premium Final",
-  "short_name": "ProCoach 2.0.6.8",
+  "name": "ProCoach 2.0.6.9 - Ficha Premium Final",
+  "short_name": "ProCoach 2.0.6.9",
   "description": "Gestão multi-equipe com rotinas, sequências reutilizáveis, Player de treino no Athlete e inteligência de performance.",
-  "start_url": "./?v=2068",
+  "start_url": "./?v=2069",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",

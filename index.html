@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./procoach-icon.svg" type="image/svg+xml">
-    <title>ProCoach 2.0.6.8 - Plano de Treino Premium</title>
+    <title>ProCoach 2.0.6.9 - Plano de Treino Premium</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -121,7 +121,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 }
 
 
-/* ===== PROCOACH 2.0.6.8 - FICHA CAMPO REFERÊNCIA FINAL ===== */
+/* ===== PROCOACH 2.0.6.9 - FICHA CAMPO REFERÊNCIA FINAL ===== */
 /* Editor: 1 imagem grande, preenchendo largura e altura do quadro */
 .tp-exercise-card.field-exercise .tp-exercise-body{grid-template-columns:minmax(560px,64%) 1fr!important}
 .tp-exercise-card.field-exercise .tp-media-pair.tp-media-single{grid-template-columns:1fr!important;padding:12px!important;gap:8px!important;background:#07111f!important}
@@ -234,7 +234,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 
 
-/* ===== PROCOACH 2.0.6.8 - REFINAMENTO FINAL DE PROPORÇÃO ===== */
+/* ===== PROCOACH 2.0.6.9 - REFINAMENTO FINAL DE PROPORÇÃO ===== */
 /* App/editor: a imagem do exercício vira o elemento principal */
 .tp-exercise-card.field-exercise .tp-exercise-body{grid-template-columns:minmax(650px,70%) 1fr!important}
 .tp-exercise-card.field-exercise .tp-media-box{height:370px!important}
@@ -269,6 +269,32 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .tpp-sparse .tpp-field-metrics{flex-basis:22%!important}
 .tpp-sparse .tpp-field-notes{flex-basis:17%!important}
 
+/* 2.0.6.9 — PADRÃO OFICIAL AUTOMÁTICO PARA 3 E 4 EXERCÍCIOS */
+/* 3 exercícios: preencher a página com imagem dominante e sem vazio inferior */
+.tpp-three .tpp-field-headline{height:8.2mm!important;padding:.9mm 1.5mm!important}
+.tpp-three .tpp-field-headline>span{height:6.2mm!important;min-width:10mm!important;font-size:5.9pt!important}
+.tpp-three .tpp-field-headline>b{font-size:7.5pt!important}
+.tpp-three .tpp-field-content{height:55mm!important}
+.tpp-three .tpp-field-media{flex:0 0 64%!important}
+.tpp-three .tpp-field-metrics{flex:0 0 20%!important;padding:.9mm!important;gap:.65mm!important}
+.tpp-three .tpp-field-metrics>div{min-height:11.1mm!important;padding:.75mm .35mm!important}
+.tpp-three .tpp-field-metrics small{font-size:3.15pt!important}
+.tpp-three .tpp-field-metrics b{font-size:5.9pt!important}
+.tpp-three .tpp-field-notes{flex:1 1 16%!important;padding:1.55mm 1.25mm!important}
+.tpp-three .tpp-field-notes small{font-size:3.85pt!important}
+.tpp-three .tpp-field-notes p{font-size:5.15pt!important;line-height:1.3!important}
+
+/* 4 exercícios: equilíbrio entre imagem grande e encaixe limpo em uma página */
+.tpp-four .tpp-field-headline{height:7.5mm!important}
+.tpp-four .tpp-field-content{height:40mm!important}
+.tpp-four .tpp-field-media{flex:0 0 61%!important}
+.tpp-four .tpp-field-metrics{flex:0 0 22%!important;padding:.8mm!important;gap:.5mm!important}
+.tpp-four .tpp-field-metrics>div{min-height:8.5mm!important;padding:.55mm .3mm!important}
+.tpp-four .tpp-field-notes{flex:1 1 17%!important;padding:1.3mm 1.1mm!important}
+.tpp-four .tpp-field-notes p{font-size:5pt!important;line-height:1.27!important}
+
+/* 1–2 seguem amplos; 5+ preferem quebra de página a reduzir demais */
+
 /* 5–6 exercícios: não esmaga a imagem; se necessário o navegador quebra a página */
 .tpp-medium .tpp-field-content{height:38mm!important}
 .tpp-medium .tpp-field-media{flex-basis:58%!important}
@@ -284,6 +310,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 /* imagem sempre ocupa o quadro completo */
 .tpp-field-media img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important}
+
+.tp-page.tp-count-3 .tp-exercise-card.field-exercise .tp-exercise-body{grid-template-columns:minmax(700px,73%) 1fr!important}
+.tp-page.tp-count-3 .tp-exercise-card.field-exercise .tp-media-box{height:410px!important}
+.tp-page.tp-count-4 .tp-exercise-card.field-exercise .tp-exercise-body{grid-template-columns:minmax(650px,70%) 1fr!important}
+.tp-page.tp-count-4 .tp-exercise-card.field-exercise .tp-media-box{height:355px!important}
 
 @media(max-width:1100px){
   .tp-exercise-card.field-exercise .tp-exercise-body{grid-template-columns:minmax(520px,64%) 1fr!important}
@@ -311,7 +342,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:900px){.tp-meta-grid{grid-template-columns:1fr 1fr}.tp-sequence-bar{grid-template-columns:repeat(3,1fr)}.tp-editor-layout{grid-template-columns:1fr}.tp-checkin{position:static}.tp-exercise-body{grid-template-columns:1fr}.tp-media-pair{border-right:0;border-bottom:1px solid #203a5b}.tp-canvas-head{align-items:flex-start;flex-direction:column}.tp-canvas-head>div:last-child{width:100%;overflow:auto}}@media(max-width:560px){.tp-hero{align-items:flex-start;flex-direction:column;padding:18px}.tp-hero h1{font-size:20px}.tp-mode-switch{width:100%}.tp-mode-switch button{flex:1}.tp-kpis{grid-template-columns:1fr 1fr}.tp-sequence-bar{grid-template-columns:1fr 1fr}.tp-meta-grid{grid-template-columns:1fr}.tp-prescription-grid{grid-template-columns:1fr 1fr}.tp-media-box{height:125px}.tp-exercise-head{align-items:flex-start}.tp-icon-btn{width:26px;height:26px}}
 @media print{body[data-print-mode="trainingpremium"] .technical-only,body[data-print-mode="trainingpremium"] .executive-only,body[data-print-mode="trainingpremium"] .report-cover,body[data-print-mode="trainingpremium"] .microcycle-print-page,body[data-print-mode="trainingpremium"] .pdf-footer{display:none!important}body[data-print-mode="trainingpremium"] .training-premium-print{display:block!important;width:190mm!important;margin:0 auto!important;background:white!important;color:#0f172a!important}body[data-print-mode="technical"] .training-premium-print,body[data-print-mode="executive"] .training-premium-print,body[data-print-mode="microcycle"] .training-premium-print{display:none!important}.training-premium-print .qrcode img,.training-premium-print canvas{max-width:13mm!important;max-height:13mm!important}}
 
-/* ===== PROCOACH 2.0.6.8 - FICHA PREMIUM COM MÍDIA AMPLIADA ===== */
+/* ===== PROCOACH 2.0.6.9 - FICHA PREMIUM COM MÍDIA AMPLIADA ===== */
 .tp-media-box{height:180px!important}.tp-exercise-body{grid-template-columns:minmax(340px,46%) 1fr!important}.tp-title-input{font-size:14px!important}.tp-exercise-sub{font-size:8px!important}
 .tp-exercise-card.field-exercise .tp-exercise-body{grid-template-columns:minmax(430px,54%) 1fr!important}.tp-exercise-card.field-exercise .tp-media-box{height:230px!important}.tp-exercise-card.field-exercise .tp-prescription-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.tp-exercise-card.field-exercise .tp-textarea-label textarea{min-height:72px!important}
 .tpp-sheet{padding:3mm!important;border-width:.9mm!important;border-radius:3mm!important;box-decoration-break:clone;-webkit-box-decoration-break:clone}
@@ -340,7 +371,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:900px){.tp-exercise-body{grid-template-columns:1fr!important}.tp-media-box{height:155px!important}}
 
 
-/* ===== PROCOACH 2.0.6.8 - FICHA PREMIUM FINAL / 1 IMAGEM / PRINT ISOLADO ===== */
+/* ===== PROCOACH 2.0.6.9 - FICHA PREMIUM FINAL / 1 IMAGEM / PRINT ISOLADO ===== */
 .tp-media-pair.tp-media-single{display:grid!important;grid-template-columns:1fr!important;gap:10px!important;padding:14px!important}
 .tp-media-pair.tp-media-single .tp-media-box{width:100%!important;height:300px!important;border-radius:18px!important;background:#030914!important}
 .tp-media-pair.tp-media-single .tp-media-box img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important}
@@ -408,7 +439,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   body[data-print-mode="trainingpremium"] .training-premium-print .tpp-gym-table tr{break-inside:avoid!important;page-break-inside:avoid!important}
 }
 
-/* 2.0.6.8 - trava definitiva de uma imagem e impressão limpa */
+/* 2.0.6.9 - trava definitiva de uma imagem e impressão limpa */
 .tpp-media.tpp-media-single{grid-template-columns:1fr!important}
 .tpp-media.tpp-media-single>div:nth-child(n+2){display:none!important}
 #pc-training-print-frame{display:block!important}
@@ -894,7 +925,7 @@ const printTrainingPremium = () => {
     const source=document.querySelector('.training-premium-print .tpp-sheet');
     if(!source){ alert('A ficha premium ainda não está disponível nesta sessão.'); return; }
 
-    // 2.0.6.8: impressão isolada em iframe. Nunca imprime a tela do app.
+    // 2.0.6.9: impressão isolada em iframe. Nunca imprime a tela do app.
     const old=document.getElementById('pc-training-print-frame');
     if(old) old.remove();
     const frame=document.createElement('iframe');
@@ -924,7 +955,7 @@ const printTrainingPremium = () => {
     const styles=[...document.querySelectorAll('style')].map(s=>s.innerHTML).join('\n');
     const doc=frame.contentDocument||frame.contentWindow.document;
     doc.open();
-    doc.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="${document.baseURI}"><title>ProCoach 2.0.6.8 - Ficha Premium</title><style>${styles}
+    doc.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="${document.baseURI}"><title>ProCoach 2.0.6.9 - Ficha Premium</title><style>${styles}
 @page{size:A4 portrait;margin:0!important}
 html,body{margin:0!important;padding:0!important;background:#fff!important;width:auto!important;height:auto!important;min-height:0!important;overflow:visible!important}
 body{display:block!important;color:#0f172a!important}
@@ -1075,12 +1106,12 @@ const PremiumTrainingPlanView = ({ drills,setDrills,header,setHeader,logo,themeC
     const applyDrills=next=>{setDrills(next);if(syncMicrocycle)syncMicrocycle(next)};
     const updateDrill=(i,f,v)=>{const n=[...ds];n[i]={...n[i],[f]:v};applyDrills(n)};
     const updateHeader=patch=>setHeader(current=>({...current,...patch}));
-    const updateRating=(i,value)=>{const next={...ratings,[i]:value};setRatings(next);setHistory({...history,[sessionDate]:{...record,drills:ds,header,attendance,rpe,ratings:next,actualDuration:actual,review,signature,premiumPlanVersion:'2.0.6.8',updatedAt:new Date().toISOString()}})};
+    const updateRating=(i,value)=>{const next={...ratings,[i]:value};setRatings(next);setHistory({...history,[sessionDate]:{...record,drills:ds,header,attendance,rpe,ratings:next,actualDuration:actual,review,signature,premiumPlanVersion:'2.0.6.9',updatedAt:new Date().toISOString()}})};
     const moveDrill=(index,dir)=>{const next=[...ds],target=index+dir;if(target<0||target>=next.length)return;[next[index],next[target]]=[next[target],next[index]];applyDrills(next)};
     const newExercise=block=>({id:`ex_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,name:'Novo exercício',block:block||blocks[0],method:trainingType==='Academia'?'Força':'Técnico',time:'10',sets:'3',reps:'10',cadence:'Controlada',rest:'45 s',pse:'5',load:'',dim:'',desc:'',tips:'',variants:'',image:'',video:''});
     const addExercise=block=>applyDrills([...ds,newExercise(block)]);
     const duplicateDrill=i=>{const d=ds[i];if(!d)return;const next={...d,id:`ex_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,name:`${d.name||'Exercício'} · cópia`};applyDrills([...ds.slice(0,i+1),next,...ds.slice(i+1)])};
-    const save=()=>{const savedHeader={...header,trainingType,pseTarget:header.pseTarget||'',coach:header.coach||'',category:header.category||''};setHistory({...history,[sessionDate]:{...record,drills:ds,header:savedHeader,attendance,rpe,ratings,actualDuration:actual,review,signature,premiumPlanVersion:'2.0.6.8',updatedAt:new Date().toISOString()}});if(syncMicrocycle)syncMicrocycle(ds);setStatus('Plano de treino salvo ✓');setTimeout(()=>setStatus(''),2200)};
+    const save=()=>{const savedHeader={...header,trainingType,pseTarget:header.pseTarget||'',coach:header.coach||'',category:header.category||''};setHistory({...history,[sessionDate]:{...record,drills:ds,header:savedHeader,attendance,rpe,ratings,actualDuration:actual,review,signature,premiumPlanVersion:'2.0.6.9',updatedAt:new Date().toISOString()}});if(syncMicrocycle)syncMicrocycle(ds);setStatus('Plano de treino salvo ✓');setTimeout(()=>setStatus(''),2200)};
     const saveTemplate=()=>{const name=prompt('Nome do modelo de treino:',`${trainingType} · ${header.objective||'Modelo'}`);if(!name)return;const item={id:`tpl_${Date.now()}`,name,trainingType,header:{objective:header.objective||'',competition:header.competition||'',category:header.category||'',local:header.local||'',time:header.time||'',dur:header.dur||'',pseTarget:header.pseTarget||'',coach:header.coach||'',notes:header.notes||''},drills:ds.map((d,i)=>({...d,id:`tplx_${Date.now()}_${i}`})),createdAt:new Date().toISOString()};setTemplates(current=>[item,...ensureArray(current)]);setStatus(`Modelo “${name}” salvo ✓`);setTimeout(()=>setStatus(''),2500)};
     const loadTemplate=id=>{const item=ensureArray(templates).find(x=>String(x.id)===String(id));if(!item)return;updateHeader({...item.header,trainingType:item.trainingType||'Campo'});applyDrills(ensureArray(item.drills).map((d,i)=>({...d,id:`ex_${Date.now()}_${i}`})));setStatus(`Modelo “${item.name}” aplicado.`);setTimeout(()=>setStatus(''),2200)};
     const deleteTemplate=id=>{const item=ensureArray(templates).find(x=>String(x.id)===String(id));if(!item||!confirm(`Excluir o modelo “${item.name}”?`))return;setTemplates(current=>ensureArray(current).filter(x=>String(x.id)!==String(id)))};
@@ -1094,7 +1125,7 @@ const PremiumTrainingPlanView = ({ drills,setDrills,header,setHeader,logo,themeC
         category:header.category||trainingType,
         priority:'Importante',
         premiumPlan:true,
-        premiumPlanVersion:'2.0.6.8',
+        premiumPlanVersion:'2.0.6.9',
         objective:header.objective||'',
         location:header.local||'',
         startTime:header.time||'',
@@ -1112,7 +1143,7 @@ const PremiumTrainingPlanView = ({ drills,setDrills,header,setHeader,logo,themeC
 
     const exerciseEditor=({d,i})=>{const imgs=drillImages(d);return <article key={d.id||i} className={`tp-exercise-card ${trainingType==='Campo'?'field-exercise':'gym-exercise'}`}><div className="tp-exercise-head"><span className="tp-ex-index">{i+1}</span><div className="flex-1 min-w-0"><input className="tp-title-input" value={d.name||''} onChange={e=>updateDrill(i,'name',e.target.value)} placeholder="Nome do exercício"/><div className="tp-exercise-sub">{inferBlock(d)} · {d.method||trainingType}</div></div><div className="flex gap-1"><button className="tp-icon-btn" onClick={()=>moveDrill(i,-1)} title="Mover para cima">↑</button><button className="tp-icon-btn" onClick={()=>moveDrill(i,1)} title="Mover para baixo">↓</button><button className="tp-icon-btn" onClick={()=>duplicateDrill(i)} title="Duplicar">⧉</button><button className="tp-icon-btn danger" onClick={()=>applyDrills(ds.filter((_,x)=>x!==i))} title="Excluir">×</button></div></div><div className="tp-exercise-body"><div className="tp-media-pair tp-media-single"><div className="tp-media-box">{imgs[0]?<img src={imgs[0]}/>:<div><Icon name={trainingType==='Academia'?'whistle':'pitch'} size={42}/><small>IMAGEM PRINCIPAL DO EXERCÍCIO</small></div>}</div><div className="tp-media-inputs tp-media-inputs-single"><input className="modern-input !min-h-9 text-[10px]" placeholder="URL da imagem principal" value={d.image||d.imageUrl||''} onChange={e=>updateDrill(i,'image',e.target.value)}/><input className="modern-input !min-h-9 text-[10px]" placeholder="URL vídeo demonstrativo (opcional)" value={d.video||d.videoUrl||''} onChange={e=>updateDrill(i,'video',e.target.value)}/></div></div><div className="tp-prescription"><div className="tp-prescription-grid"><label><span>Bloco</span><select value={inferBlock(d)} onChange={e=>updateDrill(i,'block',e.target.value)}>{blocks.map(x=><option key={x}>{x}</option>)}</select></label><label><span>Método / categoria</span><input value={d.method||''} onChange={e=>updateDrill(i,'method',e.target.value)} placeholder={trainingType==='Academia'?'Força / estabilidade':'Técnico / tático'}/></label><label><span>Minutos</span><input value={d.time||''} onChange={e=>updateDrill(i,'time',e.target.value)} placeholder="10"/></label><label><span>Séries</span><input value={d.sets||d.series||''} onChange={e=>updateDrill(i,'sets',e.target.value)} placeholder="3"/></label><label><span>Reps / tempo</span><input value={d.reps||''} onChange={e=>updateDrill(i,'reps',e.target.value)} placeholder="10 / 30 s"/></label><label><span>Cadência</span><input value={d.cadence||''} onChange={e=>updateDrill(i,'cadence',e.target.value)} placeholder="2-1-2"/></label><label><span>Descanso</span><input value={d.rest||''} onChange={e=>updateDrill(i,'rest',e.target.value)} placeholder="45 s"/></label><label><span>PSE</span><input value={d.pse||''} onChange={e=>updateDrill(i,'pse',e.target.value)} placeholder="5"/></label><label><span>{trainingType==='Academia'?'Carga':'Espaço / Dimensão'}</span><input value={trainingType==='Academia'?(d.load||''):(d.dim||'')} onChange={e=>updateDrill(i,trainingType==='Academia'?'load':'dim',e.target.value)} placeholder={trainingType==='Academia'?'Ex: 40 kg':'Ex: 30x25 m'}/></label></div><label className="tp-textarea-label"><span>Organização / descrição</span><textarea value={d.desc||''} onChange={e=>updateDrill(i,'desc',e.target.value)} placeholder="Como organizar e executar o exercício..."/></label><label className="tp-textarea-label"><span>Dicas de execução / correções</span><textarea value={d.tips||d.variants||''} onChange={e=>updateDrill(i,'tips',e.target.value)} placeholder="Pontos-chave, postura, tomada de decisão, correções..."/></label></div></div></article>};
 
-    return <div className="h-full overflow-y-auto bg-slate-50 p-3 md:p-6 tp-page">
+    return <div className={`h-full overflow-y-auto bg-slate-50 p-3 md:p-6 tp-page ${trainingType==='Campo'?`tp-count-${Math.min(ds.length,7)}`:''}`}>
         {status&&<div className="tp-toast no-print">{status}</div>}
         <div className="no-print flex flex-wrap justify-between gap-3 mb-4"><div className="flex gap-2 overflow-x-auto"><button className={`btn-secondary ${section==='plan'?'!bg-slate-900 !text-white':''}`} onClick={()=>setSection('plan')}>Plano Premium</button><button className={`btn-secondary ${section==='attendance'?'!bg-slate-900 !text-white':''}`} onClick={()=>setSection('attendance')}>Presença e carga</button><button className={`btn-secondary ${section==='ratings'?'!bg-slate-900 !text-white':''}`} onClick={()=>setSection('ratings')}><Icon name="star" size={14}/> Avaliação</button><button className={`btn-secondary ${section==='review'?'!bg-slate-900 !text-white':''}`} onClick={()=>setSection('review')}>Registro final</button></div><div className="flex flex-wrap gap-2"><select className="modern-input min-w-48" value={scheduledDates.some(item=>item.date===sessionDate)?sessionDate:''} onChange={e=>e.target.value&&setSessionDate(e.target.value)}><option value="">Buscar sessão...</option>{scheduledDates.map(item=><option key={item.date} value={item.date}>{formatDateBR(item.date)} · {item.type} · {item.count} exercício(s)</option>)}</select><input type="date" className="modern-input w-auto" value={sessionDate} onChange={e=>setSessionDate(e.target.value)}/><button className="btn-secondary" onClick={()=>printDocument('trainingpremium')}><Icon name="pdf"/> PDF FICHA PREMIUM</button><button className="btn-primary" onClick={save}><Icon name="save"/> Salvar</button></div></div>
 
@@ -1132,13 +1163,13 @@ const PremiumTrainingPlanView = ({ drills,setDrills,header,setHeader,logo,themeC
         <div className={`${section==='review'?'block':'hidden'} no-print modern-card p-5`}><div className="report-section-title">Registro final</div><h3 className="text-xl font-black mb-4">Fechamento da sessão</h3><div className="grid grid-cols-1 md:grid-cols-4 gap-4"><div><label className="report-section-title">Duração real</label><input type="number" className="modern-input mt-1" value={actual} onChange={e=>setActual(e.target.value)} placeholder="Minutos"/></div><div><label className="report-section-title">PSE final</label><input className="modern-input mt-1" value={review.pseFinal||''} onChange={e=>setReview({...review,pseFinal:e.target.value})} placeholder="0–10"/></div><div><label className="report-section-title">Dor</label><select className="modern-input mt-1" value={review.pain||'Não'} onChange={e=>setReview({...review,pain:e.target.value})}><option>Não</option><option>Sim</option></select></div><div><label className="report-section-title">Nota da sessão</label><select className="modern-input mt-1" value={review.rating||0} onChange={e=>setReview({...review,rating:e.target.value})}><option value="0">Selecionar</option>{[1,2,3,4,5].map(x=><option key={x}>{x}</option>)}</select></div></div><div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4"><textarea className="modern-input min-h-28" placeholder="Objetivos alcançados" value={review.outcomes||''} onChange={e=>setReview({...review,outcomes:e.target.value})}/><textarea className="modern-input min-h-28" placeholder="Pontos a melhorar" value={review.improvements||''} onChange={e=>setReview({...review,improvements:e.target.value})}/><textarea className="modern-input min-h-28" placeholder="Incidentes e observações" value={review.incidents||''} onChange={e=>setReview({...review,incidents:e.target.value})}/></div><div className="mt-5"><SignaturePad value={signature} onChange={setSignature}/></div><button className="btn-primary mt-4" onClick={save}>Salvar registro final</button></div>
 
         <section className="pdf-only training-premium-print">
-            <div className={`tpp-sheet ${ds.length<=2?'tpp-ultra-sparse':ds.length<=4?'tpp-sparse':ds.length<=6?'tpp-medium':'tpp-dense'}`}>
+            <div className={`tpp-sheet ${ds.length<=2?'tpp-ultra-sparse':ds.length===3?'tpp-three':ds.length===4?'tpp-four':ds.length<=6?'tpp-medium':'tpp-dense'}`}>
                 <header className="tpp-header"><div className="tpp-brand"><div className="tpp-logo">{logo?<img src={logo}/>:<b>AC</b>}</div><div><div className="tpp-kicker">AC SOCCER · PROCOACH PERFORMANCE</div><h1>FICHA DE TREINO <span>{trainingType.toUpperCase()}</span></h1><p>{trainingType==='Academia'?'CORPO FORTE. MENTE PREPARADA.':'DISCIPLINA HOJE. EVOLUÇÃO SEMPRE.'}</p></div></div><div className="tpp-date"><small>DATA DO TREINO</small><b>{formatDateBR(sessionDate)}</b><span>{header.category||'Categoria'}</span><div className="tpp-motto">PLANEJAMENTO<br/>EVOLUÇÃO<br/>PERFORMANCE<br/>RESULTADOS</div></div></header>
                 <div className="tpp-meta"><div><small>EQUIPE / ATLETA</small><b>{teamName||'Equipe principal'}</b></div><div><small>CATEGORIA</small><b>{header.category||'Profissional'}</b></div><div><small>LOCAL / INÍCIO</small><b>{header.local||'-'}{header.time?` · ${header.time}`:''}</b></div><div><small>OBJETIVO</small><b>{header.objective||'Objetivo da sessão'}</b></div><div><small>DURAÇÃO</small><b>{header.dur||`${planned} min`}</b></div><div><small>PSE ALVO</small><b>{header.pseTarget||'-'}</b></div></div>
                 <div className="tpp-sequence">{blocks.map((block,index)=><div key={block} className={blockItems(block).length?'active':''}><span>{index+1}</span><b>{block}</b></div>)}</div>
                 <div className="tpp-body"><aside className="tpp-checkin"><h3>CHECK-IN</h3><div><small>PSQ</small><b>{todayWellness.length}/{safe.length}</b></div><div><small>PRONTIDÃO</small><b>{readinessAvg===null?'—':readinessAvg+'%'}</b></div><div><small>DOR ≥ 3</small><b>{painAlerts}</b></div><div><small>LIMITADOS</small><b>{unavailable}</b></div><div className="tpp-values"><span>◒ SONO</span><span>◎ DISPOSIÇÃO</span><span>△ DOR</span><span>◉ ESTRESSE</span><span>◇ HIDRATAÇÃO</span><span>○ CONDIÇÃO GERAL</span></div></aside><main className="tpp-main">{blocks.map((block,bi)=>{const items=blockItems(block);if(!items.length)return null;return <section key={block} className={`tpp-block ${trainingType==='Campo'?'tpp-block-field':''} ${trainingType==='Academia'&&block==='Musculação'?'tpp-block-gym':''}`}><header><span>{bi+1}</span><h2>{block}</h2><small>{blockMinutes(block)} min</small></header>{trainingType==='Academia'&&block==='Musculação'&&items.length>=3?<table className="tpp-gym-table"><thead><tr><th>Exercício</th><th>Séries</th><th>Reps</th><th>Cadência</th><th>Desc.</th><th>PSE</th><th>Carga</th><th>Dicas de execução</th></tr></thead><tbody>{items.map(({d,i})=>{const imgs=drillImages(d);return <tr key={d.id||i}><td><span className="tpp-gym-thumb">{imgs[0]?<img src={imgs[0]}/>:<Icon name="whistle" size={11}/>}</span><span className="tpp-gym-name">{d.name||`Exercício ${i+1}`}</span></td><td>{d.sets||d.series||'-'}</td><td>{d.reps||'-'}</td><td>{d.cadence||'-'}</td><td>{d.rest||'-'}</td><td className="pse">{d.pse||'-'}</td><td>{d.load||'-'}</td><td className="muted">{d.tips||d.variants||d.desc||'—'}</td></tr>})}</tbody></table>:items.map(({d,i},itemIndex)=>{const imgs=drillImages(d),tips=d.tips||d.variants||d.desc||'';if(trainingType==='Campo')return <article key={d.id||i} className="tpp-field-card"><div className="tpp-field-headline"><span>{bi+1}.{itemIndex+1}</span><b>{d.name||`Exercício ${i+1}`}</b><small>{d.desc||d.method||'Exercício de campo'}</small></div><div className="tpp-field-content"><div className="tpp-field-media">{imgs[0]?<img src={imgs[0]}/>:<div className="tpp-media-empty"><Icon name="pitch" size={26}/><span>Imagem do exercício</span></div>}</div><div className="tpp-field-metrics"><div><small>SÉRIES</small><b>{d.sets||d.series||'-'}</b></div><div><small>REPS / TEMPO</small><b>{d.reps||'-'}</b></div><div><small>CADÊNCIA</small><b>{d.cadence||'-'}</b></div><div><small>DESCANSO</small><b>{d.rest||'-'}</b></div><div><small>PSE</small><b>{d.pse||'-'}</b></div><div><small>ESPAÇO / MIN</small><b>{d.dim||d.time?`${d.dim||''}${d.dim&&d.time?' · ':''}${d.time?d.time+' min':''}`:'-'}</b></div></div><div className="tpp-field-notes"><small>OBSERVAÇÕES / CORREÇÕES</small><p>{tips||'Sem observações adicionais.'}</p></div></div></article>;return <article key={d.id||i} className={`tpp-exercise tpp-gym ${d.video?'has-video':'no-video'}`}><div className="tpp-ex-title"><b>{d.name||`Exercício ${i+1}`}</b><small>{d.method||trainingType}</small></div><div className="tpp-media tpp-media-single"><div>{imgs[0]?<img src={imgs[0]}/>:<div className="tpp-media-empty"><Icon name="whistle" size={24}/><span>Imagem do exercício</span></div>}</div></div><div className="tpp-prescription"><div><small>SÉRIES</small><b>{d.sets||d.series||'-'}</b></div><div><small>REPS / TEMPO</small><b>{d.reps||'-'}</b></div><div><small>CADÊNCIA</small><b>{d.cadence||'-'}</b></div><div><small>DESCANSO</small><b>{d.rest||'-'}</b></div><div><small>PSE</small><b>{d.pse||'-'}</b></div><div><small>CARGA</small><b>{d.load||'-'}</b></div></div><div className="tpp-tips"><small>DICAS DE EXECUÇÃO / CORREÇÕES</small><p>{tips||'Sem observações adicionais.'}</p></div><div className="tpp-qr">{d.video?<QRCodeBox value={d.video} size={44}/>:<span>PLAY</span>}</div></article>})}</section>})}</main></div>
                 <footer className="tpp-final"><div><small>PSE FINAL</small><b>{review.pseFinal||'____'}</b></div><div><small>DOR</small><b>{review.pain||'____'}</b></div><div><small>DURAÇÃO REAL</small><b>{actual?`${actual} min`:'____ min'}</b></div><div><small>OBSERVAÇÕES / REGISTRO FINAL</small><b>{review.incidents||header.notes||'____________________________________________'}</b></div></footer>
-                <div className="tpp-footer"><span>{teamName} · ProCoach 2.0.6.8</span><span className="slogan">{trainingType==='Academia'?'Disciplina gera resultado.':'Futebol é processo.'}</span><span>Ficha Premium · {trainingType}</span></div>
+                <div className="tpp-footer"><span>{teamName} · ProCoach 2.0.6.9</span><span className="slogan">{trainingType==='Academia'?'Disciplina gera resultado.':'Futebol é processo.'}</span><span>Ficha Premium · {trainingType}</span></div>
             </div>
         </section>
     </div>;
@@ -1975,7 +2006,7 @@ const App = ({ user }) => {
             <div className="flex flex-1 min-h-0">
                 <aside className="app-sidebar hidden md:flex flex-col shrink-0 no-print shadow-xl z-30">
                     <div className="sidebar-brand p-4 border-b border-white/10">
-                        <div className="flex items-center gap-3 mb-3"><div className="w-11 h-11 bg-white/10 rounded-xl border border-white/10 flex items-center justify-center overflow-hidden shrink-0">{teamLogo ? <img src={teamLogo} className="w-full h-full object-contain" /> : <Icon name="users" className="opacity-60"/>}</div><div className="min-w-0"><div className="font-black text-sm uppercase truncate">{teamName}</div><div className="text-[10px] text-slate-400 mt-0.5">PROCOACH <span className="opacity-60">2.0.6.8 FICHA PREMIUM</span></div></div></div>
+                        <div className="flex items-center gap-3 mb-3"><div className="w-11 h-11 bg-white/10 rounded-xl border border-white/10 flex items-center justify-center overflow-hidden shrink-0">{teamLogo ? <img src={teamLogo} className="w-full h-full object-contain" /> : <Icon name="users" className="opacity-60"/>}</div><div className="min-w-0"><div className="font-black text-sm uppercase truncate">{teamName}</div><div className="text-[10px] text-slate-400 mt-0.5">PROCOACH <span className="opacity-60">2.0.6.9 FICHA PREMIUM</span></div></div></div>
                         <TeamSwitcher registry={teamRegistry} activeTeamId={activeTeamId} onSwitch={switchTeam} onManage={openTeamManager}/>
                     </div>
                     <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
@@ -2078,7 +2109,7 @@ const MainControl = () => {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<ErrorBoundary><MainControl /></ErrorBoundary>);
-if ('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=2068',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{}));
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=2069',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{}));
 </script>
 </body>
 
