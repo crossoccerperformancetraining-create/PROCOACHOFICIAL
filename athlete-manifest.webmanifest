@@ -1,8 +1,8 @@
 {
-  "name": "ProCoach Athlete 2.0.6.6",
+  "name": "ProCoach Athlete 2.0.6.7",
   "short_name": "ProCoach Athlete",
   "description": "Rotinas e sequências guiadas, Player de treino, academia, campo/tático, bem-estar, vídeos e comunicação individual.",
-  "start_url": "./atleta.html?v=2066",
+  "start_url": "./atleta.html?v=2067",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
