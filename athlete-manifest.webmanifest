@@ -1,20 +1,13 @@
 {
-  "name": "ProCoach Athlete 2.0.6.9",
+  "name": "ProCoach Athlete 2.0.7.1",
   "short_name": "ProCoach Athlete",
-  "description": "Rotinas e sequências guiadas, Player de treino, academia, campo/tático, bem-estar, vídeos e comunicação individual.",
-  "start_url": "./atleta.html?v=2069",
+  "description": "Portal individual do atleta ProCoach",
+  "start_url": "./atleta.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#07101d",
   "theme_color": "#07101d",
   "lang": "pt-BR",
-  "icons": [
-    {
-      "src": "./procoach-icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ]
+  "icons": [{"src":"./procoach-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
 }

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'procoach-2071-github-lite';
+const CACHE_NAME = 'procoach-2072-ficha-campo-final';
 const APP_SHELL = [
   './', './index.html', './atleta.html',
   './manifest.webmanifest', './athlete-manifest.webmanifest', './procoach-icon.svg'
