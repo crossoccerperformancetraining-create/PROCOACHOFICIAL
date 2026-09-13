@@ -1,0 +1,17 @@
+{
+  "name": "ProCoach Auxiliar 2.0.7.3",
+  "short_name": "Auxiliar",
+  "description": "App de apoio à comissão técnica ProCoach",
+  "start_url": "./auxiliar.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#07101d",
+  "theme_color": "#07101d",
+  "lang": "pt-BR",
+  "icons": [
+    {"src":"./procoach-assistant-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"},
+    {"src":"./procoach-assistant-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"./procoach-assistant-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}

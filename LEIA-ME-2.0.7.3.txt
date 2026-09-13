@@ -1,0 +1,29 @@
+PROCOACH 2.0.7.3 — AUXILIAR + SINCRONIZAÇÃO + ÍCONES
+
+ARQUIVOS DO SITE:
+- index.html            ProCoach treinador
+- atleta.html           ProCoach Athlete
+- auxiliar.html         ProCoach Auxiliar
+- manifest.webmanifest
+- athlete-manifest.webmanifest
+- assistant-manifest.webmanifest
+- service-worker.js
+- ícones SVG/PNG para cada app
+
+SINCRONIZAÇÃO DO AUXILIAR
+O Auxiliar usa o mesmo Firebase (procoachoficial), o mesmo coachData e a mesma estrutura Multi-Team do ProCoach principal.
+Nesta versão, para funcionar com as regras atuais, o Auxiliar entra com o MESMO ACESSO AUTORIZADO do treinador principal.
+Assim, presença, progresso dos exercícios e notas do auxiliar são gravados no mesmo pc_history_v2 e aparecem no mesmo conjunto de dados do treinador.
+
+FUNÇÕES DO AUXILIAR
+- Treino do dia
+- Progresso dos exercícios
+- Presença / atenção / ausência
+- Próximo jogo
+- Checklist de campo e materiais
+- Nota sincronizada do auxiliar
+- Troca de equipe/categoria
+- PWA instalável com ícone próprio
+
+SEGURANÇA / PRÓXIMA EVOLUÇÃO
+Logins individuais para cada membro da comissão exigem uma coleção de membros e regras Firestore próprias. Não foi ativado nesta versão para não quebrar as regras estáveis atuais.
