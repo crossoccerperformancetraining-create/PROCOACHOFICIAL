@@ -1,49 +1,37 @@
-const CACHE_NAME = 'procoach-2069-ficha-premium-final';
-const APP_SHELL = ['./', './index.html', './atleta.html', './manifest.webmanifest', './athlete-manifest.webmanifest', './procoach-icon.svg', './procoach-fcm-config.js'];
-
-try {
-  importScripts('https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js');
-  importScripts('https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js');
-  firebase.initializeApp({
-    apiKey: 'AIzaSyBURvWmrRe-q-l1h2XKaQepeRQoNcmi7nk',
-    authDomain: 'procoachoficial.firebaseapp.com',
-    projectId: 'procoachoficial',
-    storageBucket: 'procoachoficial.firebasestorage.app',
-    messagingSenderId: '128403842399',
-    appId: '1:128403842399:web:c54259e2b6a5622fb942ea'
-  });
-  const messaging = firebase.messaging();
-  messaging.onBackgroundMessage(payload => {
-    const notification = payload.notification || {};
-    return self.registration.showNotification(notification.title || 'ProCoach Athlete 2.0.6.9', {
-      body: notification.body || 'Você tem uma nova atualização.',
-      icon: './procoach-icon.svg',
-      badge: './procoach-icon.svg',
-      data: payload.fcmOptions && payload.fcmOptions.link || payload.data && payload.data.url || './atleta.html'
-    });
-  });
-} catch (e) {}
+const CACHE_NAME = 'procoach-2071-github-lite';
+const APP_SHELL = [
+  './', './index.html', './atleta.html',
+  './manifest.webmanifest', './athlete-manifest.webmanifest', './procoach-icon.svg'
+];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim()));
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
-  const isNav = event.request.mode === 'navigate';
-  const request = isNav ? new Request(event.request, {cache:'no-store'}) : event.request;
-  event.respondWith(fetch(request).then(response => {
-    const copy = response.clone();
-    caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+  event.respondWith(fetch(event.request).then(response => {
+    if (response && response.ok) {
+      const copy = response.clone();
+      caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+    }
     return response;
   }).catch(() => caches.match(event.request).then(hit => hit || caches.match('./index.html'))));
 });
 
+self.addEventListener('push', event => {
+  let data = {title:'ProCoach', body:'Você tem uma nova atualização.', url:'./'};
+  try { if (event.data) data = {...data, ...event.data.json()}; } catch(e) {}
+  event.waitUntil(self.registration.showNotification(data.title || 'ProCoach', {
+    body: data.body || '', icon:'./procoach-icon.svg', badge:'./procoach-icon.svg', data:data.url || './'
+  }));
+});
+
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  event.waitUntil(clients.openWindow(event.notification.data || './atleta.html'));
+  event.waitUntil(clients.openWindow(event.notification.data || './'));
 });
