@@ -9,7 +9,7 @@
 <link rel="manifest" href="./assistant-manifest.webmanifest">
 <link rel="icon" href="./procoach-assistant-icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="./procoach-assistant-192.png">
-<title>ProCoach Auxiliar 2.0.7.3</title>
+<title>ProCoach Auxiliar 2.0.7.4</title>
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
@@ -34,14 +34,19 @@ const PC_ACTIVE_TEAM_KEY='procoach_active_team_v6',PC_TEAM_REGISTRY_KEY='pc_mult
 const PC_GLOBAL_KEYS=new Set([PC_TEAM_REGISTRY_KEY,'pc_dark_mode','pc_club_movements_v61','pc_club_season_archives_v61','pc_club_access_v61']);
 const $=id=>document.getElementById(id),today=()=>new Date().toISOString().slice(0,10),ensureArray=v=>Array.isArray(v)?v:(v&&typeof v==='object'?Object.values(v):[]),parse=(raw,fallback)=>{try{return raw?JSON.parse(raw):fallback}catch(e){return fallback}};
 let activeTab='home',installPrompt=null,cloudBusy=false;
+const AUX_PENDING_KEY='procoach_aux_pending_sync_v2074';
+const pendingQueue=()=>parse(localStorage.getItem(AUX_PENDING_KEY),[])||[];
+const savePending=q=>localStorage.setItem(AUX_PENDING_KEY,JSON.stringify(q));
+function queueSync(pk,value){const q=pendingQueue().filter(x=>x.pk!==pk);q.push({pk,value,at:new Date().toISOString()});savePending(q);setSync('pending');}
+async function flushPending(){if(!auth.currentUser||!navigator.onLine)return false;const q=pendingQueue();if(!q.length)return true;setSync('syncing');try{for(const item of q){await db.collection('coachData').doc(auth.currentUser.uid).set({[item.pk]:item.value,lastUpdated:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});}savePending([]);setSync('ok');return true}catch(e){setSync('pending');return false}}
 const activeTeamId=()=>localStorage.getItem(PC_ACTIVE_TEAM_KEY)||'team-main';
 const physicalKey=(key,teamId=activeTeamId())=>(!String(key).startsWith('pc_')||PC_GLOBAL_KEYS.has(key)||teamId==='team-main')?key:`pc_team_${teamId}__${key}`;
 const read=(key,fallback)=>parse(localStorage.getItem(physicalKey(key)),fallback);
 const notify=(text)=>{const d=document.createElement('div');d.className='toast';d.textContent=text;document.body.appendChild(d);setTimeout(()=>d.remove(),1800)};
 const fmt=d=>{if(!d)return'—';const p=String(d).split('-');return p.length===3?`${p[2]}/${p[1]}`:d};
-async function write(key,value){const pk=physicalKey(key);localStorage.setItem(pk,JSON.stringify(value));if(auth.currentUser&&navigator.onLine){await db.collection('coachData').doc(auth.currentUser.uid).set({[pk]:JSON.stringify(value),lastUpdated:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});}render();}
-async function cloudLoad(){if(!auth.currentUser||cloudBusy)return;cloudBusy=true;setSync('syncing');try{const doc=await db.collection('coachData').doc(auth.currentUser.uid).get();if(doc.exists){const data=doc.data();Object.keys(data).forEach(k=>{if(k.startsWith('pc_'))localStorage.setItem(k,typeof data[k]==='string'?data[k]:JSON.stringify(data[k]))});}setSync('ok');renderTeamSelect();render();}catch(e){setSync('off');}finally{cloudBusy=false}}
-function setSync(state){const b=$('syncBadge');if(!b)return;b.classList.toggle('off',state!=='ok');b.textContent=state==='syncing'?'↻ SINCRONIZANDO':state==='ok'?'● SINCRONIZADO':'● MODO LOCAL';}
+async function write(key,value){const pk=physicalKey(key),raw=JSON.stringify(value);localStorage.setItem(pk,raw);if(auth.currentUser&&navigator.onLine){try{await db.collection('coachData').doc(auth.currentUser.uid).set({[pk]:raw,lastUpdated:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});const q=pendingQueue().filter(x=>x.pk!==pk);savePending(q);setSync(q.length?'pending':'ok')}catch(e){queueSync(pk,raw)}}else{queueSync(pk,raw)}render();}
+async function cloudLoad(){if(!auth.currentUser||cloudBusy)return;cloudBusy=true;setSync('syncing');try{await flushPending();const doc=await db.collection('coachData').doc(auth.currentUser.uid).get();if(doc.exists){const data=doc.data();Object.keys(data).forEach(k=>{if(k.startsWith('pc_'))localStorage.setItem(k,typeof data[k]==='string'?data[k]:JSON.stringify(data[k]))});}setSync(pendingQueue().length?'pending':'ok');renderTeamSelect();render();}catch(e){setSync(navigator.onLine?'pending':'off');}finally{cloudBusy=false}}
+function setSync(state){const b=$('syncBadge');if(!b)return;const n=pendingQueue().length;b.classList.toggle('off',state!=='ok');b.textContent=state==='syncing'?'↻ SINCRONIZANDO':state==='ok'?'● SINCRONIZADO':state==='pending'?`● ${n||1} PENDENTE(S)`:'● MODO LOCAL';}
 function registry(){return read(PC_TEAM_REGISTRY_KEY,{teams:[{id:'team-main',name:'Equipe Principal',category:'Principal'}]})}
 function team(){return ensureArray(registry().teams).find(t=>t.id===activeTeamId())||{id:'team-main',name:read('pc_team_name','Equipe Principal'),category:'Principal'}}
 function teamName(){return read('pc_team_name',team().name||'Equipe Principal')}
@@ -66,15 +71,15 @@ function teamScreen(){const rec=currentSession(),att=rec.attendance||{};return`<
 function matchCard(){const m=nextMatch();if(!m||(!m.date&&!m.opponent))return'';return`<section class="card"><div class="cardtitle"><h2>Próximo jogo</h2><span class="tag">MATCH DAY</span></div><div class="match"><span>${fmt(m.date||today())} · ${esc(m.time||'')}</span><b>${esc(teamName())} × ${esc(m.opponent||'Adversário')}</b><div class="muted">${esc(m.location||m.venue||'Local a definir')} ${m.system?`· Sistema ${esc(m.system)}`:''}</div></div></section>`}
 function matchScreen(){const m=nextMatch(),callups=ensureArray(read('pc_callups_v1',[])).filter(x=>x.date===m.date||x.date===today());return`<section class="card"><div class="cardtitle"><div><div class="eyebrow">JOGO & LOGÍSTICA</div><h2>${m.opponent?esc(m.opponent):'Sem jogo programado'}</h2></div><span class="tag">${callups.length?callups.length+' convocação(ões)':'GAME CENTER'}</span></div>${matchCard()||'<div class="empty">Nenhum jogo encontrado.</div>'}</section>`}
 function recordScreen(){const r=currentSession(),c=r.assistantChecklist||{};return`<section class="card"><div class="cardtitle"><div><div class="eyebrow">REGISTRO DO AUXILIAR</div><h2>Checklist e observações</h2></div><span class="tag">SYNC</span></div><div class="checkgrid"><label class="checkitem"><input id="cMaterials" type="checkbox" ${c.materials?'checked':''}> Materiais separados</label><label class="checkitem"><input id="cField" type="checkbox" ${c.field?'checked':''}> Campo preparado</label><label class="checkitem"><input id="cEquipment" type="checkbox" ${c.equipment?'checked':''}> Equipamentos OK</label><label class="checkitem"><input id="cVideo" type="checkbox" ${c.video?'checked':''}> Vídeo / tablet OK</label><label class="checkitem"><input id="cMeeting" type="checkbox" ${c.meeting?'checked':''}> Reunião alinhada</label></div><textarea id="assistantNote" class="field note" placeholder="Observações do auxiliar: campo, clima, material, comportamento, ajustes da sessão...">${esc(r.assistantNote||'')}</textarea><button class="save" onclick="saveRecord()">SALVAR E SINCRONIZAR</button><div class="muted" style="margin-top:8px">Esta nota também aparece na ficha de treino do ProCoach principal após a sincronização.</div></section>`}
-function render(){if($('appView').classList.contains('hidden'))return;const map={home,training,team:teamScreen,match:matchScreen,record:recordScreen};$('screen').innerHTML=(map[activeTab]||home)();document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===activeTab));setSync(navigator.onLine?'ok':'off')}
+function render(){if($('appView').classList.contains('hidden'))return;const map={home,training,team:teamScreen,match:matchScreen,record:recordScreen};$('screen').innerHTML=(map[activeTab]||home)();document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===activeTab));setSync(!navigator.onLine?'off':pendingQueue().length?'pending':'ok')}
 $('nav').addEventListener('click',e=>{const b=e.target.closest('button[data-tab]');if(!b)return;activeTab=b.dataset.tab;render()});
 $('teamSelect').addEventListener('change',e=>{localStorage.setItem(PC_ACTIVE_TEAM_KEY,e.target.value);render()});
 $('refreshBtn').onclick=cloudLoad;$('logoutBtn').onclick=()=>auth.signOut();
 $('loginBtn').onclick=async()=>{const email=$('email').value.trim(),pass=$('password').value;$('authErr').textContent='';try{await auth.signInWithEmailAndPassword(email,pass)}catch(e){$('authErr').textContent='Não foi possível entrar. Confira e-mail e senha.'}};
-window.addEventListener('online',()=>{setSync('syncing');cloudLoad()});window.addEventListener('offline',()=>setSync('off'));
+window.addEventListener('online',async()=>{setSync('syncing');await flushPending();cloudLoad()});window.addEventListener('offline',()=>setSync('off'));
 auth.onAuthStateChanged(async user=>{if(user){$('authView').classList.add('hidden');$('appView').classList.remove('hidden');await cloudLoad();renderTeamSelect();render()}else{$('appView').classList.add('hidden');$('authView').classList.remove('hidden')}});
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;$('installAuth').classList.add('show')});$('installAuth').onclick=async()=>{if(!installPrompt)return;installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$('installAuth').classList.remove('show')};
-if('serviceWorker'in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js?v=2073',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js?v=2074',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 </script>
 </body>
 </html>

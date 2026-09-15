@@ -1,9 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07101d"/><stop offset=".7" stop-color="#12315f"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs>
-<rect width="512" height="512" rx="112" fill="url(#bg)"/>
-<path d="M126 102h260l-19 267c-2 31-29 56-61 56H206c-32 0-59-25-61-56z" fill="#0a1c34" stroke="#f97316" stroke-width="11"/>
-<circle cx="271" cy="170" r="31" fill="#f97316"/>
-<path d="M261 212l-38 62m38-62 60 32m-58 2 10 69m-10-69-62 14m72 55 48 34m-48-34-42 57" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="337" cy="350" r="28" fill="none" stroke="#60a5fa" stroke-width="10"/>
-<text x="256" y="411" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" font-weight="800" letter-spacing="3" fill="#fdba74">ATHLETE</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#06101d"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#b)"/><path d="M256 58 393 108v118c0 95-51 169-137 223-86-54-137-128-137-223V108z" fill="#07182c" stroke="#60a5fa" stroke-width="12"/><circle cx="268" cy="143" r="31" fill="#f97316"/><path d="m246 184 48 32 45 8-6 31-57-9-20 43 56 54-26 26-72-64 25-72-50 35-17-25z" fill="#f97316"/><circle cx="168" cy="354" r="30" fill="none" stroke="#f8fafc" stroke-width="9"/><path d="M151 337l17-8 17 8 6 18-13 16h-20l-13-16z" fill="#f8fafc"/><text x="256" y="411" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="900" letter-spacing="3" fill="#dbeafe">ATHLETE</text></svg>

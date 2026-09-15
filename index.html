@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0b1220">
+    <meta name="application-name" content="ProCoach Treinador">
+    <meta name="apple-mobile-web-app-title" content="ProCoach">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./procoach-main-icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="./procoach-main-192.png">
-    <title>ProCoach 2.0.7.3 - Auxiliar & Sync</title>
+    <title>ProCoach 2.0.7.4 - Auxiliar & Sync</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -1195,12 +1197,12 @@ const PremiumTrainingPlanView = ({ drills,setDrills,header,setHeader,logo,themeC
     const applyDrills=next=>{setDrills(next);if(syncMicrocycle)syncMicrocycle(next)};
     const updateDrill=(i,f,v)=>{const n=[...ds];n[i]={...n[i],[f]:v};applyDrills(n)};
     const updateHeader=patch=>setHeader(current=>({...current,...patch}));
-    const updateRating=(i,value)=>{const next={...ratings,[i]:value};setRatings(next);setHistory({...history,[sessionDate]:{...record,drills:ds,header,attendance,rpe,ratings:next,actualDuration:actual,review,signature,premiumPlanVersion:'2.0.7.3',updatedAt:new Date().toISOString()}})};
+    const updateRating=(i,value)=>{const next={...ratings,[i]:value};setRatings(next);setHistory({...history,[sessionDate]:{...record,drills:ds,header,attendance,rpe,ratings:next,actualDuration:actual,review,signature,premiumPlanVersion:'2.0.7.4',updatedAt:new Date().toISOString()}})};
     const moveDrill=(index,dir)=>{const next=[...ds],target=index+dir;if(target<0||target>=next.length)return;[next[index],next[target]]=[next[target],next[index]];applyDrills(next)};
     const newExercise=block=>({id:`ex_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,name:'Novo exercício',block:block||blocks[0],method:trainingType==='Academia'?'Força':'Técnico',time:'10',sets:'3',reps:'10',cadence:'Controlada',rest:'45 s',pse:'5',load:'',dim:'',desc:'',tips:'',variants:'',image:'',video:''});
     const addExercise=block=>applyDrills([...ds,newExercise(block)]);
     const duplicateDrill=i=>{const d=ds[i];if(!d)return;const next={...d,id:`ex_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,name:`${d.name||'Exercício'} · cópia`};applyDrills([...ds.slice(0,i+1),next,...ds.slice(i+1)])};
-    const save=()=>{const savedHeader={...header,trainingType,pseTarget:header.pseTarget||'',coach:header.coach||'',category:header.category||''};setHistory({...history,[sessionDate]:{...record,drills:ds,header:savedHeader,attendance,rpe,ratings,actualDuration:actual,review,signature,premiumPlanVersion:'2.0.7.3',updatedAt:new Date().toISOString()}});if(syncMicrocycle)syncMicrocycle(ds);setStatus('Plano de treino salvo ✓');setTimeout(()=>setStatus(''),2200)};
+    const save=()=>{const savedHeader={...header,trainingType,pseTarget:header.pseTarget||'',coach:header.coach||'',category:header.category||''};setHistory({...history,[sessionDate]:{...record,drills:ds,header:savedHeader,attendance,rpe,ratings,actualDuration:actual,review,signature,premiumPlanVersion:'2.0.7.4',updatedAt:new Date().toISOString()}});if(syncMicrocycle)syncMicrocycle(ds);setStatus('Plano de treino salvo ✓');setTimeout(()=>setStatus(''),2200)};
     const saveTemplate=()=>{const name=prompt('Nome do modelo de treino:',`${trainingType} · ${header.objective||'Modelo'}`);if(!name)return;const item={id:`tpl_${Date.now()}`,name,trainingType,header:{objective:header.objective||'',competition:header.competition||'',category:header.category||'',local:header.local||'',time:header.time||'',dur:header.dur||'',pseTarget:header.pseTarget||'',coach:header.coach||'',notes:header.notes||''},drills:ds.map((d,i)=>({...d,id:`tplx_${Date.now()}_${i}`})),createdAt:new Date().toISOString()};setTemplates(current=>[item,...ensureArray(current)]);setStatus(`Modelo “${name}” salvo ✓`);setTimeout(()=>setStatus(''),2500)};
     const loadTemplate=id=>{const item=ensureArray(templates).find(x=>String(x.id)===String(id));if(!item)return;updateHeader({...item.header,trainingType:item.trainingType||'Campo'});applyDrills(ensureArray(item.drills).map((d,i)=>({...d,id:`ex_${Date.now()}_${i}`})));setStatus(`Modelo “${item.name}” aplicado.`);setTimeout(()=>setStatus(''),2200)};
     const deleteTemplate=id=>{const item=ensureArray(templates).find(x=>String(x.id)===String(id));if(!item||!confirm(`Excluir o modelo “${item.name}”?`))return;setTemplates(current=>ensureArray(current).filter(x=>String(x.id)!==String(id)))};
@@ -1214,7 +1216,7 @@ const PremiumTrainingPlanView = ({ drills,setDrills,header,setHeader,logo,themeC
         category:header.category||trainingType,
         priority:'Importante',
         premiumPlan:true,
-        premiumPlanVersion:'2.0.7.3',
+        premiumPlanVersion:'2.0.7.4',
         objective:header.objective||'',
         location:header.local||'',
         startTime:header.time||'',
@@ -2095,7 +2097,7 @@ const App = ({ user }) => {
             <div className="flex flex-1 min-h-0">
                 <aside className="app-sidebar hidden md:flex flex-col shrink-0 no-print shadow-xl z-30">
                     <div className="sidebar-brand p-4 border-b border-white/10">
-                        <div className="flex items-center gap-3 mb-3"><div className="w-11 h-11 bg-white/10 rounded-xl border border-white/10 flex items-center justify-center overflow-hidden shrink-0">{teamLogo ? <img src={teamLogo} className="w-full h-full object-contain" /> : <Icon name="users" className="opacity-60"/>}</div><div className="min-w-0"><div className="font-black text-sm uppercase truncate">{teamName}</div><div className="text-[10px] text-slate-400 mt-0.5">PROCOACH <span className="opacity-60">2.0.7.3 AUXILIAR & SYNC</span></div></div></div>
+                        <div className="flex items-center gap-3 mb-3"><div className="w-11 h-11 bg-white/10 rounded-xl border border-white/10 flex items-center justify-center overflow-hidden shrink-0">{teamLogo ? <img src={teamLogo} className="w-full h-full object-contain" /> : <Icon name="users" className="opacity-60"/>}</div><div className="min-w-0"><div className="font-black text-sm uppercase truncate">{teamName}</div><div className="text-[10px] text-slate-400 mt-0.5">PROCOACH <span className="opacity-60">2.0.7.4 AUXILIAR & SYNC</span></div></div></div>
                         <TeamSwitcher registry={teamRegistry} activeTeamId={activeTeamId} onSwitch={switchTeam} onManage={openTeamManager}/>
                     </div>
                     <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
@@ -2199,7 +2201,7 @@ const MainControl = () => {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<ErrorBoundary><MainControl /></ErrorBoundary>);
-if ('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=2073',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{}));
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=2074',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{}));
 </script>
 </body>
 
